@@ -90,7 +90,7 @@ class storeControllerTest extends TestCase
         $this->assertSame('tag1', $data['items'][1]['tags'][0]['name']);
     }
 
-    public function testActionIndexWithProviderAndGenres(): void
+    public function testActionIndexWithCountryAndTag(): void
     {
         Database::seeder('store', ['id'], [
             ['name1', 'foo', 'url1', 'link1', time() + 2, time()],
