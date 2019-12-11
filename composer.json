@@ -1,0 +1,23 @@
+{
+  "require": {
+    "php": "^7.2",
+    "ext-json": "*",
+    "yiisoft/yii2": "2.0.30",
+    "hashids/hashids": "4.0.0",
+    "creocoder/yii2-taggable": "2.0.0"
+  },
+  "require-dev": {
+    "vlucas/phpdotenv": "4.0.1",
+    "phpunit/phpunit": "8.5.0"
+  },
+  "provide": {
+    "bower-asset/jquery": "*",
+    "bower-asset/yii2-pjax": "*",
+    "bower-asset/punycode": "*",
+    "bower-asset/inputmask": "*"
+  },
+  "scripts": {
+    "dev": "composer install --quiet",
+    "clean": "rm -rf runtime/* vendor"
+  }
+}

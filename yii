@@ -1,0 +1,25 @@
+#!/usr/bin/env php
+<?php
+
+/*
+ * This file is part of the api.plusarchive.com
+ *
+ * (c) Tomoki Morita <tmsongbooks215@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+require __DIR__.'/vendor/autoload.php';
+
+if (php_uname('n') !== 'api.plusarchive.com') {
+    defined('YII_DEBUG') or define('YII_DEBUG', true);
+    defined('YII_ENV') or define('YII_ENV', 'dev');
+
+    $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+    $dotenv->load();
+}
+
+require __DIR__.'/vendor/yiisoft/yii2/Yii.php';
+
+exit((new yii\console\Application(require __DIR__.'/config/console.php'))->run());
