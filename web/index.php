@@ -11,7 +11,7 @@
 
 require __DIR__.'/../vendor/autoload.php';
 
-if (preg_match('/\A(localhost|dev.api.plusarchive)\z/', $_SERVER['SERVER_NAME'])) {
+if (preg_match('/\A(127.0.0.1|localhost|dev.api.plusarchive)\z/', $_SERVER['SERVER_NAME'])) {
     defined('YII_DEBUG') or define('YII_DEBUG', true);
     defined('YII_ENV') or define('YII_ENV', 'dev');
 
