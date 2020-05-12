@@ -2,12 +2,12 @@
   "require": {
     "php": "^7.2",
     "ext-json": "*",
-    "yiisoft/yii2": "2.0.34",
+    "yiisoft/yii2": "2.0.35",
     "hashids/hashids": "4.0.0",
     "creocoder/yii2-taggable": "2.0.0"
   },
   "require-dev": {
-    "vlucas/phpdotenv": "4.1.4",
+    "vlucas/phpdotenv": "4.1.5",
     "phpunit/phpunit": "8.5.4"
   },
   "provide": {
