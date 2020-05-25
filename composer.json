@@ -7,8 +7,8 @@
     "creocoder/yii2-taggable": "2.0.0"
   },
   "require-dev": {
-    "vlucas/phpdotenv": "4.1.5",
-    "phpunit/phpunit": "8.5.4"
+    "vlucas/phpdotenv": "4.1.6",
+    "phpunit/phpunit": "8.5.5"
   },
   "provide": {
     "bower-asset/jquery": "*",
