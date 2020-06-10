@@ -65,6 +65,6 @@ return yii\helpers\ArrayHelper::merge(require __DIR__.'/base.php', [
         ],
     ],
     'params' => [
-        'cors-origin' => getenv('CORS_ORIGIN'),
+        'cors-origin' => $_SERVER['CORS_ORIGIN'],
     ],
 ]);

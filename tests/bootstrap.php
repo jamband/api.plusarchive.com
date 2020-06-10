@@ -15,4 +15,7 @@ defined('YII_DEBUG') or define('YII_DEBUG', true);
 require __DIR__.'/../vendor/autoload.php';
 require_once __DIR__.'/../vendor/yiisoft/yii2/Yii.php';
 
+$dotenv = Dotenv\Dotenv::createImmutable(dirname(__dir__));
+$dotenv->load();
+
 new yii\web\Application(require __DIR__.'/../config/test.php');
