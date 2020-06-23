@@ -71,4 +71,19 @@ class ResourceTraitTest extends TestCase
         $expected = ['country1', 'country2', 'country3'];
         $this->assertSame($expected, $this->resource::countries());
     }
+
+    public function testHasName(): void
+    {
+        Database::seeder('resource', ['id'], [
+            ['name1', 'country1'],
+            ['name2', 'country2'],
+            ['name3', 'country3'],
+        ]);
+
+        $names = $this->resource::names();
+        $this->assertSame(true, $this->resource::hasName($names[0]));
+        $this->assertSame(true, $this->resource::hasName($names[1]));
+        $this->assertSame(true, $this->resource::hasName($names[2]));
+        $this->assertSame(false, $this->resource::hasName('name4'));
+    }
 }

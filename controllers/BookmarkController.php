@@ -27,7 +27,7 @@ class BookmarkController extends Controller
             $query->country($country);
         }
 
-        if (null !== $tag) {
+        if (null !== $tag && '' !== $tag && BookmarkTag::hasName($tag)) {
             $query->allTagValues($tag);
         }
 

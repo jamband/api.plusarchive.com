@@ -27,7 +27,7 @@ class StoreController extends Controller
             $query->country($country);
         }
 
-        if (null !== $tag) {
+        if (null !== $tag && '' !== $tag && StoreTag::hasName($tag)) {
             $query->allTagValues($tag);
         }
 

@@ -36,4 +36,9 @@ trait ResourceTrait
             ->orderBy(['country' => SORT_ASC])
             ->column();
     }
+
+    public static function hasName(string $name): bool
+    {
+        return in_array($name, static::names(), true);
+    }
 }

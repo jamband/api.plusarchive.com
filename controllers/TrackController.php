@@ -29,7 +29,7 @@ class TrackController extends Controller
             $query->provider($provider);
         }
 
-        if (null !== $genre && '' !== $genre) {
+        if (null !== $genre && '' !== $genre && MusicGenre::hasName($genre)) {
             $query->allTagValues($genre);
         }
 
