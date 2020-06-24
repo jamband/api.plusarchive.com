@@ -43,7 +43,11 @@ class TrackQuery extends ActiveQuery
     {
         $provider = array_search($provider, Track::PROVIDERS, true);
 
-        return $this->andWhere(['provider' => false !== $provider ? $provider : '']);
+        if (false !== $provider) {
+            return $this->andWhere(['provider' => $provider]);
+        }
+
+        return $this->nothing();
     }
 
     public function searchInTitleOrder(string $search): TrackQuery
@@ -52,7 +56,7 @@ class TrackQuery extends ActiveQuery
             ->inTitleOrder();
     }
 
-    public function favoritesInLatestOrder(): ActiveQuery
+    public function favoritesInLatestOrder(): TrackQuery
     {
         return $this->favorites()->latest();
     }

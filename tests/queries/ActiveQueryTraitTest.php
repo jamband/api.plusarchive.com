@@ -56,6 +56,17 @@ class ActiveQueryTraitTest extends TestCase
         $this->assertSame('name3', $data[1]->name);
         $this->assertSame('name2', $data[2]->name);
     }
+
+    public function testNothing(): void
+    {
+        Database::seeder('resource', ['id'], [
+            ['name1', time(), time()],
+        ]);
+
+        $query = Resource::find();
+        $this->assertSame(1, count($query->all()));
+        $this->assertSame(0, count($query->nothing()->all()));
+    }
 }
 
 class Resource extends ActiveRecord

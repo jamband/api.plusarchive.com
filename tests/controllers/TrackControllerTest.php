@@ -92,6 +92,27 @@ class TrackControllerTest extends TestCase
         $this->assertSame('genre1', $data['items'][1]['genres'][0]['name']);
     }
 
+    public function testActionIndexWithNotExistGenre(): void
+    {
+        Database::seeder('music', ['id'], [
+            ['url1', Track::PROVIDER_BANDCAMP, 'key1', 'title1', 'image1', Track::TYPE_TRACK, false, time(), time()],
+        ]);
+
+        Database::seeder('music_genre', ['id'], [
+            ['genre1', 1, time(), time()],
+        ]);
+
+        Database::seeder('music_genre_assn', [], [
+            [1, 1],
+        ]);
+
+        $data = $this->request('tracks?expand=genres&genre=genre1');
+        $this->assertSame(1, $data['_meta']['totalCount']);
+
+        $data = $this->request('tracks?expand=genres&genre=genre2');
+        $this->assertSame(0, $data['_meta']['totalCount']);
+    }
+
     public function testActionIndexWithProviderAndGenre(): void
     {
         Database::seeder('music', ['id'], [

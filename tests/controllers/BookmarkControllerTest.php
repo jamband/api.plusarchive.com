@@ -90,6 +90,27 @@ class BookmarkControllerTest extends TestCase
         $this->assertSame('tag1', $data['items'][1]['tags'][0]['name']);
     }
 
+    public function testActionIndexWithNotExistTag(): void
+    {
+        Database::seeder('bookmark', ['id'], [
+            ['name1', 'foo', 'url1', 'link1', time(), time()],
+        ]);
+
+        Database::seeder('bookmark_tag', ['id'], [
+            ['tag1', 1, time(), time()],
+        ]);
+
+        Database::seeder('bookmark_tag_assn', [], [
+            [1, 1],
+        ]);
+
+        $data = $this->request('bookmarks?expand=tags&tag=tag1');
+        $this->assertSame(1, $data['_meta']['totalCount']);
+
+        $data = $this->request('bookmarks?expand=tags&tag=tag2');
+        $this->assertSame(0, $data['_meta']['totalCount']);
+    }
+
     public function testActionIndexWithCountryAndTag(): void
     {
         Database::seeder('bookmark', ['id'], [

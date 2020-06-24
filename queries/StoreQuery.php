@@ -18,7 +18,7 @@ use creocoder\taggable\TaggableQueryBehavior;
 use yii\db\ActiveQuery;
 
 /**
- * @method StoreQuery allTagValues($values, $attribute = null)
+ * @method ActiveQuery allTagValues($values, $attribute = null)
  */
 class StoreQuery extends ActiveQuery
 {
@@ -44,7 +44,7 @@ class StoreQuery extends ActiveQuery
             return $this->andWhere(['country' => $country]);
         }
 
-        return $this->andWhere(['country' => '']);
+        return $this->nothing();
     }
 
     public function searchInNameOrder(string $search): StoreQuery

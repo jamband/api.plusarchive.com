@@ -27,8 +27,12 @@ class LabelController extends Controller
             $query->country($country);
         }
 
-        if (null !== $tag && '' !== $tag && LabelTag::hasName($tag)) {
-            $query->allTagValues($tag);
+        if (null !== $tag) {
+            if (LabelTag::hasName($tag)) {
+                $query->allTagValues($tag);
+            } else {
+                $query->nothing();
+            }
         }
 
         if (null !== $search) {

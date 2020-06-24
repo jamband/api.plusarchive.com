@@ -21,4 +21,9 @@ trait ActiveQueryTrait
     {
         return $this->orderBy([$column => SORT_DESC]);
     }
+
+    public function nothing(): ActiveQuery
+    {
+        return $this->where('1 = 0');
+    }
 }

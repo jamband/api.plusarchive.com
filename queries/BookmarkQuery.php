@@ -44,7 +44,7 @@ class BookmarkQuery extends ActiveQuery
             return $this->andWhere(['country' => $country]);
         }
 
-        return $this->andWhere(['country' => '']);
+        return $this->nothing();
     }
 
     public function searchInNameOrder(string $search): BookmarkQuery

@@ -29,8 +29,12 @@ class TrackController extends Controller
             $query->provider($provider);
         }
 
-        if (null !== $genre && '' !== $genre && MusicGenre::hasName($genre)) {
-            $query->allTagValues($genre);
+        if (null !== $genre) {
+            if (MusicGenre::hasName($genre)) {
+                $query->allTagValues($genre);
+            } else {
+                $query->nothing();
+            }
         }
 
         if (null !== $search) {
