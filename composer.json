@@ -7,7 +7,7 @@
     "creocoder/yii2-taggable": "2.0.0"
   },
   "require-dev": {
-    "vlucas/phpdotenv": "5.0.0",
+    "vlucas/phpdotenv": "5.1.0",
     "phpunit/phpunit": "8.5.8"
   },
   "provide": {
