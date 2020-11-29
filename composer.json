@@ -2,13 +2,13 @@
   "require": {
     "php": "^7.2",
     "ext-json": "*",
-    "yiisoft/yii2": "2.0.39.2",
-    "hashids/hashids": "4.0.0",
+    "yiisoft/yii2": "2.0.39.3",
+    "hashids/hashids": "4.1.0",
     "creocoder/yii2-taggable": "2.0.0"
   },
   "require-dev": {
     "vlucas/phpdotenv": "5.2.0",
-    "phpunit/phpunit": "8.5.9"
+    "phpunit/phpunit": "8.5.11"
   },
   "provide": {
     "bower-asset/jquery": "*",
