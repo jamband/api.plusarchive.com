@@ -49,11 +49,13 @@ class LabelController extends Controller
         ]);
     }
 
-    public function actionResources(): array
+    public function actionCountries(): array
     {
-        return [
-            'countries' => Label::countries(),
-            'tags' => LabelTag::names(),
-        ];
+        return Label::countries();
+    }
+
+    public function actionTags(): array
+    {
+        return LabelTag::names();
     }
 }

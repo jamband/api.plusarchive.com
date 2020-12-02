@@ -49,11 +49,13 @@ class BookmarkController extends Controller
         ]);
     }
 
-    public function actionResources(): array
+    public function actionCountries(): array
     {
-        return [
-            'countries' => Bookmark::countries(),
-            'tags' => BookmarkTag::names(),
-        ];
+        return  Bookmark::countries();
+    }
+
+    public function actionTags(): array
+    {
+        return BookmarkTag::names();
     }
 }

@@ -161,7 +161,21 @@ class BookmarkControllerTest extends TestCase
         $this->assertSame('baz', $data['items'][1]['name']);
     }
 
-    public function testActionResources(): void
+    public function testActionCountries(): void
+    {
+        Database::seeder('bookmark', ['id'], [
+            ['name1', 'foo', 'url1', 'link1', time(), time()],
+            ['name2', 'bar', 'url2', 'link2', time(), time()],
+            ['name3', 'baz', 'url3', 'link3', time(), time()],
+            ['name4', 'foo', 'url4', 'link4', time(), time()],
+        ]);
+
+        $data = $this->request('bookmarks/countries');
+        $expected = ['bar', 'baz', 'foo'];
+        $this->assertSame($expected, $data);
+    }
+
+    public function testActionTags(): void
     {
         Database::seeder('bookmark', ['id'], [
             ['name1', 'foo', 'url1', 'link1', time(), time()],
@@ -176,11 +190,8 @@ class BookmarkControllerTest extends TestCase
             ['tag3', 1, time(), time()],
         ]);
 
-        $data = $this->request('bookmarks/resources');
-        $expected = ['bar', 'baz', 'foo'];
-        $this->assertSame($expected, $data['countries']);
-
+        $data = $this->request('bookmarks/tags');
         $expected = ['tag1', 'tag2', 'tag3'];
-        $this->assertSame($expected, $data['tags']);
+        $this->assertSame($expected, $data);
     }
 }

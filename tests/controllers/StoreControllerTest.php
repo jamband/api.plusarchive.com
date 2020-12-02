@@ -161,7 +161,7 @@ class storeControllerTest extends TestCase
         $this->assertSame('baz', $data['items'][1]['name']);
     }
 
-    public function testActionResources(): void
+    public function testActionCountries(): void
     {
         Database::seeder('store', ['id'], [
             ['name1', 'foo', 'url1', 'link1', time(), time()],
@@ -176,12 +176,28 @@ class storeControllerTest extends TestCase
             ['tag3', 1, time(), time()],
         ]);
 
-        $data = $this->request('stores/resources');
-
+        $data = $this->request('stores/countries');
         $expected = ['bar', 'baz', 'foo'];
-        $this->assertSame($expected, $data['countries']);
+        $this->assertSame($expected, $data);
+    }
 
+    public function testActionTags(): void
+    {
+        Database::seeder('store', ['id'], [
+            ['name1', 'foo', 'url1', 'link1', time(), time()],
+            ['name2', 'bar', 'url2', 'link2', time(), time()],
+            ['name3', 'baz', 'url3', 'link3', time(), time()],
+            ['name4', 'foo', 'url4', 'link4', time(), time()],
+        ]);
+
+        Database::seeder('store_tag', ['id'], [
+            ['tag1', 1, time(), time()],
+            ['tag2', 1, time(), time()],
+            ['tag3', 1, time(), time()],
+        ]);
+
+        $data = $this->request('stores/tags');
         $expected = ['tag1', 'tag2', 'tag3'];
-        $this->assertSame($expected, $data['tags']);
+        $this->assertSame($expected, $data);
     }
 }

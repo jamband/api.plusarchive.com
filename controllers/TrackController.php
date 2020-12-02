@@ -51,6 +51,11 @@ class TrackController extends Controller
         ]);
     }
 
+    public function actionGenres(): array
+    {
+        return MusicGenre::names();
+    }
+
     public function actionFavorites(): ActiveDataProvider
     {
         return new ActiveDataProvider([
@@ -73,12 +78,5 @@ class TrackController extends Controller
         }
 
         return $model;
-    }
-
-    public function actionResources(): array
-    {
-        return [
-            'genres' => MusicGenre::names(),
-        ];
     }
 }

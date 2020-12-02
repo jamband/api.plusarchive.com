@@ -179,6 +179,19 @@ class TrackControllerTest extends TestCase
         $this->request('tracks/'.Yii::$app->hashids->encode(1));
     }
 
+    public function testActionGenres(): void
+    {
+        Database::seeder('music_genre', ['id'], [
+            ['genre1', 1, time(), time()],
+            ['genre2', 1, time(), time()],
+            ['genre3', 1, time(), time()],
+        ]);
+
+        $data = $this->request('tracks/genres');
+        $expected = ['genre1', 'genre2', 'genre3'];
+        $this->assertSame($expected, $data);
+    }
+
     public function testFavorites(): void
     {
         Database::seeder('music', ['id'], [
@@ -226,18 +239,5 @@ class TrackControllerTest extends TestCase
         $data = $this->request('tracks/minimal-genres?limit=3');
         $expected = ['genre2', 'genre4', 'genre5'];
         $this->assertSame($expected, $data);
-    }
-
-    public function testActionResources(): void
-    {
-        Database::seeder('music_genre', ['id'], [
-            ['genre1', 1, time(), time()],
-            ['genre2', 1, time(), time()],
-            ['genre3', 1, time(), time()],
-        ]);
-
-        $data = $this->request('tracks/resources');
-        $expected = ['genre1', 'genre2', 'genre3'];
-        $this->assertSame($expected, $data['genres']);
     }
 }

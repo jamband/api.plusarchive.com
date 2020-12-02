@@ -46,10 +46,12 @@ return yii\helpers\ArrayHelper::merge(require __DIR__.'/base.php', [
             'enableStrictParsing' => true,
             'showScriptName' => false,
             'rules' => [
+                'tracks/genres' => 'track/genres',
                 'tracks/favorites' => 'track/favorites',
                 'tracks/minimal-genres' => 'track/minimal-genres',
                 '<controller:(track|playlist|label|store|bookmark)>s' => '<controller>/index',
-                '<controller:(track|label|store|bookmark)>s/<action:resources>' => '<controller>/resources',
+                '<controller:(label|store|bookmark)>s/countries' => '<controller>/countries',
+                '<controller:(label|store|bookmark)>s/tags' => '<controller>/tags',
                 '<controller:(track|playlist)>s/<id:[\w-]+>' => '<controller>/view',
             ],
         ],

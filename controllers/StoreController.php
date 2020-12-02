@@ -49,11 +49,13 @@ class StoreController extends Controller
         ]);
     }
 
-    public function actionResources(): array
+    public function actionCountries(): array
     {
-        return [
-            'countries' => Store::countries(),
-            'tags' => StoreTag::names(),
-        ];
+        return Store::countries();
+    }
+
+    public function actionTags(): array
+    {
+        return StoreTag::names();
     }
 }
