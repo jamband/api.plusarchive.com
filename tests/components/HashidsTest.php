@@ -20,7 +20,7 @@ class HashidsTest extends TestCase
 {
     public function testMinHashLengthAndAlphabet(): void
     {
-        $this->assertRegExp('/\A[\w-]{11}\z/', Yii::$app->hashids->encode(mt_rand()));
+        $this->assertMatchesRegularExpression('/\A[\w-]{11}\z/', Yii::$app->hashids->encode(mt_rand()));
     }
 
     public function testEncode(): void

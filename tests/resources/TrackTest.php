@@ -35,7 +35,7 @@ class TrackTest extends TestCase
         ]);
 
         $data = Track::findOne(1)->toArray();
-        $this->assertRegExp('/[\w-]{11}/', $data['id']);
+        $this->assertMatchesRegularExpression('/[\w-]{11}/', $data['id']);
         $this->assertSame('url1', $data['url']);
         $this->assertSame('Bandcamp', $data['provider']);
         $this->assertSame('key1', $data['provider_key']);
@@ -43,7 +43,7 @@ class TrackTest extends TestCase
         $this->assertSame('image1', $data['image']);
         $this->assertArrayNotHasKey('type', $data);
         $this->assertArrayNotHasKey('urge', $data);
-        $this->assertRegExp('/\A[0-9]{4}\.[0-9]{2}\.[0-9]{2}\z/', $data['created_at']);
+        $this->assertMatchesRegularExpression('/\A[0-9]{4}\.[0-9]{2}\.[0-9]{2}\z/', $data['created_at']);
         $this->assertArrayNotHasKey('updated_at', $data);
     }
 

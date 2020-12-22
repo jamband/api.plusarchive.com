@@ -37,7 +37,7 @@ class PlaylistTest extends TestCase
         ]);
 
         $data = Playlist::findOne(1)->toArray();
-        $this->assertRegExp('/\A[\w-]{11}\z/', $data['id']);
+        $this->assertMatchesRegularExpression('/\A[\w-]{11}\z/', $data['id']);
         $this->assertSame('url1', $data['url']);
         $this->assertSame('SoundCloud', $data['provider']);
         $this->assertSame('key1', $data['provider_key']);

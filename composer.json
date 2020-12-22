@@ -8,7 +8,7 @@
   },
   "require-dev": {
     "vlucas/phpdotenv": "5.2.0",
-    "phpunit/phpunit": "8.5.13"
+    "phpunit/phpunit": "9.5.0"
   },
   "provide": {
     "bower-asset/jquery": "*",
