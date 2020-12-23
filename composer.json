@@ -1,6 +1,6 @@
 {
   "require": {
-    "php": "^7.2",
+    "php": "^7.4",
     "ext-json": "*",
     "yiisoft/yii2": "2.0.39.3",
     "hashids/hashids": "4.1.0",
