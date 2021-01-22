@@ -109,6 +109,10 @@
                 "tags",
                 "yii2"
             ],
+            "support": {
+                "issues": "https://github.com/creocoder/yii2-taggable/issues",
+                "source": "https://github.com/creocoder/yii2-taggable/tree/master"
+            },
             "time": "2015-02-24T21:45:58+00:00"
         },
         {
@@ -229,6 +233,10 @@
                 "obfuscate",
                 "youtube"
             ],
+            "support": {
+                "issues": "https://github.com/vinkla/hashids/issues",
+                "source": "https://github.com/vinkla/hashids/tree/4.1.0"
+            },
             "time": "2020-11-26T19:24:33+00:00"
         },
         {
