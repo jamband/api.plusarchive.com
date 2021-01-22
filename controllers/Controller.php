@@ -23,7 +23,7 @@ use yii\web\Response;
 
 class Controller extends BaseController
 {
-    public $serializer = [
+    public array $serializer = [
         'class' => Serializer::class,
         'collectionEnvelope' => 'items',
     ];

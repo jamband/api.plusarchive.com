@@ -18,14 +18,11 @@ use yii\base\BaseObject;
 
 class Hashids extends BaseObject
 {
-    public $salt;
-    public $minHashLength;
-    public $alphabet;
+    public string $salt;
+    public int $minHashLength;
+    public string $alphabet;
 
-    /**
-     * @var HashidsBase
-     */
-    private $_hashids;
+    private HashidsBase $_hashids;
 
     public function init(): void
     {
