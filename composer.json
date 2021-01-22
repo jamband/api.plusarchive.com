@@ -14,7 +14,9 @@
     "bower-asset/jquery": "*",
     "bower-asset/yii2-pjax": "*",
     "bower-asset/punycode": "*",
-    "bower-asset/inputmask": "*"
+    "bower-asset/inputmask": "*",
+    "cebe/markdown": "*",
+    "ezyang/htmlpurifier": "*"
   },
   "scripts": {
     "clean": "rm -rf runtime/* vendor"
