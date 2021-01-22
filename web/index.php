@@ -9,6 +9,8 @@
  * file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 require __DIR__.'/../vendor/autoload.php';
 
 if (preg_match('/\A(127.0.0.1|localhost|dev.api.plusarchive)\z/', $_SERVER['SERVER_NAME'])) {

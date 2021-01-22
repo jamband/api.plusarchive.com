@@ -9,6 +9,8 @@
  * file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 return yii\helpers\ArrayHelper::merge(require __DIR__.'/base.php', [
     'id' => 'web',
     'components' => [

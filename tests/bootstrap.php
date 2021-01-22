@@ -9,6 +9,8 @@
  * file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 define('YII_ENV', 'test');
 defined('YII_DEBUG') or define('YII_DEBUG', true);
 
