@@ -8,7 +8,8 @@
          convertWarningsToExceptions="true"
          processIsolation="false"
          stopOnFailure="false"
-         bootstrap="./tests/bootstrap.php">
+         bootstrap="./tests/bootstrap.php"
+         cacheResultFile="./runtime/phpunit/result.cache">
     <testsuites>
         <testsuite name="Test Suite">
             <directory>./tests</directory>
