@@ -14,6 +14,8 @@ declare(strict_types=1);
 namespace app\controllers;
 
 use Yii;
+use yii\web\MethodNotAllowedHttpException;
+use yii\web\NotFoundHttpException;
 
 class ErrorController extends Controller
 {
@@ -21,13 +23,16 @@ class ErrorController extends Controller
     {
         $exception = Yii::$app->errorHandler->exception;
 
-        if (null !== $exception) {
-            $data['message'] = $exception->getMessage();
-            $data['statusCode'] = $exception->statusCode;
-
-            return $data;
+        if ($exception instanceof NotFoundHttpException) {
+            $data['message'] = 'Not found.';
+            $data['status'] = $exception->statusCode;
         }
 
-        return [];
+        if ($exception instanceof  MethodNotAllowedHttpException) {
+            $data['message'] = $exception->getMessage();
+            $data['status'] = $exception->statusCode;
+        }
+
+        return $data ?? [];
     }
 }

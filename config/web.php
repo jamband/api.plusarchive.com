@@ -30,18 +30,6 @@ return yii\helpers\ArrayHelper::merge(require __DIR__.'/base.php', [
                     'encodeOptions' => JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE,
                 ],
             ],
-            'on beforeSend' => function (yii\base\Event $event) {
-                $response = $event->sender;
-                if (200 !== $response->statusCode) {
-                    $response->data['statusCode'] = $response->statusCode;
-                    unset(
-                        $response->data['name'],
-                        $response->data['code'],
-                        $response->data['status'],
-                        $response->data['type']
-                    );
-                }
-            },
         ],
         'urlManager' => [
             'enablePrettyUrl' => true,
