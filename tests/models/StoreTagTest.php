@@ -11,7 +11,7 @@
 
 declare(strict_types=1);
 
-namespace app\tests\resources;
+namespace app\tests\models;
 
 use app\models\StoreTag;
 use app\tests\Database;

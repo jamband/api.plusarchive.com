@@ -11,10 +11,10 @@
 
 declare(strict_types=1);
 
-namespace app\tests\resources;
+namespace app\tests\models;
 
-use app\queries\PlaylistQuery;
 use app\models\Playlist;
+use app\queries\PlaylistQuery;
 use app\tests\Database;
 use app\tests\TestCase;
 

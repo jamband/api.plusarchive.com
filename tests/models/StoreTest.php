@@ -11,10 +11,10 @@
 
 declare(strict_types=1);
 
-namespace app\tests\resources;
+namespace app\tests\models;
 
-use app\queries\StoreQuery;
 use app\models\Store;
+use app\queries\StoreQuery;
 use app\tests\Database;
 use app\tests\TestCase;
 use creocoder\taggable\TaggableBehavior;
@@ -74,15 +74,15 @@ class StoreTest extends TestCase
 
     public function testTrait(): void
     {
-        $resource = new Store;
-        $this->assertTrue($resource->hasMethod('names'));
-        $this->assertTrue($resource->hasMethod('countries'));
+        $model = new Store;
+        $this->assertTrue($model->hasMethod('names'));
+        $this->assertTrue($model->hasMethod('countries'));
     }
 
     public function testBehaviors(): void
     {
-        $resource = new Store;
-        $this->assertArrayHasKey('taggable', $resource->behaviors);
-        $this->assertInstanceOf(TaggableBehavior::class, $resource->behaviors['taggable']);
+        $model = new Store;
+        $this->assertArrayHasKey('taggable', $model->behaviors);
+        $this->assertInstanceOf(TaggableBehavior::class, $model->behaviors['taggable']);
     }
 }

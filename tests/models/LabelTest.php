@@ -11,10 +11,10 @@
 
 declare(strict_types=1);
 
-namespace app\tests\resources;
+namespace app\tests\models;
 
-use app\queries\LabelQuery;
 use app\models\Label;
+use app\queries\LabelQuery;
 use app\tests\Database;
 use app\tests\TestCase;
 use creocoder\taggable\TaggableBehavior;
@@ -74,15 +74,15 @@ class LabelTest extends TestCase
 
     public function testTrait(): void
     {
-        $resource = new Label;
-        $this->assertTrue($resource->hasMethod('names'));
-        $this->assertTrue($resource->hasMethod('countries'));
+        $model = new Label;
+        $this->assertTrue($model->hasMethod('names'));
+        $this->assertTrue($model->hasMethod('countries'));
     }
 
     public function testBehaviors(): void
     {
-        $resource = new Label;
-        $this->assertArrayHasKey('taggable', $resource->behaviors);
-        $this->assertInstanceOf(TaggableBehavior::class, $resource->behaviors['taggable']);
+        $model = new Label;
+        $this->assertArrayHasKey('taggable', $model->behaviors);
+        $this->assertInstanceOf(TaggableBehavior::class, $model->behaviors['taggable']);
     }
 }

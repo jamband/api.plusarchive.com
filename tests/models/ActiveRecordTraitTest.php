@@ -11,7 +11,7 @@
 
 declare(strict_types=1);
 
-namespace app\tests\resources;
+namespace app\tests\models;
 
 use app\models\ActiveRecordTrait;
 use app\tests\Database;
@@ -30,14 +30,14 @@ class ActiveRecordTraitTest extends TestCase
 
             public static function tableName(): string
             {
-                return 'resource';
+                return 'foo';
             }
         };
 
         $database = new class extends Database
         {
             protected const SCHEMA = [
-                'resource' => [
+                'foo' => [
                     'id' => 'INTEGER PRIMARY KEY',
                     'name' => 'TEXT NOT NULL',
                     'country' => 'TEXT NOT NULL',
@@ -45,12 +45,12 @@ class ActiveRecordTraitTest extends TestCase
             ];
         };
 
-        $database::createTable('resource');
+        $database::createTable('foo');
     }
 
     public function testNames(): void
     {
-        Database::seeder('resource', ['id'], [
+        Database::seeder('foo', ['id'], [
             ['name3', 'country3'],
             ['name1', 'country1'],
             ['name2', 'country2'],
@@ -62,7 +62,7 @@ class ActiveRecordTraitTest extends TestCase
 
     public function testCountries(): void
     {
-        Database::seeder('resource', ['id'], [
+        Database::seeder('foo', ['id'], [
             ['name3', 'country3'],
             ['name1', 'country1'],
             ['name2', 'country2'],
@@ -74,7 +74,7 @@ class ActiveRecordTraitTest extends TestCase
 
     public function testHasName(): void
     {
-        Database::seeder('resource', ['id'], [
+        Database::seeder('foo', ['id'], [
             ['name1', 'country1'],
             ['name2', 'country2'],
             ['name3', 'country3'],
