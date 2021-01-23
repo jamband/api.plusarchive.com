@@ -18,18 +18,19 @@ use Yii;
 
 class HashidsTest extends TestCase
 {
-    public function testMinHashLengthAndAlphabet(): void
+    public function testSalt(): void
     {
-        $this->assertMatchesRegularExpression('/\A[\w-]{11}\z/', Yii::$app->hashids->encode(mt_rand()));
+        $this->assertSame('test', Yii::$app->hashids->salt);
     }
 
     public function testEncode(): void
     {
-        $this->assertSame('YnOJk15BjqZ', Yii::$app->hashids->encode(1));
+        $this->assertMatchesRegularExpression('/\A[\w-]{11}\z/', Yii::$app->hashids->encode(1));
     }
 
     public function testDecode(): void
     {
-        $this->assertSame(1, Yii::$app->hashids->decode('YnOJk15BjqZ'));
+        $id = Yii::$app->hashids->encode(1);
+        $this->assertSame(1, Yii::$app->hashids->decode($id));
     }
 }
