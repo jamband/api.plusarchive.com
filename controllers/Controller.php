@@ -17,6 +17,7 @@ use Yii;
 use yii\filters\ContentNegotiator;
 use yii\filters\Cors;
 use yii\filters\RateLimiter;
+use yii\filters\VerbFilter;
 use yii\rest\Serializer;
 use yii\web\Controller as BaseController;
 use yii\web\Response;
@@ -30,6 +31,8 @@ class Controller extends BaseController
 
     public $enableCsrfValidation = false;
 
+    protected array $verbs = [];
+
     public function behaviors(): array
     {
         return [
@@ -42,6 +45,10 @@ class Controller extends BaseController
                     'Access-Control-Allow-Credentials' => true,
                     'Access-Control-Max-Age' => 3600,
                 ],
+            ],
+            'verbFilter' => [
+                'class' => VerbFilter::class,
+                'actions' => ['index' => $this->verbs],
             ],
             'contentNegotiator' => [
                 'class' => ContentNegotiator::class,

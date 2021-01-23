@@ -22,6 +22,8 @@ use yii\web\NotFoundHttpException;
  */
 class ErrorController extends Controller
 {
+    protected array $verbs = ['GET'];
+
     public function actionIndex(): array
     {
         $exception = Yii::$app->errorHandler->exception;

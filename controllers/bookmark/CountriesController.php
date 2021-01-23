@@ -21,6 +21,8 @@ use app\resources\Bookmark;
  */
 class CountriesController extends Controller
 {
+    protected array $verbs = ['GET'];
+
     public function actionIndex(): array
     {
         return Bookmark::countries();

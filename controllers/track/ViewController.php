@@ -23,6 +23,8 @@ use yii\web\NotFoundHttpException;
  */
 class ViewController extends Controller
 {
+    protected array $verbs = ['GET'];
+
     public function actionIndex(string $id): Track
     {
         $model = Track::findOne(

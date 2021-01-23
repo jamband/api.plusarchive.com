@@ -22,6 +22,8 @@ use app\resources\Playlist;
  */
 class IndexController extends Controller
 {
+    protected array $verbs = ['GET'];
+
     public function actionIndex(): ActiveDataProvider
     {
         return new ActiveDataProvider([

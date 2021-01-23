@@ -21,6 +21,8 @@ use app\resources\MusicGenre;
  */
 class GenresController extends Controller
 {
+    protected array $verbs = ['GET'];
+
     public function actionIndex(): array
     {
         return MusicGenre::names();

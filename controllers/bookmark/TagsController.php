@@ -21,6 +21,8 @@ use app\resources\BookmarkTag;
  */
 class TagsController extends Controller
 {
+    protected array $verbs = ['GET'];
+
     public function actionIndex(): array
     {
         return BookmarkTag::names();

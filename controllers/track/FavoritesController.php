@@ -22,6 +22,8 @@ use yii\data\ActiveDataProvider;
  */
 class FavoritesController extends Controller
 {
+    protected array $verbs = ['GET'];
+
     public function actionIndex(): ActiveDataProvider
     {
         return new ActiveDataProvider([

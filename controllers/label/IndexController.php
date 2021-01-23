@@ -23,6 +23,8 @@ use yii\data\ActiveDataProvider;
  */
 class IndexController extends Controller
 {
+    protected array $verbs = ['GET'];
+
     public function actionIndex(?string $country = null, ?string $tag = null, ?string $search = null): ActiveDataProvider
     {
         $query = Label::find();

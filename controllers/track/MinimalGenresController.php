@@ -21,6 +21,8 @@ use app\resources\MusicGenre;
  */
 class MinimalGenresController extends Controller
 {
+    protected array $verbs = ['GET'];
+
     public function actionIndex(int $limit): array
     {
         return MusicGenre::minimal($limit);

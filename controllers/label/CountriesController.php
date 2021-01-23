@@ -21,6 +21,8 @@ use app\resources\Label;
  */
 class CountriesController extends Controller
 {
+    protected array $verbs = ['GET'];
+
     public function actionIndex(): array
     {
         return Label::countries();

@@ -21,6 +21,8 @@ use app\resources\Store;
  */
 class CountriesController extends Controller
 {
+    protected array $verbs = ['GET'];
+
     public function actionIndex(): array
     {
         return Store::countries();
