@@ -11,25 +11,23 @@
 
 declare(strict_types=1);
 
-namespace app\tests\controllers;
+namespace app\tests\controllers\playlist;
 
 use app\resources\Playlist;
 use app\tests\Database;
-use app\tests\RequestHelper;
-use app\tests\TestCase;
+use app\tests\WebTestCase;
 use Yii;
-use yii\web\NotFoundHttpException;
 
-class PlaylistControllerTest extends TestCase
+class IndexControllerTest extends WebTestCase
 {
-    use RequestHelper;
-
     protected function setUp(): void
     {
         Database::createTable('music');
+
+        parent::setUp();
     }
 
-    public function testActionIndex(): void
+    public function test(): void
     {
         Database::seeder('music', ['id'], [
             ['url1', Playlist::PROVIDER_SOUNDCLOUD, 'key1', 'title1', 'image1', Playlist::TYPE_PLAYLIST, false, time() + 2, time()],
@@ -37,26 +35,12 @@ class PlaylistControllerTest extends TestCase
             ['url3', Playlist::PROVIDER_YOUTUBE, 'key3', 'title3', 'image3', Playlist::TYPE_TRACK, false, time() + 1, time()],
         ]);
 
-        $data = $this->request('playlists');
+        $data = $this->request('GET', '/playlists');
+        $this->assertSame(200, Yii::$app->response->statusCode);
+
         $this->assertSame(2, count($data['items']));
         $this->assertSame('url2', $data['items'][0]['url']);
         $this->assertSame('url1', $data['items'][1]['url']);
         $this->assertArrayNotHasKey('_meta', $data);
-    }
-
-    public function testActionView(): void
-    {
-        Database::seeder('music', ['id'], [
-            ['url1', Playlist::PROVIDER_SOUNDCLOUD, 'key1', 'title1', 'image1', Playlist::TYPE_PLAYLIST, false, time(), time()],
-        ]);
-
-        $data = $this->request('playlists/'.Yii::$app->hashids->encode(1));
-        $this->assertSame('url1', $data['url']);
-    }
-
-    public function testActionViewNotFound(): void
-    {
-        $this->expectException(NotFoundHttpException::class);
-        $this->request('playlists/'.Yii::$app->hashids->encode(1));
     }
 }

@@ -11,24 +11,28 @@
 
 declare(strict_types=1);
 
-namespace app\controllers;
+namespace app\controllers\store;
 
-use app\resources\Bookmark;
-use app\resources\BookmarkTag;
+use app\controllers\Controller;
+use app\resources\Store;
+use app\resources\StoreTag;
 use yii\data\ActiveDataProvider;
 
-class BookmarkController extends Controller
+/**
+ * @noinspection PhpUnused
+ */
+class IndexController extends Controller
 {
     public function actionIndex(?string $country = null, ?string $tag = null, ?string $search = null): ActiveDataProvider
     {
-        $query = Bookmark::find();
+        $query = Store::find();
 
         if (null !== $country) {
             $query->country($country);
         }
 
         if (null !== $tag) {
-            if (BookmarkTag::hasName($tag)) {
+            if (StoreTag::hasName($tag)) {
                 $query->allTagValues($tag);
             } else {
                 $query->nothing();
@@ -47,15 +51,5 @@ class BookmarkController extends Controller
                 'pageSize' => 8,
             ],
         ]);
-    }
-
-    public function actionCountries(): array
-    {
-        return  Bookmark::countries();
-    }
-
-    public function actionTags(): array
-    {
-        return BookmarkTag::names();
     }
 }

@@ -17,6 +17,9 @@ use Yii;
 use yii\web\MethodNotAllowedHttpException;
 use yii\web\NotFoundHttpException;
 
+/**
+ * @noinspection PhpUnused
+ */
 class ErrorController extends Controller
 {
     public function actionIndex(): array

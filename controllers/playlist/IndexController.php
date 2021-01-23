@@ -11,14 +11,16 @@
 
 declare(strict_types=1);
 
-namespace app\controllers;
+namespace app\controllers\playlist;
 
-use app\resources\Playlist;
-use Yii;
+use app\controllers\Controller;
 use yii\data\ActiveDataProvider;
-use yii\web\NotFoundHttpException;
+use app\resources\Playlist;
 
-class PlaylistController extends Controller
+/**
+ * @noinspection PhpUnused
+ */
+class IndexController extends Controller
 {
     public function actionIndex(): ActiveDataProvider
     {
@@ -26,16 +28,5 @@ class PlaylistController extends Controller
             'query' => Playlist::find()->latest(),
             'pagination' => false,
         ]);
-    }
-
-    public function actionView(string $id): Playlist
-    {
-        $model = Playlist::findOne(Yii::$app->hashids->decode($id));
-
-        if (null === $model) {
-            throw new NotFoundHttpException('Page not found.');
-        }
-
-        return $model;
     }
 }

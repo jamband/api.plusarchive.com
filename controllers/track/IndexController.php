@@ -11,15 +11,17 @@
 
 declare(strict_types=1);
 
-namespace app\controllers;
+namespace app\controllers\track;
 
+use app\controllers\Controller;
 use app\resources\MusicGenre;
 use app\resources\Track;
-use Yii;
 use yii\data\ActiveDataProvider;
-use yii\web\NotFoundHttpException;
 
-class TrackController extends Controller
+/**
+ * @noinspection PhpUnused
+ */
+class IndexController extends Controller
 {
     public function actionIndex(?string $provider = null, ?string $genre = null, ?string $search = null): ActiveDataProvider
     {
@@ -49,34 +51,5 @@ class TrackController extends Controller
                 'pageSize' => 24,
             ],
         ]);
-    }
-
-    public function actionGenres(): array
-    {
-        return MusicGenre::names();
-    }
-
-    public function actionFavorites(): ActiveDataProvider
-    {
-        return new ActiveDataProvider([
-            'query' => Track::find()->favoritesInLatestOrder(),
-            'pagination' => false,
-        ]);
-    }
-
-    public function actionMinimalGenres(int $limit): array
-    {
-        return MusicGenre::minimal($limit);
-    }
-
-    public function actionView(string $id): Track
-    {
-        $model = Track::findOne(Yii::$app->hashids->decode($id));
-
-        if (null === $model) {
-            throw new NotFoundHttpException('Page not found.');
-        }
-
-        return $model;
     }
 }

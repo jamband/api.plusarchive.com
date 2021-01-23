@@ -11,24 +11,24 @@
 
 declare(strict_types=1);
 
-namespace app\tests\controllers;
+namespace app\tests\controllers\bookmark;
 
 use app\tests\Database;
-use app\tests\RequestHelper;
-use app\tests\TestCase;
+use app\tests\WebTestCase;
+use Yii;
 
-class BookmarkControllerTest extends TestCase
+class IndexControllerTest extends WebTestCase
 {
-    use RequestHelper;
-
     protected function setUp(): void
     {
         Database::createTable('bookmark');
         Database::createTable('bookmark_tag');
         Database::createTable('bookmark_tag_assn');
+
+        parent::setUp();
     }
 
-    public function testActionIndex(): void
+    public function test(): void
     {
         Database::seeder('bookmark', ['id'], [
             ['name1', 'country1', 'url1', 'link1', time() + 2, time()],
@@ -36,14 +36,16 @@ class BookmarkControllerTest extends TestCase
             ['name3', 'country3', 'url3', 'link3', time() + 3, time()],
         ]);
 
-        $data = $this->request('bookmarks?expand=tags');
+        $data = $this->request('GET', '/bookmarks?expand=tags');
+        $this->assertSame(200, Yii::$app->response->statusCode);
+
         $this->assertSame(3, $data['_meta']['totalCount']);
         $this->assertSame('name3', $data['items'][0]['name']);
         $this->assertSame('name1', $data['items'][1]['name']);
         $this->assertSame('name2', $data['items'][2]['name']);
     }
 
-    public function testActionIndexWithCountry(): void
+    public function testWithCountryParameters(): void
     {
         Database::seeder('bookmark', ['id'], [
             ['name1', 'foo', 'url1', 'link1', time() + 2, time()],
@@ -51,17 +53,21 @@ class BookmarkControllerTest extends TestCase
             ['name3', 'foo', 'url3', 'link3', time() + 3, time()],
         ]);
 
-        $data = $this->request('bookmarks?expand=tags&country=foo');
+        $data = $this->request('GET', '/bookmarks?expand=tags&country=foo');
+        $this->assertSame(200, Yii::$app->response->statusCode);
+
         $this->assertSame(2, $data['_meta']['totalCount']);
         $this->assertSame('name3', $data['items'][0]['name']);
         $this->assertSame('name1', $data['items'][1]['name']);
 
-        $data = $this->request('bookmarks?expand=tags&country=bar');
+        $data = $this->request('GET', '/bookmarks?expand=tags&country=bar');
+        $this->assertSame(200, Yii::$app->response->statusCode);
+
         $this->assertSame(1, $data['_meta']['totalCount']);
         $this->assertSame('name2', $data['items'][0]['name']);
     }
 
-    public function testActionIndexWithTag(): void
+    public function testWithTagParameters(): void
     {
         Database::seeder('bookmark', ['id'], [
             ['name1', 'foo', 'url1', 'link1', time() + 2, time()],
@@ -81,7 +87,9 @@ class BookmarkControllerTest extends TestCase
             [3, 2],
         ]);
 
-        $data = $this->request('bookmarks?expand=tags&tag=tag1');
+        $data = $this->request('GET', '/bookmarks?expand=tags&tag=tag1');
+        $this->assertSame(200, Yii::$app->response->statusCode);
+
         $this->assertSame(2, $data['_meta']['totalCount']);
         $this->assertSame('name1', $data['items'][0]['name']);
         $this->assertSame('tag1', $data['items'][0]['tags'][0]['name']);
@@ -90,7 +98,7 @@ class BookmarkControllerTest extends TestCase
         $this->assertSame('tag1', $data['items'][1]['tags'][0]['name']);
     }
 
-    public function testActionIndexWithNotExistTag(): void
+    public function testWithNotExistTagParameters(): void
     {
         Database::seeder('bookmark', ['id'], [
             ['name1', 'foo', 'url1', 'link1', time(), time()],
@@ -104,14 +112,16 @@ class BookmarkControllerTest extends TestCase
             [1, 1],
         ]);
 
-        $data = $this->request('bookmarks?expand=tags&tag=tag1');
+        $data = $this->request('GET', '/bookmarks?expand=tags&tag=tag1');
+        $this->assertSame(200, Yii::$app->response->statusCode);
         $this->assertSame(1, $data['_meta']['totalCount']);
 
-        $data = $this->request('bookmarks?expand=tags&tag=tag2');
+        $data = $this->request('GET', '/bookmarks?expand=tags&tag=tag2');
+        $this->assertSame(200, Yii::$app->response->statusCode);
         $this->assertSame(0, $data['_meta']['totalCount']);
     }
 
-    public function testActionIndexWithCountryAndTag(): void
+    public function testWithCountryAndTagParameters(): void
     {
         Database::seeder('bookmark', ['id'], [
             ['name1', 'foo', 'url1', 'link1', time() + 2, time()],
@@ -131,19 +141,23 @@ class BookmarkControllerTest extends TestCase
             [3, 2],
         ]);
 
-        $data = $this->request('bookmarks?expand=tags&country=foo&tag=tag1');
+        $data = $this->request('GET', '/bookmarks?expand=tags&country=foo&tag=tag1');
+        $this->assertSame(200, Yii::$app->response->statusCode);
+
         $this->assertSame(1, $data['_meta']['totalCount']);
         $this->assertSame('name1', $data['items'][0]['name']);
         $this->assertSame('tag1', $data['items'][0]['tags'][0]['name']);
         $this->assertSame('tag2', $data['items'][0]['tags'][1]['name']);
 
-        $data = $this->request('bookmarks?expand=tags&country=bar&tag=tag1');
+        $data = $this->request('GET', '/bookmarks?expand=tags&country=bar&tag=tag1');
+        $this->assertSame(200, Yii::$app->response->statusCode);
+
         $this->assertSame(1, $data['_meta']['totalCount']);
         $this->assertSame('name2', $data['items'][0]['name']);
         $this->assertSame('tag1', $data['items'][0]['tags'][0]['name']);
     }
 
-    public function testActionIndexWithSearch(): void
+    public function testWithSearchParameters(): void
     {
         Database::seeder('bookmark', ['id'], [
             ['foo', 'country1', 'url1', 'link1', time() + 2, time()],
@@ -151,47 +165,17 @@ class BookmarkControllerTest extends TestCase
             ['baz', 'country3', 'url3', 'link3', time() + 3, time()],
         ]);
 
-        $data = $this->request('bookmarks?expand=tags&search=o');
+        $data = $this->request('GET', '/bookmarks?expand=tags&search=o');
+        $this->assertSame(200, Yii::$app->response->statusCode);
+
         $this->assertSame(1, $data['_meta']['totalCount']);
         $this->assertSame('foo', $data['items'][0]['name']);
 
-        $data = $this->request('bookmarks?expand=tags&search=ba');
+        $data = $this->request('GET', '/bookmarks?expand=tags&search=ba');
+        $this->assertSame(200, Yii::$app->response->statusCode);
+
         $this->assertSame(2, $data['_meta']['totalCount']);
         $this->assertSame('bar', $data['items'][0]['name']);
         $this->assertSame('baz', $data['items'][1]['name']);
-    }
-
-    public function testActionCountries(): void
-    {
-        Database::seeder('bookmark', ['id'], [
-            ['name1', 'foo', 'url1', 'link1', time(), time()],
-            ['name2', 'bar', 'url2', 'link2', time(), time()],
-            ['name3', 'baz', 'url3', 'link3', time(), time()],
-            ['name4', 'foo', 'url4', 'link4', time(), time()],
-        ]);
-
-        $data = $this->request('bookmarks/countries');
-        $expected = ['bar', 'baz', 'foo'];
-        $this->assertSame($expected, $data);
-    }
-
-    public function testActionTags(): void
-    {
-        Database::seeder('bookmark', ['id'], [
-            ['name1', 'foo', 'url1', 'link1', time(), time()],
-            ['name2', 'bar', 'url2', 'link2', time(), time()],
-            ['name3', 'baz', 'url3', 'link3', time(), time()],
-            ['name4', 'foo', 'url4', 'link4', time(), time()],
-        ]);
-
-        Database::seeder('bookmark_tag', ['id'], [
-            ['tag1', 1, time(), time()],
-            ['tag2', 1, time(), time()],
-            ['tag3', 1, time(), time()],
-        ]);
-
-        $data = $this->request('bookmarks/tags');
-        $expected = ['tag1', 'tag2', 'tag3'];
-        $this->assertSame($expected, $data);
     }
 }

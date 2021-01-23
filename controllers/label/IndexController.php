@@ -11,24 +11,28 @@
 
 declare(strict_types=1);
 
-namespace app\controllers;
+namespace app\controllers\label;
 
-use app\resources\Store;
-use app\resources\StoreTag;
+use app\controllers\Controller;
+use app\resources\Label;
+use app\resources\LabelTag;
 use yii\data\ActiveDataProvider;
 
-class StoreController extends Controller
+/**
+ * @noinspection PhpUnused
+ */
+class IndexController extends Controller
 {
     public function actionIndex(?string $country = null, ?string $tag = null, ?string $search = null): ActiveDataProvider
     {
-        $query = Store::find();
+        $query = Label::find();
 
         if (null !== $country) {
             $query->country($country);
         }
 
         if (null !== $tag) {
-            if (StoreTag::hasName($tag)) {
+            if (LabelTag::hasName($tag)) {
                 $query->allTagValues($tag);
             } else {
                 $query->nothing();
@@ -47,15 +51,5 @@ class StoreController extends Controller
                 'pageSize' => 8,
             ],
         ]);
-    }
-
-    public function actionCountries(): array
-    {
-        return Store::countries();
-    }
-
-    public function actionTags(): array
-    {
-        return StoreTag::names();
     }
 }

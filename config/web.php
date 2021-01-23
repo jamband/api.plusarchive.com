@@ -36,13 +36,26 @@ return yii\helpers\ArrayHelper::merge(require __DIR__.'/base.php', [
             'enableStrictParsing' => true,
             'showScriptName' => false,
             'rules' => [
-                'tracks/genres' => 'track/genres',
+                'bookmarks/countries' => 'bookmark/countries',
+                'bookmarks/tags' => 'bookmark/tags',
+                'bookmarks' => 'bookmark/index',
+
+                'labels/countries' => 'label/countries',
+                'labels/tags' => 'label/tags',
+                'labels' => 'label/index',
+
+                'playlists/<id:[\w-]{11}>' => 'playlist/view',
+                'playlists' => 'playlist/index',
+
+                'stores/countries' => 'store/countries',
+                'stores/tags' => 'store/tags',
+                'stores' => 'store/index',
+
                 'tracks/favorites' => 'track/favorites',
+                'tracks/genres' => 'track/genres',
                 'tracks/minimal-genres' => 'track/minimal-genres',
-                '<controller:(track|playlist|label|store|bookmark)>s' => '<controller>/index',
-                '<controller:(label|store|bookmark)>s/countries' => '<controller>/countries',
-                '<controller:(label|store|bookmark)>s/tags' => '<controller>/tags',
-                '<controller:(track|playlist)>s/<id:[\w-]+>' => '<controller>/view',
+                'tracks/<id:[\w-]{11}>' => 'track/view',
+                'tracks' => 'track/index',
             ],
         ],
         'errorHandler' => [

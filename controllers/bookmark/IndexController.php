@@ -11,24 +11,28 @@
 
 declare(strict_types=1);
 
-namespace app\controllers;
+namespace app\controllers\bookmark;
 
-use app\resources\Label;
-use app\resources\LabelTag;
+use app\controllers\Controller;
+use app\resources\Bookmark;
+use app\resources\BookmarkTag;
 use yii\data\ActiveDataProvider;
 
-class LabelController extends Controller
+/**
+ * @noinspection PhpUnused
+ */
+class IndexController extends Controller
 {
     public function actionIndex(?string $country = null, ?string $tag = null, ?string $search = null): ActiveDataProvider
     {
-        $query = Label::find();
+        $query = Bookmark::find();
 
         if (null !== $country) {
             $query->country($country);
         }
 
         if (null !== $tag) {
-            if (LabelTag::hasName($tag)) {
+            if (BookmarkTag::hasName($tag)) {
                 $query->allTagValues($tag);
             } else {
                 $query->nothing();
@@ -47,15 +51,5 @@ class LabelController extends Controller
                 'pageSize' => 8,
             ],
         ]);
-    }
-
-    public function actionCountries(): array
-    {
-        return Label::countries();
-    }
-
-    public function actionTags(): array
-    {
-        return LabelTag::names();
     }
 }

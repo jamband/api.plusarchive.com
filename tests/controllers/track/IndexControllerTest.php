@@ -11,27 +11,25 @@
 
 declare(strict_types=1);
 
-namespace app\tests\controllers;
+namespace app\tests\controllers\track;
 
 use app\resources\Track;
 use app\tests\Database;
-use app\tests\RequestHelper;
-use app\tests\TestCase;
+use app\tests\WebTestCase;
 use Yii;
-use yii\web\NotFoundHttpException;
 
-class TrackControllerTest extends TestCase
+class IndexControllerTest extends WebTestCase
 {
-    use RequestHelper;
-
     protected function setUp(): void
     {
         Database::createTable('music');
         Database::createTable('music_genre');
         Database::createTable('music_genre_assn');
+
+        parent::setUp();
     }
 
-    public function testActionIndex(): void
+    public function test(): void
     {
         Database::seeder('music', ['id'], [
             ['url1', Track::PROVIDER_BANDCAMP, 'key1', 'title1', 'image1', Track::TYPE_TRACK, false, time() + 2, time()],
@@ -39,13 +37,15 @@ class TrackControllerTest extends TestCase
             ['url3', Track::PROVIDER_SOUNDCLOUD, 'key3', 'title3', 'image3', Track::TYPE_PLAYLIST, false, time() + 1, time()],
         ]);
 
-        $data = $this->request('tracks?expand=genres');
+        $data = $this->request('GET', '/tracks?expand=genres');
+        $this->assertSame(200, Yii::$app->response->statusCode);
+
         $this->assertSame(2, $data['_meta']['totalCount']);
         $this->assertSame('title2', $data['items'][0]['title']);
         $this->assertSame('title1', $data['items'][1]['title']);
     }
 
-    public function testActionIndexWithProvider(): void
+    public function testWithProviderParameters(): void
     {
         Database::seeder('music', ['id'], [
             ['url1', Track::PROVIDER_BANDCAMP, 'key1', 'title1', 'image1', Track::TYPE_TRACK, false, time() + 2, time()],
@@ -53,17 +53,21 @@ class TrackControllerTest extends TestCase
             ['url3', Track::PROVIDER_SOUNDCLOUD, 'key3', 'title3', 'image3', Track::TYPE_TRACK, false, time() + 3, time()],
         ]);
 
-        $data = $this->request('tracks?expand=genres&provider=Bandcamp');
+        $data = $this->request('GET', '/tracks?expand=genres&provider=Bandcamp');
+        $this->assertSame(200, Yii::$app->response->statusCode);
+
         $this->assertSame(1, $data['_meta']['totalCount']);
         $this->assertSame('title1', $data['items'][0]['title']);
 
-        $data = $this->request('tracks?expand=genres&provider=SoundCloud');
+        $data = $this->request('GET', '/tracks?expand=genres&provider=SoundCloud');
+        $this->assertSame(200, Yii::$app->response->statusCode);
+
         $this->assertSame(2, $data['_meta']['totalCount']);
         $this->assertSame('title3', $data['items'][0]['title']);
         $this->assertSame('title2', $data['items'][1]['title']);
     }
 
-    public function testActionIndexWithGenre(): void
+    public function testWithGenreParameters(): void
     {
         Database::seeder('music', ['id'], [
             ['url1', Track::PROVIDER_BANDCAMP, 'key1', 'title1', 'image1', Track::TYPE_TRACK, false, time() + 2, time()],
@@ -83,7 +87,9 @@ class TrackControllerTest extends TestCase
             [3, 2],
         ]);
 
-        $data = $this->request('tracks?expand=genres&genre=genre1');
+        $data = $this->request('GET', '/tracks?expand=genres&genre=genre1');
+        $this->assertSame(200, Yii::$app->response->statusCode);
+
         $this->assertSame(2, $data['_meta']['totalCount']);
         $this->assertSame('title1', $data['items'][0]['title']);
         $this->assertSame('genre1', $data['items'][0]['genres'][0]['name']);
@@ -92,7 +98,7 @@ class TrackControllerTest extends TestCase
         $this->assertSame('genre1', $data['items'][1]['genres'][0]['name']);
     }
 
-    public function testActionIndexWithNotExistGenre(): void
+    public function testWithNotExistGenreParameters(): void
     {
         Database::seeder('music', ['id'], [
             ['url1', Track::PROVIDER_BANDCAMP, 'key1', 'title1', 'image1', Track::TYPE_TRACK, false, time(), time()],
@@ -106,14 +112,16 @@ class TrackControllerTest extends TestCase
             [1, 1],
         ]);
 
-        $data = $this->request('tracks?expand=genres&genre=genre1');
+        $data = $this->request('GEt', '/tracks?expand=genres&genre=genre1');
+        $this->assertSame(200, Yii::$app->response->statusCode);
         $this->assertSame(1, $data['_meta']['totalCount']);
 
-        $data = $this->request('tracks?expand=genres&genre=genre2');
+        $data = $this->request('GET', '/tracks?expand=genres&genre=genre2');
+        $this->assertSame(200, Yii::$app->response->statusCode);
         $this->assertSame(0, $data['_meta']['totalCount']);
     }
 
-    public function testActionIndexWithProviderAndGenre(): void
+    public function testWithProviderAndGenreParameters(): void
     {
         Database::seeder('music', ['id'], [
             ['url1', Track::PROVIDER_BANDCAMP, 'key1', 'title1', 'image1', Track::TYPE_TRACK, false, time() + 2, time()],
@@ -133,19 +141,22 @@ class TrackControllerTest extends TestCase
             [3, 2],
         ]);
 
-        $data = $this->request('tracks?expand=genres&provider=Bandcamp&genre=genre1');
+        $data = $this->request('GET', '/tracks?expand=genres&provider=Bandcamp&genre=genre1');
+        $this->assertSame(200, Yii::$app->response->statusCode);
+
         $this->assertSame(1, $data['_meta']['totalCount']);
         $this->assertSame('title1', $data['items'][0]['title']);
         $this->assertSame('genre1', $data['items'][0]['genres'][0]['name']);
         $this->assertSame('genre2', $data['items'][0]['genres'][1]['name']);
 
-        $data = $this->request('tracks?expand=genres&provider=SoundCloud&genre=genre1');
+        $data = $this->request('GET', '/tracks?expand=genres&provider=SoundCloud&genre=genre1');
+        $this->assertSame(200, Yii::$app->response->statusCode);
         $this->assertSame(1, $data['_meta']['totalCount']);
         $this->assertSame('title2', $data['items'][0]['title']);
         $this->assertSame('genre1', $data['items'][0]['genres'][0]['name']);
     }
 
-    public function testActionIndexWithSearch(): void
+    public function testWithSearchParameters(): void
     {
         Database::seeder('music', ['id'], [
             ['url1', Track::PROVIDER_BANDCAMP, 'key1', 'foo', 'image1', Track::TYPE_TRACK, false, time() + 2, time()],
@@ -153,91 +164,17 @@ class TrackControllerTest extends TestCase
             ['url3', Track::PROVIDER_BANDCAMP, 'key3', 'baz', 'image3', Track::TYPE_TRACK, false, time() + 3, time()],
         ]);
 
-        $data = $this->request('tracks?expand=genres&search=o');
+        $data = $this->request('GET', '/tracks?expand=genres&search=o');
+        $this->assertSame(200, Yii::$app->response->statusCode);
+
         $this->assertSame(1, $data['_meta']['totalCount']);
         $this->assertSame('foo', $data['items'][0]['title']);
 
-        $data = $this->request('tracks?expand=genres&search=ba');
+        $data = $this->request('GET', '/tracks?expand=genres&search=ba');
+        $this->assertSame(200, Yii::$app->response->statusCode);
+
         $this->assertSame(2, $data['_meta']['totalCount']);
         $this->assertSame('bar', $data['items'][0]['title']);
         $this->assertSame('baz', $data['items'][1]['title']);
-    }
-
-    public function testActionView(): void
-    {
-        Database::seeder('music', ['id'], [
-            ['url1', Track::PROVIDER_BANDCAMP, 'key1', 'title1', 'image1', Track::TYPE_TRACK, false, time(), time()],
-        ]);
-
-        $data = $this->request('tracks/'.Yii::$app->hashids->encode(1));
-        $this->assertSame('url1', $data['url']);
-    }
-
-    public function testActionViewNotFound(): void
-    {
-        $this->expectException(NotFoundHttpException::class);
-        $this->request('tracks/'.Yii::$app->hashids->encode(1));
-    }
-
-    public function testActionGenres(): void
-    {
-        Database::seeder('music_genre', ['id'], [
-            ['genre1', 1, time(), time()],
-            ['genre2', 1, time(), time()],
-            ['genre3', 1, time(), time()],
-        ]);
-
-        $data = $this->request('tracks/genres');
-        $expected = ['genre1', 'genre2', 'genre3'];
-        $this->assertSame($expected, $data);
-    }
-
-    public function testFavorites(): void
-    {
-        Database::seeder('music', ['id'], [
-            ['url1', Track::PROVIDER_BANDCAMP, 'key1', 'title1', 'image1', Track::TYPE_TRACK, false, time(), time()],
-            ['url2', Track::PROVIDER_BANDCAMP, 'key2', 'title2', 'image2', Track::TYPE_TRACK, true, time(), time()],
-            ['url3', Track::PROVIDER_BANDCAMP, 'key3', 'title3', 'image3', Track::TYPE_TRACK, false, time(), time()],
-            ['url4', Track::PROVIDER_BANDCAMP, 'key4', 'title4', 'image4', Track::TYPE_TRACK, true, time(), time()],
-            ['url5', Track::PROVIDER_BANDCAMP, 'key5', 'title5', 'image5', Track::TYPE_TRACK, true, time(), time()],
-        ]);
-
-        Database::seeder('music_genre', ['id'], [
-            ['genre1', 2, time(), time()],
-            ['genre2', 2, time(), time()],
-        ]);
-
-        Database::seeder('music_genre_assn', [], [
-            [2, 1],
-            [2, 2],
-            [4, 1],
-            [4, 2],
-        ]);
-
-        $data = $this->request('tracks/favorites?expand=genres');
-        $this->assertSame('title2', $data['items'][0]['title']);
-        $this->assertSame('genre1', $data['items'][0]['genres'][0]['name']);
-        $this->assertSame('genre2', $data['items'][0]['genres'][1]['name']);
-
-        $this->assertSame('title4', $data['items'][1]['title']);
-        $this->assertSame('genre1', $data['items'][1]['genres'][0]['name']);
-        $this->assertSame('genre2', $data['items'][1]['genres'][1]['name']);
-
-        $this->assertSame('title5', $data['items'][2]['title']);
-    }
-
-    public function testActionMinimalGenres(): void
-    {
-        Database::seeder('music_genre', ['id'], [
-            ['genre1', 3, time(), time()],
-            ['genre2', 10, time(), time()],
-            ['genre3', 5, time(), time()],
-            ['genre4', 9, time(), time()],
-            ['genre5', 8, time(), time()],
-        ]);
-
-        $data = $this->request('tracks/minimal-genres?limit=3');
-        $expected = ['genre2', 'genre4', 'genre5'];
-        $this->assertSame($expected, $data);
     }
 }
