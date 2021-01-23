@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace app\controllers\playlist;
 
 use app\controllers\Controller;
-use app\resources\Playlist;
+use app\models\Playlist;
 use Yii;
 use yii\web\NotFoundHttpException;
 

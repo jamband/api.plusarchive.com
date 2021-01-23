@@ -11,9 +11,9 @@
 
 declare(strict_types=1);
 
-namespace app\resources;
+namespace app\models;
 
-use app\queries\StoreQuery;
+use app\queries\LabelQuery;
 use creocoder\taggable\TaggableBehavior;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
@@ -27,15 +27,15 @@ use yii\db\ActiveRecord;
  * @property int $created_at
  * @property int $updated_at
  *
- * @property StoreTag[] $tags
+ * @property LabelTag[] $tags
  */
-class Store extends ActiveRecord
+class Label extends ActiveRecord
 {
-    use ResourceTrait;
+    use ActiveRecordTrait;
 
     public static function tableName(): string
     {
-        return 'store';
+        return 'label';
     }
 
     public function fields(): array
@@ -48,15 +48,22 @@ class Store extends ActiveRecord
         ];
     }
 
-    public static function find(): StoreQuery
+    public function extraFields(): array
     {
-        return new StoreQuery(static::class);
+        return [
+            'tags'
+        ];
+    }
+
+    public static function find(): LabelQuery
+    {
+        return new LabelQuery(static::class);
     }
 
     public function getTags(): ActiveQuery
     {
-        return $this->hasMany(StoreTag::class, ['id' => 'store_tag_id'])
-            ->viaTable('store_tag_assn', ['store_id' => 'id'])
+        return $this->hasMany(LabelTag::class, ['id' => 'label_tag_id'])
+            ->viaTable('label_tag_assn', ['label_id' => 'id'])
             ->orderBy(['name' => SORT_ASC]);
     }
 

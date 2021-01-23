@@ -15,7 +15,7 @@ namespace app\controllers\playlist;
 
 use app\controllers\Controller;
 use yii\data\ActiveDataProvider;
-use app\resources\Playlist;
+use app\models\Playlist;
 
 /**
  * @noinspection PhpUnused

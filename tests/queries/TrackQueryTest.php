@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace app\tests\queries;
 
-use app\resources\Track;
+use app\models\Track;
 use app\tests\Database;
 use app\tests\TestCase;
 

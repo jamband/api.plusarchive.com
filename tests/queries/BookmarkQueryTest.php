@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace app\tests\queries;
 
-use app\resources\Bookmark;
+use app\models\Bookmark;
 use app\tests\Database;
 use app\tests\TestCase;
 

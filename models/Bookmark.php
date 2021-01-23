@@ -11,7 +11,7 @@
 
 declare(strict_types=1);
 
-namespace app\resources;
+namespace app\models;
 
 use app\queries\BookmarkQuery;
 use creocoder\taggable\TaggableBehavior;
@@ -31,7 +31,7 @@ use yii\db\ActiveRecord;
  */
 class Bookmark extends ActiveRecord
 {
-    use ResourceTrait;
+    use ActiveRecordTrait;
 
     public static function tableName(): string
     {

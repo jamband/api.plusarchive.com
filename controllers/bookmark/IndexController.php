@@ -14,8 +14,8 @@ declare(strict_types=1);
 namespace app\controllers\bookmark;
 
 use app\controllers\Controller;
-use app\resources\Bookmark;
-use app\resources\BookmarkTag;
+use app\models\Bookmark;
+use app\models\BookmarkTag;
 use yii\data\ActiveDataProvider;
 
 /**

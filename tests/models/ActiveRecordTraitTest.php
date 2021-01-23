@@ -13,20 +13,20 @@ declare(strict_types=1);
 
 namespace app\tests\resources;
 
-use app\resources\ResourceTrait;
+use app\models\ActiveRecordTrait;
 use app\tests\Database;
 use app\tests\TestCase;
 use yii\db\ActiveRecord;
 
-class ResourceTraitTest extends TestCase
+class ActiveRecordTraitTest extends TestCase
 {
-    private $resource;
+    private $model;
 
     public function setUp(): void
     {
-        $this->resource = new class extends ActiveRecord
+        $this->model = new class extends ActiveRecord
         {
-            use ResourceTrait;
+            use ActiveRecordTrait;
 
             public static function tableName(): string
             {
@@ -57,7 +57,7 @@ class ResourceTraitTest extends TestCase
         ]);
 
         $expected = ['name1', 'name2', 'name3'];
-        $this->assertSame($expected, $this->resource::names());
+        $this->assertSame($expected, $this->model::names());
     }
 
     public function testCountries(): void
@@ -69,7 +69,7 @@ class ResourceTraitTest extends TestCase
         ]);
 
         $expected = ['country1', 'country2', 'country3'];
-        $this->assertSame($expected, $this->resource::countries());
+        $this->assertSame($expected, $this->model::countries());
     }
 
     public function testHasName(): void
@@ -80,10 +80,10 @@ class ResourceTraitTest extends TestCase
             ['name3', 'country3'],
         ]);
 
-        $names = $this->resource::names();
-        $this->assertSame(true, $this->resource::hasName($names[0]));
-        $this->assertSame(true, $this->resource::hasName($names[1]));
-        $this->assertSame(true, $this->resource::hasName($names[2]));
-        $this->assertSame(false, $this->resource::hasName('name4'));
+        $names = $this->model::names();
+        $this->assertSame(true, $this->model::hasName($names[0]));
+        $this->assertSame(true, $this->model::hasName($names[1]));
+        $this->assertSame(true, $this->model::hasName($names[2]));
+        $this->assertSame(false, $this->model::hasName('name4'));
     }
 }

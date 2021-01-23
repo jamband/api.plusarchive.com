@@ -13,33 +13,33 @@ declare(strict_types=1);
 
 namespace app\tests\resources;
 
-use app\queries\BookmarkQuery;
-use app\resources\Bookmark;
+use app\queries\StoreQuery;
+use app\models\Store;
 use app\tests\Database;
 use app\tests\TestCase;
 use creocoder\taggable\TaggableBehavior;
 
-class BookmarkTest extends TestCase
+class StoreTest extends TestCase
 {
     public function setUp(): void
     {
-        Database::createTable('bookmark');
-        Database::createTable('bookmark_tag');
-        Database::createTable('bookmark_tag_assn');
+        Database::createTable('store');
+        Database::createTable('store_tag');
+        Database::createTable('store_tag_assn');
     }
 
     public function testTableName(): void
     {
-        $this->assertSame('bookmark', Bookmark::tableName());
+        $this->assertSame('store', Store::tableName());
     }
 
     public function testFields(): void
     {
-        Database::seeder('bookmark', ['id'], [
+        Database::seeder('store', ['id'], [
             ['name1', 'country1', 'url1', 'link1', time(), time()],
         ]);
 
-        $data = Bookmark::findOne(1)->toArray();
+        $data = Store::findOne(1)->toArray();
         $this->assertSame('name1', $data['name']);
         $this->assertSame('country1', $data['country']);
         $this->assertSame('url1', $data['url']);
@@ -50,38 +50,38 @@ class BookmarkTest extends TestCase
 
     public function testFind(): void
     {
-        $query = Bookmark::find();
-        $this->assertInstanceOf(BookmarkQuery::class, $query);
+        $query = Store::find();
+        $this->assertInstanceOf(StoreQuery::class, $query);
     }
 
     public function testGetTags(): void
     {
-        Database::seeder('bookmark', ['id'], [
+        Database::seeder('store', ['id'], [
             ['name1', 'country1', 'url1', 'link1', time(), time()],
         ]);
 
-        Database::seeder('bookmark_tag', ['id'], [
+        Database::seeder('store_tag', ['id'], [
             ['tag1', 1, time(), time()],
         ]);
 
-        Database::seeder('bookmark_tag_assn', [], [
+        Database::seeder('store_tag_assn', [], [
             [1, 1],
         ]);
 
-        $data = Bookmark::find()->all();
+        $data = Store::find()->all();
         $this->assertSame('tag1', $data[0]->tags[0]->name);
     }
 
     public function testTrait(): void
     {
-        $resource = new Bookmark;
+        $resource = new Store;
         $this->assertTrue($resource->hasMethod('names'));
         $this->assertTrue($resource->hasMethod('countries'));
     }
 
     public function testBehaviors(): void
     {
-        $resource = new Bookmark;
+        $resource = new Store;
         $this->assertArrayHasKey('taggable', $resource->behaviors);
         $this->assertInstanceOf(TaggableBehavior::class, $resource->behaviors['taggable']);
     }

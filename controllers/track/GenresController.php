@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace app\controllers\track;
 
 use app\controllers\Controller;
-use app\resources\MusicGenre;
+use app\models\MusicGenre;
 
 /**
  * @noinspection PhpUnused

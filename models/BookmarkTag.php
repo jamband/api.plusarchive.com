@@ -11,7 +11,7 @@
 
 declare(strict_types=1);
 
-namespace app\resources;
+namespace app\models;
 
 use yii\db\ActiveRecord;
 
@@ -24,7 +24,7 @@ use yii\db\ActiveRecord;
  */
 class BookmarkTag extends ActiveRecord
 {
-    use ResourceTrait;
+    use ActiveRecordTrait;
 
     public static function tableName(): string
     {

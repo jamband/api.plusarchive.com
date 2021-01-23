@@ -13,29 +13,29 @@ declare(strict_types=1);
 
 namespace app\tests\resources;
 
-use app\resources\StoreTag;
+use app\models\LabelTag;
 use app\tests\Database;
 use app\tests\TestCase;
 
-class StoreTagTest extends TestCase
+class LabelTagTest extends TestCase
 {
     public function setUp(): void
     {
-        Database::createTable('store_tag');
+        Database::createTable('label_tag');
     }
 
     public function testTableName(): void
     {
-        $this->assertSame('store_tag', StoreTag::tableName());
+        $this->assertSame('label_tag', LabelTag::tableName());
     }
 
     public function testFields(): void
     {
-        Database::seeder('store_tag', ['id'], [
+        Database::seeder('label_tag', ['id'], [
             ['name1', 1, time(), time()],
         ]);
 
-        $data = StoreTag::findOne(1)->toArray();
+        $data = LabelTag::findOne(1)->toArray();
         $this->assertArrayNotHasKey('id', $data);
         $this->assertSame('name1', $data['name']);
         $this->assertArrayNotHasKey('frequency', $data);
@@ -45,7 +45,7 @@ class StoreTagTest extends TestCase
 
     public function testTrait(): void
     {
-        $tag = new StoreTag;
+        $tag = new LabelTag;
         $this->assertTrue($tag->hasMethod('names'));
         $this->assertTrue($tag->hasMethod('countries'));
     }

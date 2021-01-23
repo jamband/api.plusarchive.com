@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace app\controllers\label;
 
 use app\controllers\Controller;
-use app\resources\LabelTag;
+use app\models\LabelTag;
 
 /**
  * @noinspection PhpUnused

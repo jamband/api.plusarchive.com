@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace app\tests\resources;
 
 use app\queries\PlaylistQuery;
-use app\resources\Playlist;
+use app\models\Playlist;
 use app\tests\Database;
 use app\tests\TestCase;
 

@@ -11,7 +11,7 @@
 
 declare(strict_types=1);
 
-namespace app\resources;
+namespace app\models;
 
 use yii\db\ActiveRecord;
 
@@ -22,13 +22,13 @@ use yii\db\ActiveRecord;
  * @property int $created_at
  * @property int $updated_at
  */
-class MusicGenre extends ActiveRecord
+class LabelTag extends ActiveRecord
 {
-    use ResourceTrait;
+    use ActiveRecordTrait;
 
     public static function tableName(): string
     {
-        return 'music_genre';
+        return 'label_tag';
     }
 
     public function fields(): array
@@ -36,18 +36,5 @@ class MusicGenre extends ActiveRecord
         return [
             'name',
         ];
-    }
-
-    public static function minimal(int $limit): array
-    {
-        $data = static::find()
-            ->select('name')
-            ->orderBy(['frequency' => SORT_DESC])
-            ->limit($limit)
-            ->column();
-
-        sort($data, SORT_STRING);
-
-        return $data;
     }
 }

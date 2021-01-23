@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace app\tests\resources;
 
-use app\resources\Music;
+use app\models\Music;
 use app\tests\TestCase;
 
 class MusicTest extends TestCase

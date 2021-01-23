@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace app\tests\resources;
 
-use app\resources\MusicGenre;
+use app\models\MusicGenre;
 use app\tests\Database;
 use app\tests\TestCase;
 

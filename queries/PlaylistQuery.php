@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace app\queries;
 
-use app\resources\Playlist;
+use app\models\Playlist;
 use yii\db\ActiveQuery;
 
 class PlaylistQuery extends ActiveQuery

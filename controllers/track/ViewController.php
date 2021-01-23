@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace app\controllers\track;
 
 use app\controllers\Controller;
-use app\resources\Track;
+use app\models\Track;
 use Yii;
 use yii\web\NotFoundHttpException;
 

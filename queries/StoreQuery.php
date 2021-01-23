@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace app\queries;
 
-use app\resources\Store;
+use app\models\Store;
 use creocoder\taggable\TaggableQueryBehavior;
 use yii\db\ActiveQuery;
 

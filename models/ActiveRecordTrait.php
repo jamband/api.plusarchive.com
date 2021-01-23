@@ -11,14 +11,14 @@
 
 declare(strict_types=1);
 
-namespace app\resources;
+namespace app\models;
 
 use yii\db\ActiveQuery;
 
 /**
  * @method static|ActiveQuery find()
  */
-trait ResourceTrait
+trait ActiveRecordTrait
 {
     public static function names(): array
     {

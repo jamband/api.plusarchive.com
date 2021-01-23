@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace app\tests\controllers\playlist;
 
-use app\resources\Playlist;
+use app\models\Playlist;
 use app\tests\Database;
 use app\tests\WebTestCase;
 use Yii;

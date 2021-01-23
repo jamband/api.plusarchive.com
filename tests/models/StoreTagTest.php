@@ -13,29 +13,29 @@ declare(strict_types=1);
 
 namespace app\tests\resources;
 
-use app\resources\BookmarkTag;
+use app\models\StoreTag;
 use app\tests\Database;
 use app\tests\TestCase;
 
-class BookmarkTagTest extends TestCase
+class StoreTagTest extends TestCase
 {
     public function setUp(): void
     {
-        Database::createTable('bookmark_tag');
+        Database::createTable('store_tag');
     }
 
     public function testTableName(): void
     {
-        $this->assertSame('bookmark_tag', BookmarkTag::tableName());
+        $this->assertSame('store_tag', StoreTag::tableName());
     }
 
     public function testFields(): void
     {
-        Database::seeder('bookmark_tag', ['id'], [
+        Database::seeder('store_tag', ['id'], [
             ['name1', 1, time(), time()],
         ]);
 
-        $data = BookmarkTag::findOne(1)->toArray();
+        $data = StoreTag::findOne(1)->toArray();
         $this->assertArrayNotHasKey('id', $data);
         $this->assertSame('name1', $data['name']);
         $this->assertArrayNotHasKey('frequency', $data);
@@ -45,7 +45,7 @@ class BookmarkTagTest extends TestCase
 
     public function testTrait(): void
     {
-        $tag = new BookmarkTag;
+        $tag = new StoreTag;
         $this->assertTrue($tag->hasMethod('names'));
         $this->assertTrue($tag->hasMethod('countries'));
     }

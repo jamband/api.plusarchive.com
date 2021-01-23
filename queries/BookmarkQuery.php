@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace app\queries;
 
-use app\resources\Bookmark;
+use app\models\Bookmark;
 use creocoder\taggable\TaggableQueryBehavior;
 use yii\db\ActiveQuery;
 

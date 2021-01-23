@@ -11,7 +11,7 @@
 
 declare(strict_types=1);
 
-namespace app\resources;
+namespace app\models;
 
 use yii\db\ActiveRecord;
 
@@ -22,13 +22,13 @@ use yii\db\ActiveRecord;
  * @property int $created_at
  * @property int $updated_at
  */
-class LabelTag extends ActiveRecord
+class StoreTag extends ActiveRecord
 {
-    use ResourceTrait;
+    use ActiveRecordTrait;
 
     public static function tableName(): string
     {
-        return 'label_tag';
+        return 'store_tag';
     }
 
     public function fields(): array

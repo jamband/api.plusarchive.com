@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace app\tests\resources;
 
 use app\queries\TrackQuery;
-use app\resources\Track;
+use app\models\Track;
 use app\tests\Database;
 use app\tests\TestCase;
 use creocoder\taggable\TaggableBehavior;

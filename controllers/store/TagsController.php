@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace app\controllers\store;
 
 use app\controllers\Controller;
-use app\resources\StoreTag;
+use app\models\StoreTag;
 
 /**
  * @noinspection PhpUnused

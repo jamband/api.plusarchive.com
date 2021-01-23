@@ -14,8 +14,8 @@ declare(strict_types=1);
 namespace app\controllers\label;
 
 use app\controllers\Controller;
-use app\resources\Label;
-use app\resources\LabelTag;
+use app\models\Label;
+use app\models\LabelTag;
 use yii\data\ActiveDataProvider;
 
 /**
