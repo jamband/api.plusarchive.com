@@ -155,26 +155,4 @@ class IndexControllerTest extends WebTestCase
         $this->assertSame('title2', $data['items'][0]['title']);
         $this->assertSame('genre1', $data['items'][0]['genres'][0]['name']);
     }
-
-    public function testWithSearchParameters(): void
-    {
-        Database::seeder('music', ['id'], [
-            ['url1', Track::PROVIDER_BANDCAMP, 'key1', 'foo', 'image1', Track::TYPE_TRACK, false, time() + 2, time()],
-            ['url2', Track::PROVIDER_BANDCAMP, 'key2', 'bar', 'image2', Track::TYPE_TRACK, false, time() + 1, time()],
-            ['url3', Track::PROVIDER_BANDCAMP, 'key3', 'baz', 'image3', Track::TYPE_TRACK, false, time() + 3, time()],
-        ]);
-
-        $data = $this->request('GET', '/tracks?expand=genres&search=o');
-        $this->assertSame(200, Yii::$app->response->statusCode);
-
-        $this->assertSame(1, $data['_meta']['totalCount']);
-        $this->assertSame('foo', $data['items'][0]['title']);
-
-        $data = $this->request('GET', '/tracks?expand=genres&search=ba');
-        $this->assertSame(200, Yii::$app->response->statusCode);
-
-        $this->assertSame(2, $data['_meta']['totalCount']);
-        $this->assertSame('bar', $data['items'][0]['title']);
-        $this->assertSame('baz', $data['items'][1]['title']);
-    }
 }

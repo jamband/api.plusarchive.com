@@ -156,26 +156,4 @@ class IndexControllerTest extends WebTestCase
         $this->assertSame('name2', $data['items'][0]['name']);
         $this->assertSame('tag1', $data['items'][0]['tags'][0]['name']);
     }
-
-    public function testWithSearchParameters(): void
-    {
-        Database::seeder('store', ['id'], [
-            ['foo', 'country1', 'url1', 'link1', time() + 2, time()],
-            ['bar', 'country2', 'url2', 'link2', time() + 1, time()],
-            ['baz', 'country3', 'url3', 'link3', time() + 3, time()],
-        ]);
-
-        $data = $this->request('GET', '/stores?expand=tags&search=o');
-        $this->assertSame(200, Yii::$app->response->statusCode);
-
-        $this->assertSame(1, $data['_meta']['totalCount']);
-        $this->assertSame('foo', $data['items'][0]['name']);
-
-        $data = $this->request('GET', '/stores?expand=tags&search=ba');
-        $this->assertSame(200, Yii::$app->response->statusCode);
-
-        $this->assertSame(2, $data['_meta']['totalCount']);
-        $this->assertSame('bar', $data['items'][0]['name']);
-        $this->assertSame('baz', $data['items'][1]['name']);
-    }
 }

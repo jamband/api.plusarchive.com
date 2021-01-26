@@ -37,10 +37,12 @@ return yii\helpers\ArrayHelper::merge(require __DIR__.'/base.php', [
             'showScriptName' => false,
             'rules' => [
                 'bookmarks/countries' => 'bookmark/countries',
+                'bookmarks/search' => 'bookmark/search',
                 'bookmarks/tags' => 'bookmark/tags',
                 'bookmarks' => 'bookmark/index',
 
                 'labels/countries' => 'label/countries',
+                'labels/search' => 'label/search',
                 'labels/tags' => 'label/tags',
                 'labels' => 'label/index',
 
@@ -48,12 +50,14 @@ return yii\helpers\ArrayHelper::merge(require __DIR__.'/base.php', [
                 'playlists' => 'playlist/index',
 
                 'stores/countries' => 'store/countries',
+                'stores/search' => 'store/search',
                 'stores/tags' => 'store/tags',
                 'stores' => 'store/index',
 
                 'tracks/favorites' => 'track/favorites',
                 'tracks/genres' => 'track/genres',
                 'tracks/minimal-genres' => 'track/minimal-genres',
+                'tracks/search' => 'track/search',
                 'tracks/<id:[\w-]{11}>' => 'track/view',
                 'tracks' => 'track/index',
             ],

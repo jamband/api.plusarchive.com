@@ -11,19 +11,14 @@
 
 declare(strict_types=1);
 
-namespace app\controllers\track;
+namespace app\controllers\label;
 
-use app\models\Track;
+use app\controllers\Controller as BaseController;
 
 /**
  * @noinspection PhpUnused
  */
-class ViewController extends Controller
+class Controller extends BaseController
 {
-    protected array $verbs = ['GET'];
-
-    public function actionIndex(string $id): Track
-    {
-        return $this->findModel($id);
-    }
+    protected const PER_PAGE = 8;
 }
