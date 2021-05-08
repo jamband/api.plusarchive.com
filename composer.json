@@ -2,7 +2,7 @@
   "require": {
     "php": "^7.4",
     "ext-json": "*",
-    "yiisoft/yii2": "2.0.41.1",
+    "yiisoft/yii2": "2.0.42.1",
     "hashids/hashids": "4.1.0",
     "creocoder/yii2-taggable": "2.0.0"
   },
