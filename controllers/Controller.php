@@ -39,7 +39,7 @@ class Controller extends BaseController
             'corsFilter' => [
                 'class' => Cors::class,
                 'cors' => [
-                    'Origin' => [Yii::$app->params['cors-origin']],
+                    'Origin' => Yii::$app->params['cors-origin'],
                     'Access-Control-Request-Method' => ['GET'],
                     'Access-Control-Request-Headers' => ['Content-Type'],
                     'Access-Control-Allow-Credentials' => true,
