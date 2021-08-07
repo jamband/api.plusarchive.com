@@ -19,6 +19,7 @@
     "ezyang/htmlpurifier": "*"
   },
   "scripts": {
+    "serve": "@php yii serve 127.0.0.1:8000",
     "clean": "rm -rf runtime/* vendor"
   }
 }
