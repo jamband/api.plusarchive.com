@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace app\tests\controllers\track;
 
-use app\models\Track;
+use app\models\Music;
 use app\tests\Database;
 use app\tests\WebTestCase;
 use Yii;
@@ -32,9 +32,9 @@ class IndexControllerTest extends WebTestCase
     public function test(): void
     {
         Database::seeder('music', ['id'], [
-            ['url1', Track::PROVIDER_BANDCAMP, 'key1', 'title1', 'image1', Track::TYPE_TRACK, false, time() + 2, time()],
-            ['url2', Track::PROVIDER_BANDCAMP, 'key2', 'title2', 'image2', Track::TYPE_TRACK, false, time() + 3, time()],
-            ['url3', Track::PROVIDER_SOUNDCLOUD, 'key3', 'title3', 'image3', Track::TYPE_PLAYLIST, false, time() + 1, time()],
+            ['url1', Music::PROVIDER_BANDCAMP, 'key1', 'title1', 'image1', Music::TYPE_TRACK, false, time() + 2, time()],
+            ['url2', Music::PROVIDER_BANDCAMP, 'key2', 'title2', 'image2', Music::TYPE_TRACK, false, time() + 3, time()],
+            ['url3', Music::PROVIDER_SOUNDCLOUD, 'key3', 'title3', 'image3', Music::TYPE_PLAYLIST, false, time() + 1, time()],
         ]);
 
         $data = $this->request('GET', '/tracks?expand=genres');
@@ -48,9 +48,9 @@ class IndexControllerTest extends WebTestCase
     public function testWithProviderParameters(): void
     {
         Database::seeder('music', ['id'], [
-            ['url1', Track::PROVIDER_BANDCAMP, 'key1', 'title1', 'image1', Track::TYPE_TRACK, false, time() + 2, time()],
-            ['url2', Track::PROVIDER_SOUNDCLOUD, 'key2', 'title2', 'image2', Track::TYPE_TRACK, false, time() + 1, time()],
-            ['url3', Track::PROVIDER_SOUNDCLOUD, 'key3', 'title3', 'image3', Track::TYPE_TRACK, false, time() + 3, time()],
+            ['url1', Music::PROVIDER_BANDCAMP, 'key1', 'title1', 'image1', Music::TYPE_TRACK, false, time() + 2, time()],
+            ['url2', Music::PROVIDER_SOUNDCLOUD, 'key2', 'title2', 'image2', Music::TYPE_TRACK, false, time() + 1, time()],
+            ['url3', Music::PROVIDER_SOUNDCLOUD, 'key3', 'title3', 'image3', Music::TYPE_TRACK, false, time() + 3, time()],
         ]);
 
         $data = $this->request('GET', '/tracks?expand=genres&provider=Bandcamp');
@@ -70,9 +70,9 @@ class IndexControllerTest extends WebTestCase
     public function testWithGenreParameters(): void
     {
         Database::seeder('music', ['id'], [
-            ['url1', Track::PROVIDER_BANDCAMP, 'key1', 'title1', 'image1', Track::TYPE_TRACK, false, time() + 2, time()],
-            ['url2', Track::PROVIDER_SOUNDCLOUD, 'key2', 'title2', 'image2', Track::TYPE_TRACK, false, time() + 1, time()],
-            ['url3', Track::PROVIDER_SOUNDCLOUD, 'key3', 'title3', 'image3', Track::TYPE_TRACK, false, time() + 3, time()],
+            ['url1', Music::PROVIDER_BANDCAMP, 'key1', 'title1', 'image1', Music::TYPE_TRACK, false, time() + 2, time()],
+            ['url2', Music::PROVIDER_SOUNDCLOUD, 'key2', 'title2', 'image2', Music::TYPE_TRACK, false, time() + 1, time()],
+            ['url3', Music::PROVIDER_SOUNDCLOUD, 'key3', 'title3', 'image3', Music::TYPE_TRACK, false, time() + 3, time()],
         ]);
 
         Database::seeder('music_genre', ['id'], [
@@ -101,7 +101,7 @@ class IndexControllerTest extends WebTestCase
     public function testWithNotExistGenreParameters(): void
     {
         Database::seeder('music', ['id'], [
-            ['url1', Track::PROVIDER_BANDCAMP, 'key1', 'title1', 'image1', Track::TYPE_TRACK, false, time(), time()],
+            ['url1', Music::PROVIDER_BANDCAMP, 'key1', 'title1', 'image1', Music::TYPE_TRACK, false, time(), time()],
         ]);
 
         Database::seeder('music_genre', ['id'], [
@@ -124,9 +124,9 @@ class IndexControllerTest extends WebTestCase
     public function testWithProviderAndGenreParameters(): void
     {
         Database::seeder('music', ['id'], [
-            ['url1', Track::PROVIDER_BANDCAMP, 'key1', 'title1', 'image1', Track::TYPE_TRACK, false, time() + 2, time()],
-            ['url2', Track::PROVIDER_SOUNDCLOUD, 'key2', 'title2', 'image2', Track::TYPE_TRACK, false, time() + 1, time()],
-            ['url3', Track::PROVIDER_SOUNDCLOUD, 'key3', 'title3', 'image3', Track::TYPE_TRACK, false, time() + 3, time()],
+            ['url1', Music::PROVIDER_BANDCAMP, 'key1', 'title1', 'image1', Music::TYPE_TRACK, false, time() + 2, time()],
+            ['url2', Music::PROVIDER_SOUNDCLOUD, 'key2', 'title2', 'image2', Music::TYPE_TRACK, false, time() + 1, time()],
+            ['url3', Music::PROVIDER_SOUNDCLOUD, 'key3', 'title3', 'image3', Music::TYPE_TRACK, false, time() + 3, time()],
         ]);
 
         Database::seeder('music_genre', ['id'], [

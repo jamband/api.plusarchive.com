@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace app\tests\queries;
 
+use app\models\Music;
 use app\models\Playlist;
 use app\tests\Database;
 use app\tests\TestCase;
@@ -27,9 +28,9 @@ class PlaylistQueryTest extends TestCase
     public function testInit(): void
     {
         Database::seeder('music', ['id'], [
-            ['url1', Playlist::PROVIDER_YOUTUBE, 'key1', 'title1', 'image1', Playlist::TYPE_TRACK, false, time(), time()],
-            ['url2', Playlist::PROVIDER_YOUTUBE, 'key2', 'title2', 'image2', Playlist::TYPE_PLAYLIST, false, time(), time()],
-            ['url3', Playlist::PROVIDER_YOUTUBE, 'key3', 'title3', 'image3', Playlist::TYPE_PLAYLIST, false, time(), time()],
+            ['url1', Music::PROVIDER_YOUTUBE, 'key1', 'title1', 'image1', Music::TYPE_TRACK, false, time(), time()],
+            ['url2', Music::PROVIDER_YOUTUBE, 'key2', 'title2', 'image2', Music::TYPE_PLAYLIST, false, time(), time()],
+            ['url3', Music::PROVIDER_YOUTUBE, 'key3', 'title3', 'image3', Music::TYPE_PLAYLIST, false, time(), time()],
         ]);
 
         $data = Playlist::find()->all();

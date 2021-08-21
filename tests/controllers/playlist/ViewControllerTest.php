@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace app\tests\controllers\playlist;
 
-use app\models\Playlist;
+use app\models\Music;
 use app\tests\Database;
 use app\tests\WebTestCase;
 use Yii;
@@ -37,7 +37,7 @@ class ViewControllerTest extends WebTestCase
     public function test(): void
     {
         Database::seeder('music', ['id'], [
-            ['url1', Playlist::PROVIDER_SOUNDCLOUD, 'key1', 'title1', 'image1', Playlist::TYPE_PLAYLIST, false, time(), time()],
+            ['url1', Music::PROVIDER_SOUNDCLOUD, 'key1', 'title1', 'image1', Music::TYPE_PLAYLIST, false, time(), time()],
         ]);
 
         $data = $this->request('GET', '/playlists/'.Yii::$app->hashids->encode(1));

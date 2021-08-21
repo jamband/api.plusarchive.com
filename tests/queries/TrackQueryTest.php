@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace app\tests\queries;
 
+use app\models\Music;
 use app\models\Track;
 use app\tests\Database;
 use app\tests\TestCase;
@@ -29,9 +30,9 @@ class TrackQueryTest extends TestCase
     public function testInit(): void
     {
         Database::seeder('music', ['id'], [
-            ['url1', Track::PROVIDER_YOUTUBE, 'key1', 'title1', 'image1', Track::TYPE_TRACK, false, time(), time()],
-            ['url2', Track::PROVIDER_YOUTUBE, 'key2', 'title2', 'image2', Track::TYPE_TRACK, false, time(), time()],
-            ['url3', Track::PROVIDER_YOUTUBE, 'key3', 'title3', 'image3', Track::TYPE_PLAYLIST, false, time(), time()],
+            ['url1', Music::PROVIDER_YOUTUBE, 'key1', 'title1', 'image1', Music::TYPE_TRACK, false, time(), time()],
+            ['url2', Music::PROVIDER_YOUTUBE, 'key2', 'title2', 'image2', Music::TYPE_TRACK, false, time(), time()],
+            ['url3', Music::PROVIDER_YOUTUBE, 'key3', 'title3', 'image3', Music::TYPE_PLAYLIST, false, time(), time()],
         ]);
 
         Database::seeder('music_genre', ['id'], [
@@ -51,9 +52,9 @@ class TrackQueryTest extends TestCase
     public function testBehaviors(): void
     {
         Database::seeder('music', ['id'], [
-            ['url1', Track::PROVIDER_BANDCAMP, 'key1', 'title1', 'image1', Track::TYPE_TRACK, false, time(), time()],
-            ['url2', Track::PROVIDER_BANDCAMP, 'key2', 'title2', 'image2', Track::TYPE_TRACK, false, time(), time()],
-            ['url3', Track::PROVIDER_BANDCAMP, 'key3', 'title3', 'image3', Track::TYPE_TRACK, false, time(), time()],
+            ['url1', Music::PROVIDER_BANDCAMP, 'key1', 'title1', 'image1', Music::TYPE_TRACK, false, time(), time()],
+            ['url2', Music::PROVIDER_BANDCAMP, 'key2', 'title2', 'image2', Music::TYPE_TRACK, false, time(), time()],
+            ['url3', Music::PROVIDER_BANDCAMP, 'key3', 'title3', 'image3', Music::TYPE_TRACK, false, time(), time()],
         ]);
 
         Database::seeder('music_genre', ['id'], [
@@ -74,9 +75,9 @@ class TrackQueryTest extends TestCase
     public function testProvider(): void
     {
         Database::seeder('music', ['id'], [
-            ['url1', Track::PROVIDER_BANDCAMP, 'key1', 'title1', 'image1', Track::TYPE_TRACK, false, time(), time()],
-            ['url2', Track::PROVIDER_BANDCAMP, 'key2', 'title2', 'image2', Track::TYPE_TRACK, false, time(), time()],
-            ['url3', Track::PROVIDER_SOUNDCLOUD, 'key3', 'title3', 'image3', Track::TYPE_TRACK, false, time(), time()],
+            ['url1', Music::PROVIDER_BANDCAMP, 'key1', 'title1', 'image1', Music::TYPE_TRACK, false, time(), time()],
+            ['url2', Music::PROVIDER_BANDCAMP, 'key2', 'title2', 'image2', Music::TYPE_TRACK, false, time(), time()],
+            ['url3', Music::PROVIDER_SOUNDCLOUD, 'key3', 'title3', 'image3', Music::TYPE_TRACK, false, time(), time()],
         ]);
 
         $data = Track::find()->provider('Bandcamp')->all();
@@ -92,10 +93,10 @@ class TrackQueryTest extends TestCase
     public function testSearchInTitleOrder(): void
     {
         Database::seeder('music', ['id'], [
-            ['url1', Track::PROVIDER_BANDCAMP, 'key1', 'title3', 'image1', Track::TYPE_TRACK, false, time(), time()],
-            ['url2', Track::PROVIDER_BANDCAMP, 'key2', 'title1', 'image2', Track::TYPE_TRACK, false, time(), time()],
-            ['url3', Track::PROVIDER_SOUNDCLOUD, 'key3', 'title2', 'image3', Track::TYPE_TRACK, false, time(), time()],
-            ['url3', Track::PROVIDER_SOUNDCLOUD, 'key3', 'foo', 'image3', Track::TYPE_TRACK, false, time(), time()],
+            ['url1', Music::PROVIDER_BANDCAMP, 'key1', 'title3', 'image1', Music::TYPE_TRACK, false, time(), time()],
+            ['url2', Music::PROVIDER_BANDCAMP, 'key2', 'title1', 'image2', Music::TYPE_TRACK, false, time(), time()],
+            ['url3', Music::PROVIDER_SOUNDCLOUD, 'key3', 'title2', 'image3', Music::TYPE_TRACK, false, time(), time()],
+            ['url3', Music::PROVIDER_SOUNDCLOUD, 'key3', 'foo', 'image3', Music::TYPE_TRACK, false, time(), time()],
         ]);
 
         $data = Track::find()->searchInTitleOrder('title')->all();
@@ -108,11 +109,11 @@ class TrackQueryTest extends TestCase
     public function testFavoritesLatest(): void
     {
         Database::seeder('music', ['id'], [
-            ['url1', Track::PROVIDER_BANDCAMP, 'key1', 'title1', 'image1', Track::TYPE_TRACK, true, time() + 3, time()],
-            ['url2', Track::PROVIDER_BANDCAMP, 'key2', 'title2', 'image2', Track::TYPE_TRACK, false, time(), time()],
-            ['url3', Track::PROVIDER_BANDCAMP, 'key3', 'title3', 'image3', Track::TYPE_TRACK, true, time() + 5, time()],
-            ['url4', Track::PROVIDER_BANDCAMP, 'key4', 'title4', 'image4', Track::TYPE_TRACK, false, time(), time()],
-            ['url5', Track::PROVIDER_BANDCAMP, 'key5', 'title5', 'image5', Track::TYPE_TRACK, true, time() + 1, time()],
+            ['url1', Music::PROVIDER_BANDCAMP, 'key1', 'title1', 'image1', Music::TYPE_TRACK, true, time() + 3, time()],
+            ['url2', Music::PROVIDER_BANDCAMP, 'key2', 'title2', 'image2', Music::TYPE_TRACK, false, time(), time()],
+            ['url3', Music::PROVIDER_BANDCAMP, 'key3', 'title3', 'image3', Music::TYPE_TRACK, true, time() + 5, time()],
+            ['url4', Music::PROVIDER_BANDCAMP, 'key4', 'title4', 'image4', Music::TYPE_TRACK, false, time(), time()],
+            ['url5', Music::PROVIDER_BANDCAMP, 'key5', 'title5', 'image5', Music::TYPE_TRACK, true, time() + 1, time()],
         ]);
 
         $data = Track::find()->favoritesInLatestOrder()->all();

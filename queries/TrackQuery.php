@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace app\queries;
 
-use app\models\Track;
+use app\models\Music;
 use creocoder\taggable\TaggableQueryBehavior;
 use yii\db\ActiveQuery;
 
@@ -29,7 +29,7 @@ class TrackQuery extends ActiveQuery
         parent::init();
 
         $this->with(['genres'])
-            ->where(['type' => Track::TYPE_TRACK]);
+            ->where(['type' => Music::TYPE_TRACK]);
     }
 
     public function behaviors(): array
@@ -41,7 +41,7 @@ class TrackQuery extends ActiveQuery
 
     public function provider(?string $provider): TrackQuery
     {
-        $provider = array_search($provider, Track::PROVIDERS, true);
+        $provider = array_search($provider, Music::PROVIDERS, true);
 
         if (false !== $provider) {
             return $this->andWhere(['provider' => $provider]);

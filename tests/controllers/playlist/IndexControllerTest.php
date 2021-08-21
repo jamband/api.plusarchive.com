@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace app\tests\controllers\playlist;
 
-use app\models\Playlist;
+use app\models\Music;
 use app\tests\Database;
 use app\tests\WebTestCase;
 use Yii;
@@ -30,9 +30,9 @@ class IndexControllerTest extends WebTestCase
     public function test(): void
     {
         Database::seeder('music', ['id'], [
-            ['url1', Playlist::PROVIDER_SOUNDCLOUD, 'key1', 'title1', 'image1', Playlist::TYPE_PLAYLIST, false, time() + 2, time()],
-            ['url2', Playlist::PROVIDER_SOUNDCLOUD, 'key2', 'title2', 'image2', Playlist::TYPE_PLAYLIST, false, time() + 3, time()],
-            ['url3', Playlist::PROVIDER_YOUTUBE, 'key3', 'title3', 'image3', Playlist::TYPE_TRACK, false, time() + 1, time()],
+            ['url1', Music::PROVIDER_SOUNDCLOUD, 'key1', 'title1', 'image1', Music::TYPE_PLAYLIST, false, time() + 2, time()],
+            ['url2', Music::PROVIDER_SOUNDCLOUD, 'key2', 'title2', 'image2', Music::TYPE_PLAYLIST, false, time() + 3, time()],
+            ['url3', Music::PROVIDER_YOUTUBE, 'key3', 'title3', 'image3', Music::TYPE_TRACK, false, time() + 1, time()],
         ]);
 
         $data = $this->request('GET', '/playlists');

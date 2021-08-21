@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace app\tests\models;
 
+use app\models\Music;
 use app\models\Track;
 use app\queries\TrackQuery;
 use app\tests\Database;
@@ -31,7 +32,7 @@ class TrackTest extends TestCase
     public function testFields(): void
     {
         Database::seeder('music', ['id'], [
-            ['url1', Track::PROVIDER_BANDCAMP, 'key1', 'title1', 'image1', Track::TYPE_TRACK, false, time(), time()],
+            ['url1', Music::PROVIDER_BANDCAMP, 'key1', 'title1', 'image1', Music::TYPE_TRACK, false, time(), time()],
         ]);
 
         $data = Track::findOne(1)->toArray();
@@ -56,7 +57,7 @@ class TrackTest extends TestCase
     public function testGetGenres(): void
     {
         Database::seeder('music', ['id'], [
-            ['url1', Track::PROVIDER_BANDCAMP, 'key1', 'title1', 'image1', Track::TYPE_TRACK, false, time(), time()],
+            ['url1', Music::PROVIDER_BANDCAMP, 'key1', 'title1', 'image1', Music::TYPE_TRACK, false, time(), time()],
         ]);
 
         Database::seeder('music_genre', ['id'], [

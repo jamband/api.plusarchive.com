@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace app\tests\controllers\track;
 
-use app\models\Track;
+use app\models\Music;
 use app\tests\Database;
 use app\tests\WebTestCase;
 use Yii;
@@ -39,9 +39,9 @@ class SearchControllerTest extends WebTestCase
     public function test(): void
     {
         Database::seeder('music', ['id'], [
-            ['url1', Track::PROVIDER_BANDCAMP, 'key1', 'foo', 'image1', Track::TYPE_TRACK, false, time() + 2, time()],
-            ['url2', Track::PROVIDER_BANDCAMP, 'key2', 'bar', 'image2', Track::TYPE_TRACK, false, time() + 1, time()],
-            ['url3', Track::PROVIDER_BANDCAMP, 'key3', 'baz', 'image3', Track::TYPE_TRACK, false, time() + 3, time()],
+            ['url1', Music::PROVIDER_BANDCAMP, 'key1', 'foo', 'image1', Music::TYPE_TRACK, false, time() + 2, time()],
+            ['url2', Music::PROVIDER_BANDCAMP, 'key2', 'bar', 'image2', Music::TYPE_TRACK, false, time() + 1, time()],
+            ['url3', Music::PROVIDER_BANDCAMP, 'key3', 'baz', 'image3', Music::TYPE_TRACK, false, time() + 3, time()],
         ]);
 
         $data = $this->request('GET', '/tracks/search?expand=genres&q=o');

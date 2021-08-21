@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace app\tests\controllers\track;
 
-use app\models\Track;
+use app\models\Music;
 use app\tests\Database;
 use app\tests\WebTestCase;
 use Yii;
@@ -32,11 +32,11 @@ class FavoritesControllerTest extends WebTestCase
     public function test(): void
     {
         Database::seeder('music', ['id'], [
-            ['url1', Track::PROVIDER_BANDCAMP, 'key1', 'title1', 'image1', Track::TYPE_TRACK, false, time(), time()],
-            ['url2', Track::PROVIDER_BANDCAMP, 'key2', 'title2', 'image2', Track::TYPE_TRACK, true, time(), time()],
-            ['url3', Track::PROVIDER_BANDCAMP, 'key3', 'title3', 'image3', Track::TYPE_TRACK, false, time(), time()],
-            ['url4', Track::PROVIDER_BANDCAMP, 'key4', 'title4', 'image4', Track::TYPE_TRACK, true, time(), time()],
-            ['url5', Track::PROVIDER_BANDCAMP, 'key5', 'title5', 'image5', Track::TYPE_TRACK, true, time(), time()],
+            ['url1', Music::PROVIDER_BANDCAMP, 'key1', 'title1', 'image1', Music::TYPE_TRACK, false, time(), time()],
+            ['url2', Music::PROVIDER_BANDCAMP, 'key2', 'title2', 'image2', Music::TYPE_TRACK, true, time(), time()],
+            ['url3', Music::PROVIDER_BANDCAMP, 'key3', 'title3', 'image3', Music::TYPE_TRACK, false, time(), time()],
+            ['url4', Music::PROVIDER_BANDCAMP, 'key4', 'title4', 'image4', Music::TYPE_TRACK, true, time(), time()],
+            ['url5', Music::PROVIDER_BANDCAMP, 'key5', 'title5', 'image5', Music::TYPE_TRACK, true, time(), time()],
         ]);
 
         Database::seeder('music_genre', ['id'], [

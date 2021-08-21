@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace app\queries;
 
-use app\models\Playlist;
+use app\models\Music;
 use yii\db\ActiveQuery;
 
 class PlaylistQuery extends ActiveQuery
@@ -24,6 +24,6 @@ class PlaylistQuery extends ActiveQuery
     {
         parent::init();
 
-        $this->where(['type' => Playlist::TYPE_PLAYLIST]);
+        $this->where(['type' => Music::TYPE_PLAYLIST]);
     }
 }

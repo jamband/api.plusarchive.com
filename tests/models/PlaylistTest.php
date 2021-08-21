@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace app\tests\models;
 
+use app\models\Music;
 use app\models\Playlist;
 use app\queries\PlaylistQuery;
 use app\tests\Database;
@@ -33,7 +34,7 @@ class PlaylistTest extends TestCase
     public function testFields(): void
     {
         Database::seeder('music', ['id'], [
-            ['url1', Playlist::PROVIDER_SOUNDCLOUD, 'key1', 'title1', 'image1', Playlist::TYPE_PLAYLIST, false, time(), time()],
+            ['url1', Music::PROVIDER_SOUNDCLOUD, 'key1', 'title1', 'image1', Music::TYPE_PLAYLIST, false, time(), time()],
         ]);
 
         $data = Playlist::findOne(1)->toArray();
