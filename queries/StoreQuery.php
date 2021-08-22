@@ -38,7 +38,11 @@ class StoreQuery extends ActiveQuery
         ];
     }
 
-    public function country(?string $country): StoreQuery
+    /**
+     * @param string|null $country
+     * @return StoreQuery|ActiveQuery
+     */
+    public function country(?string $country)
     {
         if (in_array($country, Store::countries(), true)) {
             return $this->andWhere(['country' => $country]);

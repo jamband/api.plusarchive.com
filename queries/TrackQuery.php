@@ -39,7 +39,11 @@ class TrackQuery extends ActiveQuery
         ];
     }
 
-    public function provider(?string $provider): TrackQuery
+    /**
+     * @param string|null $provider
+     * @return TrackQuery|ActiveQuery
+     */
+    public function provider(?string $provider)
     {
         $provider = array_search($provider, Music::PROVIDERS, true);
 
@@ -56,7 +60,7 @@ class TrackQuery extends ActiveQuery
             ->inTitleOrder();
     }
 
-    public function favoritesInLatestOrder(): TrackQuery
+    public function favoritesInLatestOrder(): ActiveQuery
     {
         return $this->favorites()->latest();
     }

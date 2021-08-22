@@ -38,7 +38,11 @@ class LabelQuery extends ActiveQuery
         ];
     }
 
-    public function country(?string $country): LabelQuery
+    /**
+     * @param string|null $country
+     * @return LabelQuery|ActiveQuery
+     */
+    public function country(?string $country)
     {
         if (in_array($country, Label::countries(), true)) {
             return $this->andWhere(['country' => $country]);

@@ -38,7 +38,11 @@ class BookmarkQuery extends ActiveQuery
         ];
     }
 
-    public function country(?string $country): BookmarkQuery
+    /**
+     * @param string|null $country
+     * @return BookmarkQuery|ActiveQuery
+     */
+    public function country(?string $country)
     {
         if (in_array($country, Bookmark::countries(), true)) {
             return $this->andWhere(['country' => $country]);
