@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace app\tests;
 
 use Yii;
+use yii\db\Connection;
 
 class Database
 {
@@ -107,19 +108,31 @@ class Database
         ],
     ];
 
-    public static function seeder(string $table, array $exceptColumns, array $rows): void
+    private Connection $db;
+
+    public function __construct()
     {
-        $columns = Yii::$app->db->getTableSchema($table)->getColumnNames();
+        Yii::$app->set('db', [
+            'class' => Connection::class,
+            'dsn' => 'sqlite::memory:',
+        ]);
+
+        $this->db = Yii::$app->db;
+    }
+
+    public function seeder(string $table, array $exceptColumns, array $rows): void
+    {
+        $columns = $this->db->getTableSchema($table)->getColumnNames();
         $columns = array_values(array_diff($columns, $exceptColumns));
 
-        Yii::$app->db->createCommand()
+        $this->db->createCommand()
             ->batchInsert($table, $columns, $rows)
             ->execute();
     }
 
-    public static function createTable(string $table): void
+    public function createTable(string $table): void
     {
-        Yii::$app->db->createCommand()
+        $this->db->createCommand()
             ->createTable($table, static::SCHEMA[$table])
             ->execute();
     }

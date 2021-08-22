@@ -20,6 +20,10 @@
   },
   "scripts": {
     "serve": "@php yii serve 127.0.0.1:8000",
+    "test": ["@test:console", "@test:feature", "@test:unit"],
+    "test:console": "phpunit --bootstrap tests/console/bootstrap.php --testsuite console",
+    "test:feature": "phpunit --bootstrap tests/feature/bootstrap.php --testsuite feature",
+    "test:unit": "phpunit --bootstrap tests/unit/bootstrap.php --testsuite unit",
     "clean": "rm -rf runtime/* vendor"
   }
 }
