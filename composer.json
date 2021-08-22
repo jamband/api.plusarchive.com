@@ -18,6 +18,11 @@
     "cebe/markdown": "*",
     "ezyang/htmlpurifier": "*"
   },
+  "autoload-dev": {
+    "psr-4": {
+      "app\\tests\\": "tests//"
+    }
+  },
   "scripts": {
     "serve": "@php yii serve 127.0.0.1:8000",
     "test": ["@test:console", "@test:feature", "@test:unit"],
