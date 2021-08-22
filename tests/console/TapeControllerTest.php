@@ -15,6 +15,7 @@ namespace app\tests\console;
 
 use app\models\Music;
 use app\tests\Database;
+use DateTime;
 use PHPUnit\Framework\TestCase;
 use Yii;
 use yii\helpers\FileHelper;
@@ -53,9 +54,9 @@ class TapeControllerTest extends TestCase
         $this->assertCount(5, get_object_vars($tape));
         $this->assertSame(1, $tape->id);
         $this->assertSame('Test Tape 1', $tape->title);
-        // 今日の日付になるので、テスト側もそれに対応する
-//        $this->assertSame('/2021/08/test-tape-1', $tape->path);
-//        $this->assertSame('Aug 21, 2021', $tape->date);
+        $date = new DateTime;
+        $this->assertSame('/'.$date->format('Y').'/'.$date->format('m').'/test-tape-1', $tape->path);
+        $this->assertSame($date->format('M d, Y'), $tape->date);
         $this->assertCount(2, $tape->items);
 
         $item1 = $tape->items[0];
