@@ -29,7 +29,7 @@ class TapeControllerTest extends TestCase
         $this->db->createTable('music_genre');
         $this->db->createTable('music_genre_assn');
 
-        parent::setup();
+        parent::setUp();
     }
 
     protected function tearDown(): void

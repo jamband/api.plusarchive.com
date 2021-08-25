@@ -24,7 +24,7 @@ class CountriesControllerTest extends TestCase
         $this->db = new Database;
         $this->db->createTable('bookmark');
 
-        parent::setup();
+        parent::setUp();
     }
 
     public function test(): void
