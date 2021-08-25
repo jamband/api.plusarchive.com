@@ -36,7 +36,7 @@ class TapeControllerTest extends TestCase
     {
         FileHelper::removeDirectory(Yii::getAlias('@runtime/tape'));
 
-        parent::setUp();
+        parent::tearDown();
     }
 
     public function testFavorites(): void
