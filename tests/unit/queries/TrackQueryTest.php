@@ -16,18 +16,18 @@ namespace app\tests\unit\queries;
 use app\models\Music;
 use app\models\Track;
 use app\tests\Database;
-use PHPUnit\Framework\TestCase;
+use app\tests\TestCase;
 
 class TrackQueryTest extends TestCase
 {
-    private Database $db;
-
     public function setUp(): void
     {
         $this->db = new Database;
         $this->db->createTable('music');
         $this->db->createTable('music_genre');
         $this->db->createTable('music_genre_assn');
+
+        parent::setUp();
     }
 
     public function testInit(): void

@@ -18,8 +18,6 @@ use app\tests\feature\TestCase;
 
 class TagsControllerTest extends TestCase
 {
-    private Database $db;
-
     protected function setUp(): void
     {
         $this->db = new Database;

@@ -21,8 +21,6 @@ use yii\web\NotFoundHttpException;
 
 class ViewControllerTest extends TestCase
 {
-    private Database $db;
-
     protected function setUp(): void
     {
         $this->db = new Database;

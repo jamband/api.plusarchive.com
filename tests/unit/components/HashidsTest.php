@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace app\tests\unit\components;
 
-use PHPUnit\Framework\TestCase;
+use app\tests\TestCase;
 use Yii;
 
 class HashidsTest extends TestCase

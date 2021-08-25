@@ -15,16 +15,16 @@ namespace app\tests\unit\models;
 
 use app\models\BookmarkTag;
 use app\tests\Database;
-use PHPUnit\Framework\TestCase;
+use app\tests\TestCase;
 
 class BookmarkTagTest extends TestCase
 {
-    private Database $db;
-
     public function setUp(): void
     {
         $this->db = new Database;
         $this->db->createTable('bookmark_tag');
+
+        parent::setUp();
     }
 
     public function testTableName(): void

@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace app\tests\unit\models;
 
 use app\models\Music;
-use PHPUnit\Framework\TestCase;
+use app\tests\TestCase;
 
 class MusicTest extends TestCase
 {

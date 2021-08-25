@@ -117,7 +117,7 @@ class Database
             'dsn' => 'sqlite::memory:',
         ]);
 
-        $this->db = Yii::$app->db;
+        $this->db = Yii::$app->getDb();
     }
 
     public function seeder(string $table, array $exceptColumns, array $rows): void

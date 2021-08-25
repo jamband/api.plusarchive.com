@@ -16,19 +16,19 @@ namespace app\tests\unit\models;
 use app\models\Store;
 use app\queries\StoreQuery;
 use app\tests\Database;
+use app\tests\TestCase;
 use creocoder\taggable\TaggableBehavior;
-use PHPUnit\Framework\TestCase;
 
 class StoreTest extends TestCase
 {
-    private Database $db;
-
     public function setUp(): void
     {
         $this->db = new Database;
         $this->db->createTable('store');
         $this->db->createTable('store_tag');
         $this->db->createTable('store_tag_assn');
+
+        parent::setUp();
     }
 
     public function testTableName(): void

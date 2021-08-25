@@ -17,16 +17,16 @@ use app\models\Music;
 use app\models\Playlist;
 use app\queries\PlaylistQuery;
 use app\tests\Database;
-use PHPUnit\Framework\TestCase;
+use app\tests\TestCase;
 
 class PlaylistTest extends TestCase
 {
-    private Database $db;
-
     public function setUp(): void
     {
         $this->db = new Database;
         $this->db->createTable('music');
+
+        parent::setUp();
     }
 
     public function testTableName(): void

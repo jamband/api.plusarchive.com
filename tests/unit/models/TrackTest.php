@@ -17,19 +17,19 @@ use app\models\Music;
 use app\models\Track;
 use app\queries\TrackQuery;
 use app\tests\Database;
+use app\tests\TestCase;
 use creocoder\taggable\TaggableBehavior;
-use PHPUnit\Framework\TestCase;
 
 class TrackTest extends TestCase
 {
-    private Database $db;
-
     public function setUp(): void
     {
         $this->db = new Database;
         $this->db->createTable('music');
         $this->db->createTable('music_genre');
         $this->db->createTable('music_genre_assn');
+
+        parent::setUp();
     }
 
     public function testFields(): void

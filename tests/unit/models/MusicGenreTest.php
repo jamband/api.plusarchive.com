@@ -15,16 +15,16 @@ namespace app\tests\unit\models;
 
 use app\models\MusicGenre;
 use app\tests\Database;
-use PHPUnit\Framework\TestCase;
+use app\tests\TestCase;
 
 class MusicGenreTest extends TestCase
 {
-    private Database $db;
-
     public function setUp(): void
     {
         $this->db = new Database;
         $this->db->createTable('music_genre');
+
+        parent::setUp();
     }
 
     public function testTableName(): void

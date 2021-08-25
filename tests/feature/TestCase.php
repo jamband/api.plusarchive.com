@@ -7,16 +7,20 @@ namespace app\tests\feature;
 use Yii;
 use yii\web\Response;
 
-class TestCase extends \PHPUnit\Framework\TestCase
+class TestCase extends \app\tests\TestCase
 {
     protected function setUp(): void
     {
         Yii::$app->set('response', new Response);
+
+        parent::setUp();
     }
 
     protected function tearDown(): void
     {
         unset($_SERVER['REQUEST_METHOD']);
+
+        parent::tearDown();
     }
 
     public function request(string $method, string $url, array $params = [])

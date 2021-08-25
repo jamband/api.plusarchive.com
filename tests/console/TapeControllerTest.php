@@ -15,26 +15,28 @@ namespace app\tests\console;
 
 use app\models\Music;
 use app\tests\Database;
+use app\tests\TestCase;
 use DateTime;
-use PHPUnit\Framework\TestCase;
 use Yii;
 use yii\helpers\FileHelper;
 
 class TapeControllerTest extends TestCase
 {
-    private Database $db;
-
     protected function setUp(): void
     {
         $this->db = new Database;
         $this->db->createTable('music');
         $this->db->createTable('music_genre');
         $this->db->createTable('music_genre_assn');
+
+        parent::setup();
     }
 
     protected function tearDown(): void
     {
         FileHelper::removeDirectory(Yii::getAlias('@runtime/tape'));
+
+        parent::setUp();
     }
 
     public function testFavorites(): void

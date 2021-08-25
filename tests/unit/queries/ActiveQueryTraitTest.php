@@ -15,14 +15,12 @@ namespace app\tests\unit\queries;
 
 use app\queries\ActiveQueryTrait;
 use app\tests\Database;
-use PHPUnit\Framework\TestCase;
+use app\tests\TestCase;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 
 class ActiveQueryTraitTest extends TestCase
 {
-    private Database $db;
-
     public function setUp(): void
     {
         $this->db = new class extends Database
@@ -38,6 +36,8 @@ class ActiveQueryTraitTest extends TestCase
         };
 
         $this->db->createTable('resource');
+
+        parent::setUp();
     }
 
     public function testLatest(): void

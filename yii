@@ -12,16 +12,25 @@
 
 declare(strict_types=1);
 
-require __DIR__.'/vendor/autoload.php';
+use Dotenv\Dotenv;
+use yii\console\Application;
 
-if (php_uname('n') !== 'api.plusarchive.com') {
+$isLocal = php_uname('n') !== 'api.plusarchive.com';
+
+if ($isLocal) {
     defined('YII_DEBUG') or define('YII_DEBUG', true);
     defined('YII_ENV') or define('YII_ENV', 'dev');
+}
 
-    $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+$basePath = __DIR__;
+require $basePath.'/vendor/autoload.php';
+require $basePath.'/vendor/yiisoft/yii2/Yii.php';
+
+if ($isLocal) {
+    $dotenv = Dotenv::createImmutable(__DIR__);
     $dotenv->load();
 }
 
-require __DIR__.'/vendor/yiisoft/yii2/Yii.php';
-
-exit((new yii\console\Application(require __DIR__.'/config/console.php'))->run());
+$config = require $basePath.'/config/console.php';
+$application = new Application($config);
+exit($application->run());

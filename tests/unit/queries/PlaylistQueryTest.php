@@ -16,16 +16,16 @@ namespace app\tests\unit\queries;
 use app\models\Music;
 use app\models\Playlist;
 use app\tests\Database;
-use PHPUnit\Framework\TestCase;
+use app\tests\TestCase;
 
 class PlaylistQueryTest extends TestCase
 {
-    private Database $db;
-
     public function setUp(): void
     {
         $this->db = new Database;
         $this->db->createTable('music');
+
+        parent::setUp();
     }
 
     public function testInit(): void

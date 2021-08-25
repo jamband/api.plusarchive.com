@@ -17,9 +17,7 @@
             <directory>./tests/feature</directory>
         </testsuite>
         <testsuite name="unit">
-            <directory>./tests/unit/components</directory>
-            <directory>./tests/unit/models</directory>
-            <directory>./tests/unit/queries</directory>
+            <directory>./tests/unit</directory>
         </testsuite>
     </testsuites>
 </phpunit>

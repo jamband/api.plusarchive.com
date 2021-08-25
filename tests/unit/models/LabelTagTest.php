@@ -15,16 +15,16 @@ namespace app\tests\unit\models;
 
 use app\models\LabelTag;
 use app\tests\Database;
-use PHPUnit\Framework\TestCase;
+use app\tests\TestCase;
 
 class LabelTagTest extends TestCase
 {
-    private Database $db;
-
     protected function setUp(): void
     {
         $this->db = new Database;
         $this->db->createTable('label_tag');
+
+        parent::setUp();
     }
 
     public function testTableName(): void

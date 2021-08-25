@@ -15,13 +15,12 @@ namespace app\tests\unit\models;
 
 use app\models\ActiveRecordTrait;
 use app\tests\Database;
-use PHPUnit\Framework\TestCase;
+use app\tests\TestCase;
 use yii\db\ActiveRecord;
 
 class ActiveRecordTraitTest extends TestCase
 {
     private $model;
-    private Database $db;
 
     public function setUp(): void
     {
@@ -46,6 +45,8 @@ class ActiveRecordTraitTest extends TestCase
         };
 
         $this->db->createTable('foo');
+
+        parent::setUp();
     }
 
     public function testNames(): void

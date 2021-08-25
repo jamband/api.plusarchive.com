@@ -16,19 +16,19 @@ namespace app\tests\unit\models;
 use app\models\Bookmark;
 use app\queries\BookmarkQuery;
 use app\tests\Database;
+use app\tests\TestCase;
 use creocoder\taggable\TaggableBehavior;
-use PHPUnit\Framework\TestCase;
 
 class BookmarkTest extends TestCase
 {
-    private Database $db;
-
     public function setUp(): void
     {
         $this->db = new Database;
         $this->db->createTable('bookmark');
         $this->db->createTable('bookmark_tag');
         $this->db->createTable('bookmark_tag_assn');
+
+        parent::setUp();
     }
 
     public function testTableName(): void

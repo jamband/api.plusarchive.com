@@ -16,19 +16,19 @@ namespace app\tests\unit\models;
 use app\models\Label;
 use app\queries\LabelQuery;
 use app\tests\Database;
+use app\tests\TestCase;
 use creocoder\taggable\TaggableBehavior;
-use PHPUnit\Framework\TestCase;
 
 class LabelTest extends TestCase
 {
-    private Database $db;
-
     public function setUp(): void
     {
         $this->db = new Database;
         $this->db->createTable('label');
         $this->db->createTable('label_tag');
         $this->db->createTable('label_tag_assn');
+
+        parent::setUp();
     }
 
     public function testTableName(): void

@@ -19,8 +19,6 @@ use Yii;
 
 class CountriesControllerTest extends TestCase
 {
-    private Database $db;
-
     protected function setUp(): void
     {
         $this->db = new Database;

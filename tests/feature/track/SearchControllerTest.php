@@ -21,8 +21,6 @@ use yii\web\BadRequestHttpException;
 
 class SearchControllerTest extends TestCase
 {
-    private Database $db;
-
     protected function setUp(): void
     {
         $this->db = new Database;
