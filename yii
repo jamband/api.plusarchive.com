@@ -22,15 +22,14 @@ if ($isLocal) {
     defined('YII_ENV') or define('YII_ENV', 'dev');
 }
 
-$basePath = __DIR__;
-require $basePath.'/vendor/autoload.php';
-require $basePath.'/vendor/yiisoft/yii2/Yii.php';
+require __DIR__.'/vendor/autoload.php';
+require __DIR__.'/vendor/yiisoft/yii2/Yii.php';
 
 if ($isLocal) {
     $dotenv = Dotenv::createImmutable(__DIR__);
     $dotenv->load();
 }
 
-$config = require $basePath.'/config/console.php';
+$config = require __DIR__.'/config/console.php';
 $application = new Application($config);
 exit($application->run());
