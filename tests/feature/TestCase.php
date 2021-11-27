@@ -23,11 +23,11 @@ class TestCase extends \app\tests\TestCase
         parent::tearDown();
     }
 
-    public function request(string $method, string $url, array $params = [])
+    public function request(string $method, string $url, array $params = []): mixed
     {
         $_SERVER['REQUEST_METHOD'] = $method;
 
-        if (false === strpos($url, '?')) {
+        if (!str_contains($url, '?')) {
             $path = $url;
         } else {
             [$path, $query] = explode('?', $url);

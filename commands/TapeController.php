@@ -1,14 +1,5 @@
 <?php
 
-/*
- * This file is part of the api.plusarchive.com
- *
- * (c) Tomoki Morita <tmsongbooks215@gmail.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 declare(strict_types=1);
 
 namespace app\commands;
@@ -25,10 +16,10 @@ use yii\helpers\Inflector;
 /**
  * Creates your some tape.
  * The slug generated here is not complete and may need to be edited.
+ * @noinspection PhpUnused
  */
 class TapeController extends Controller
 {
-    /** @var string */
     public $defaultAction = 'favorites';
 
     public function init(): void
@@ -41,6 +32,7 @@ class TapeController extends Controller
 
     /**
      * Creates favorite tracks.
+     * @noinspection PhpUnused
      */
     public function actionFavorites(int $id, string $title): int
     {

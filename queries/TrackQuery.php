@@ -1,14 +1,5 @@
 <?php
 
-/*
- * This file is part of the api.plusarchive.com
- *
- * (c) Tomoki Morita <tmsongbooks215@gmail.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 declare(strict_types=1);
 
 namespace app\queries;
@@ -39,11 +30,7 @@ class TrackQuery extends ActiveQuery
         ];
     }
 
-    /**
-     * @param string|null $provider
-     * @return TrackQuery|ActiveQuery
-     */
-    public function provider(?string $provider)
+    public function provider(string|null $provider): ActiveQuery|TrackQuery
     {
         $provider = array_search($provider, Music::PROVIDERS, true);
 

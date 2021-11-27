@@ -1,14 +1,5 @@
 <?php
 
-/*
- * This file is part of the api.plusarchive.com
- *
- * (c) Tomoki Morita <tmsongbooks215@gmail.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 declare(strict_types=1);
 
 namespace app\models;
@@ -60,6 +51,9 @@ class Label extends ActiveRecord
         return new LabelQuery(static::class);
     }
 
+    /**
+     * @noinspection PhpUnused
+     */
     public function getTags(): ActiveQuery
     {
         return $this->hasMany(LabelTag::class, ['id' => 'label_tag_id'])
