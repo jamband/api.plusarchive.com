@@ -15,7 +15,6 @@
     "bower-asset/yii2-pjax": "*",
     "bower-asset/punycode": "*",
     "bower-asset/inputmask": "*",
-    "cebe/markdown": "*",
     "ezyang/htmlpurifier": "*"
   },
   "autoload-dev": {
