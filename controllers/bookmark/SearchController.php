@@ -7,9 +7,6 @@ namespace app\controllers\bookmark;
 use app\models\Bookmark;
 use yii\data\ActiveDataProvider;
 
-/**
- * @noinspection PhpUnused
- */
 class SearchController extends Controller
 {
     protected array $verbs = ['GET'];

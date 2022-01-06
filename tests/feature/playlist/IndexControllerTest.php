@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace app\tests\feature\playlist;
 
+use app\controllers\playlist\IndexController;
 use app\models\Music;
 use app\tests\Database;
 use app\tests\feature\TestCase;
 use Yii;
 
+/** @see IndexController */
 class IndexControllerTest extends TestCase
 {
     protected function setUp(): void

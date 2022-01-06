@@ -6,9 +6,6 @@ namespace app\controllers\store;
 
 use app\controllers\Controller as BaseController;
 
-/**
- * @noinspection PhpUnused
- */
 class Controller extends BaseController
 {
     protected const PER_PAGE = 8;

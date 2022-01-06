@@ -7,9 +7,6 @@ namespace app\controllers\track;
 use app\models\Track;
 use yii\data\ActiveDataProvider;
 
-/**
- * @noinspection PhpUnused
- */
 class SearchController extends Controller
 {
     protected array $verbs = ['GET'];

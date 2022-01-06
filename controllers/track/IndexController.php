@@ -8,9 +8,6 @@ use app\models\MusicGenre;
 use app\models\Track;
 use yii\data\ActiveDataProvider;
 
-/**
- * @noinspection PhpUnused
- */
 class IndexController extends Controller
 {
     protected array $verbs = ['GET'];

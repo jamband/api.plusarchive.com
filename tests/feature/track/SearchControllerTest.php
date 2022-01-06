@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace app\tests\feature\track;
 
+use app\controllers\track\SearchController;
 use app\models\Music;
 use app\tests\Database;
 use app\tests\feature\TestCase;
 use Yii;
 use yii\web\BadRequestHttpException;
 
+/** @see SearchController */
 class SearchControllerTest extends TestCase
 {
     protected function setUp(): void

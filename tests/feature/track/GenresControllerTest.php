@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace app\tests\feature\track;
 
+use app\controllers\track\GenresController;
 use app\tests\Database;
 use app\tests\feature\TestCase;
 use Yii;
 
+/** @see GenresController */
 class GenresControllerTest extends TestCase
 {
     protected function setUp(): void

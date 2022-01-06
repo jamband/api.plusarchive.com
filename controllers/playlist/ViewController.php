@@ -9,9 +9,6 @@ use app\models\Playlist;
 use Yii;
 use yii\web\NotFoundHttpException;
 
-/**
- * @noinspection PhpUnused
- */
 class ViewController extends Controller
 {
     protected array $verbs = ['GET'];

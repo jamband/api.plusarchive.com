@@ -7,9 +7,6 @@ namespace app\controllers\store;
 use app\controllers\Controller;
 use app\models\StoreTag;
 
-/**
- * @noinspection PhpUnused
- */
 class TagsController extends Controller
 {
     protected array $verbs = ['GET'];

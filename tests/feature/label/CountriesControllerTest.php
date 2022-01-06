@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace app\tests\feature\label;
 
+use app\controllers\label\CountriesController;
 use app\tests\Database;
 use app\tests\feature\TestCase;
 use Yii;
 
+/** @see CountriesController */
 class CountriesControllerTest extends TestCase
 {
     protected function setUp(): void

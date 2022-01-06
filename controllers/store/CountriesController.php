@@ -7,9 +7,6 @@ namespace app\controllers\store;
 use app\controllers\Controller;
 use app\models\Store;
 
-/**
- * @noinspection PhpUnused
- */
 class CountriesController extends Controller
 {
     protected array $verbs = ['GET'];

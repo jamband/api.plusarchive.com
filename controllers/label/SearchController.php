@@ -7,9 +7,6 @@ namespace app\controllers\label;
 use app\models\Label;
 use yii\data\ActiveDataProvider;
 
-/**
- * @noinspection PhpUnused
- */
 class SearchController extends Controller
 {
     protected array $verbs = ['GET'];

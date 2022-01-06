@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace app\tests\feature\label;
 
+use app\controllers\label\SearchController;
 use app\tests\Database;
 use app\tests\feature\TestCase;
 use Yii;
 use yii\web\BadRequestHttpException;
 
+/** @see SearchController */
 class SearchControllerTest extends TestCase
 {
     protected function setUp(): void

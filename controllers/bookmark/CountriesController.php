@@ -7,9 +7,6 @@ namespace app\controllers\bookmark;
 use app\controllers\Controller;
 use app\models\Bookmark;
 
-/**
- * @noinspection PhpUnused
- */
 class CountriesController extends Controller
 {
     protected array $verbs = ['GET'];

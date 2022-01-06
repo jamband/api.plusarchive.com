@@ -7,9 +7,6 @@ namespace app\controllers\store;
 use app\models\Store;
 use yii\data\ActiveDataProvider;
 
-/**
- * @noinspection PhpUnused
- */
 class SearchController extends Controller
 {
     protected array $verbs = ['GET'];

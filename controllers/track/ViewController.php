@@ -6,9 +6,6 @@ namespace app\controllers\track;
 
 use app\models\Track;
 
-/**
- * @noinspection PhpUnused
- */
 class ViewController extends Controller
 {
     protected array $verbs = ['GET'];

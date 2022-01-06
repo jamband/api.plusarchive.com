@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace app\tests\feature\playlist;
 
+use app\controllers\playlist\ViewController;
 use app\models\Music;
 use app\tests\Database;
 use app\tests\feature\TestCase;
 use Yii;
 use yii\web\NotFoundHttpException;
 
+/** @see ViewController */
 class ViewControllerTest extends TestCase
 {
     protected function setUp(): void

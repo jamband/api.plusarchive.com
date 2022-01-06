@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace app\tests\feature\track;
 
+use app\controllers\track\FavoritesController;
 use app\models\Music;
 use app\tests\Database;
 use app\tests\feature\TestCase;
 use Yii;
 
+/** @see FavoritesController */
 class FavoritesControllerTest extends TestCase
 {
     protected function setUp(): void

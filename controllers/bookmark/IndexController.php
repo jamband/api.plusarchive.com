@@ -8,9 +8,6 @@ use app\models\Bookmark;
 use app\models\BookmarkTag;
 use yii\data\ActiveDataProvider;
 
-/**
- * @noinspection PhpUnused
- */
 class IndexController extends Controller
 {
     protected array $verbs = ['GET'];

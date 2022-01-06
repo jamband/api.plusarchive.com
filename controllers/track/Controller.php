@@ -9,9 +9,6 @@ use app\models\Track;
 use Yii;
 use yii\web\NotFoundHttpException;
 
-/**
- * @noinspection PhpUnused
- */
 class Controller extends BaseController
 {
     protected const PER_PAGE = 24;

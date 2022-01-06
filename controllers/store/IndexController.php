@@ -8,9 +8,6 @@ use app\models\Store;
 use app\models\StoreTag;
 use yii\data\ActiveDataProvider;
 
-/**
- * @noinspection PhpUnused
- */
 class IndexController extends Controller
 {
     protected array $verbs = ['GET'];

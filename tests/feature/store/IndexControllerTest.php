@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace app\tests\feature\store;
 
+use app\controllers\store\IndexController;
 use app\tests\Database;
 use app\tests\feature\TestCase;
 use Yii;
 
+/** @see IndexController */
 class IndexControllerTest extends TestCase
 {
     protected function setUp(): void
