@@ -15,14 +15,18 @@ use yii\helpers\FileHelper;
 /** @see TapeController */
 class TapeControllerTest extends TestCase
 {
+    private BufferedTapeController $controller;
+
     protected function setUp(): void
     {
+        parent::setUp();
+
         $this->db = new Database;
         $this->db->createTable('music');
         $this->db->createTable('music_genre');
         $this->db->createTable('music_genre_assn');
 
-        parent::setUp();
+        $this->controller = new BufferedTapeController('tape', Yii::$app);
     }
 
     protected function tearDown(): void
@@ -41,7 +45,8 @@ class TapeControllerTest extends TestCase
             ['url3', Music::PROVIDER_BANDCAMP, 'key3', 'Foo3 Bar3', 'image3', Music::TYPE_TRACK, true, time(), time()],
         ]);
 
-        $this->assertSame(0, Yii::$app->runAction('tape', [1, 'Test Tape 1']));
+        $this->assertSame(0, $this->controller->run('favorites', [1, 'Test Tape 1']));
+        $this->assertSame('Created: '.Yii::getAlias('@runtime/tape')."/test-tape-1.json\n", $this->controller->flushStdOutBuffer());
         $this->assertFileExists(Yii::getAlias('@tape/test-tape-1.json'));
 
         $tape = file_get_contents(Yii::getAlias('@tape/test-tape-1.json'));
@@ -71,4 +76,9 @@ class TapeControllerTest extends TestCase
         $this->assertSame('image3', $item2->image);
         $this->assertSame('foo3-bar3', $item2->slug);
     }
+}
+
+class BufferedTapeController extends TapeController
+{
+    use StdOutBufferControllerTrait;
 }
