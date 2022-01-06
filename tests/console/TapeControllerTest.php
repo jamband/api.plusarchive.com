@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace app\tests\console;
 
+use app\commands\TapeController;
 use app\models\Music;
 use app\tests\Database;
 use app\tests\TestCase;
@@ -11,6 +12,7 @@ use DateTime;
 use Yii;
 use yii\helpers\FileHelper;
 
+/** @see TapeController */
 class TapeControllerTest extends TestCase
 {
     protected function setUp(): void
@@ -30,6 +32,7 @@ class TapeControllerTest extends TestCase
         parent::tearDown();
     }
 
+    /** @see TapeController::actionFavorites() */
     public function testFavorites(): void
     {
         $this->db->seeder('music', ['id'], [

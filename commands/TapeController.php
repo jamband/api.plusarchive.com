@@ -16,7 +16,6 @@ use yii\helpers\Inflector;
 /**
  * Creates your some tape.
  * The slug generated here is not complete and may need to be edited.
- * @noinspection PhpUnused
  */
 class TapeController extends Controller
 {
@@ -32,7 +31,6 @@ class TapeController extends Controller
 
     /**
      * Creates favorite tracks.
-     * @noinspection PhpUnused
      */
     public function actionFavorites(int $id, string $title): int
     {
