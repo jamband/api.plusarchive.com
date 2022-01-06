@@ -11,6 +11,8 @@ new Application(ArrayHelper::merge(require __DIR__.'/../../config/web.php', [
     'id' => 'test',
     'components' => [
         'db' => null,
+        'cache' => null,
+        'log' => null,
         'hashids' => [
             'salt' => 'test',
         ],
