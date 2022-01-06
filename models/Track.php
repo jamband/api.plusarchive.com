@@ -17,19 +17,13 @@ class Track extends Music
     public function fields(): array
     {
         return [
-            'id' => function (): string {
-                return Yii::$app->hashids->encode($this->id);
-            },
+            'id' => fn(): string => Yii::$app->hashids->encode($this->id),
             'url',
-            'provider' => function (): string {
-                return static::PROVIDERS[$this->provider];
-            },
+            'provider' => fn(): string => static::PROVIDERS[$this->provider],
             'provider_key',
             'title',
             'image',
-            'created_at' => function (): string {
-                return Yii::$app->formatter->asDate($this->created_at);
-            },
+            'created_at' => fn(): string => Yii::$app->formatter->asDate($this->created_at),
         ];
     }
 
