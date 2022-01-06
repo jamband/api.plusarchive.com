@@ -2,7 +2,13 @@
 
 declare(strict_types=1);
 
-return yii\helpers\ArrayHelper::merge(require __DIR__.'/base.php', [
+use yii\data\Pagination;
+use yii\helpers\ArrayHelper;
+use yii\web\JsonParser;
+use yii\web\JsonResponseFormatter;
+use yii\web\Response;
+
+return ArrayHelper::merge(require __DIR__.'/base.php', [
     'id' => 'web',
     'components' => [
         'user' => [
@@ -10,13 +16,13 @@ return yii\helpers\ArrayHelper::merge(require __DIR__.'/base.php', [
         ],
         'request' => [
             'parsers' => [
-                'application/json' => yii\web\JsonParser::class,
+                'application/json' => JsonParser::class,
             ],
         ],
         'response' => [
             'formatters' => [
-                yii\web\Response::FORMAT_JSON => [
-                    'class' => yii\web\JsonResponseFormatter::class,
+                Response::FORMAT_JSON => [
+                    'class' => JsonResponseFormatter::class,
                     'prettyPrint' => YII_DEBUG,
                     'encodeOptions' => JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE,
                 ],
@@ -59,7 +65,7 @@ return yii\helpers\ArrayHelper::merge(require __DIR__.'/base.php', [
     ],
     'container' => [
         'definitions' => [
-            yii\data\Pagination::class => [
+            Pagination::class => [
                 'pageSizeParam' => false,
             ],
         ],
