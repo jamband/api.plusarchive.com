@@ -9,26 +9,24 @@ use app\tests\Database;
 use app\tests\TestCase;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
+use Yii;
 
 class ActiveQueryTraitTest extends TestCase
 {
     public function setUp(): void
     {
-        $this->db = new class extends Database
-        {
-            protected const SCHEMA = [
-                'resource' => [
-                    'id' => 'INTEGER PRIMARY KEY',
-                    'name' => 'TEXT NOT NULL',
-                    'created_at' => 'INTEGER NOT NULL',
-                    'updated_at' => 'INTEGER NOT NULL',
-                ],
-            ];
-        };
+        $this->db = new Database;
 
-        $this->db->createTable('resource');
+        $columns = [
+            'id' => 'INTEGER PRIMARY KEY',
+            'name' => 'TEXT NOT NULL',
+            'created_at' => 'INTEGER NOT NULL',
+            'updated_at' => 'INTEGER NOT NULL',
+        ];
 
-        parent::setUp();
+        Yii::$app->getDb()->createCommand()
+            ->createTable('resource', $columns)
+            ->execute();
     }
 
     public function testLatest(): void

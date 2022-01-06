@@ -4,23 +4,17 @@ declare(strict_types=1);
 
 namespace app\tests;
 
+use PHPUnit\Framework\TestCase as BaseTestCase;
 use Yii;
 use yii\di\Container;
+use yii\test\FixtureTrait;
 
-class TestCase extends \PHPUnit\Framework\TestCase
+class TestCase extends BaseTestCase
 {
-    protected Database|null $db = null;
-
-    protected function setUp(): void
-    {
-    }
+    use FixtureTrait;
 
     protected function tearDown(): void
     {
-        if (null !== $this->db) {
-            Yii::$app->db->close();
-        }
-
         Yii::$container = new Container;
     }
 }

@@ -8,6 +8,7 @@ use app\models\Bookmark;
 use app\queries\BookmarkQuery;
 use app\tests\Database;
 use app\tests\TestCase;
+use app\tests\unit\fixtures\BookmarkFixture;
 use creocoder\taggable\TaggableBehavior;
 
 class BookmarkTest extends TestCase
@@ -15,11 +16,16 @@ class BookmarkTest extends TestCase
     public function setUp(): void
     {
         $this->db = new Database;
-        $this->db->createTable('bookmark');
-        $this->db->createTable('bookmark_tag');
-        $this->db->createTable('bookmark_tag_assn');
+        $this->db->createTable(Database::TABLE_BOOKMARK);
+        $this->db->createTable(Database::TABLE_BOOKMARK_TAG);
+        $this->db->createTable(Database::TABLE_BOOKMARK_TAG_ASSN);
+    }
 
-        parent::setUp();
+    public function fixtures(): array
+    {
+        return [
+            'bookmark' => BookmarkFixture::class,
+        ];
     }
 
     public function testTableName(): void
@@ -29,17 +35,17 @@ class BookmarkTest extends TestCase
 
     public function testFields(): void
     {
-        $this->db->seeder('bookmark', ['id'], [
-            ['name1', 'country1', 'url1', 'link1', time(), time()],
-        ]);
+        /** @var BookmarkFixture $fixture */
+        $fixture = $this->getFixture('bookmark');
+        $fixture->load();
+        $bookmark1Fixture = $fixture->data['bookmark1'];
 
         $data = Bookmark::findOne(1)->toArray();
-        $this->assertSame('name1', $data['name']);
-        $this->assertSame('country1', $data['country']);
-        $this->assertSame('url1', $data['url']);
-        $this->assertSame('link1', $data['link']);
-        $this->assertArrayNotHasKey('created_at', $data);
-        $this->assertArrayNotHasKey('updated_at', $data);
+        $this->assertCount(4, $data);
+        $this->assertSame($bookmark1Fixture['name'], $data['name']);
+        $this->assertSame($bookmark1Fixture['country'], $data['country']);
+        $this->assertSame($bookmark1Fixture['url'], $data['url']);
+        $this->assertSame($bookmark1Fixture['link'], $data['link']);
     }
 
     public function testFind(): void

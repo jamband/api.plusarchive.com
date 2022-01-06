@@ -7,15 +7,21 @@ namespace app\tests\unit\models;
 use app\models\BookmarkTag;
 use app\tests\Database;
 use app\tests\TestCase;
+use app\tests\unit\fixtures\BookmarkTagFixture;
 
 class BookmarkTagTest extends TestCase
 {
     public function setUp(): void
     {
         $this->db = new Database;
-        $this->db->createTable('bookmark_tag');
+        $this->db->createTable(Database::TABLE_BOOKMARK_TAG);
+    }
 
-        parent::setUp();
+    public function fixtures(): array
+    {
+        return [
+            'tag' => BookmarkTagFixture::class,
+        ];
     }
 
     public function testTableName(): void
@@ -25,16 +31,14 @@ class BookmarkTagTest extends TestCase
 
     public function testFields(): void
     {
-        $this->db->seeder('bookmark_tag', ['id'], [
-            ['name1', 1, time(), time()],
-        ]);
+        /** @var BookmarkTagFixture $fixture */
+        $fixture = $this->getFixture('tag');
+        $fixture->load();
+        $tag1Fixture = $fixture->data['tag1'];
 
         $data = BookmarkTag::findOne(1)->toArray();
-        $this->assertArrayNotHasKey('id', $data);
-        $this->assertSame('name1', $data['name']);
-        $this->assertArrayNotHasKey('frequency', $data);
-        $this->assertArrayNotHasKey('created_at', $data);
-        $this->assertArrayNotHasKey('updated_at', $data);
+        $this->assertCount(1, $data);
+        $this->assertSame($tag1Fixture['name'], $data['name']);
     }
 
     public function testTrait(): void

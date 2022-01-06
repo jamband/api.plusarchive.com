@@ -7,12 +7,11 @@ namespace app\tests\unit\models;
 use app\models\ActiveRecordTrait;
 use app\tests\Database;
 use app\tests\TestCase;
+use Yii;
 use yii\db\ActiveRecord;
 
 class ActiveRecordTraitTest extends TestCase
 {
-    private $model;
-
     public function setUp(): void
     {
         $this->model = new class extends ActiveRecord
@@ -25,19 +24,17 @@ class ActiveRecordTraitTest extends TestCase
             }
         };
 
-        $this->db = new class extends Database {
-            protected const SCHEMA = [
-                'foo' => [
-                    'id' => 'INTEGER PRIMARY KEY',
-                    'name' => 'TEXT NOT NULL',
-                    'country' => 'TEXT NOT NULL',
-                ]
-            ];
-        };
+        $this->db = new Database;
 
-        $this->db->createTable('foo');
+        $columns = [
+            'id' => 'INTEGER PRIMARY KEY',
+            'name' => 'TEXT NOT NULL',
+            'country' => 'TEXT NOT NULL',
+        ];
 
-        parent::setUp();
+        Yii::$app->getDb()->createCommand()
+            ->createTable('foo', $columns)
+            ->execute();
     }
 
     public function testNames(): void
