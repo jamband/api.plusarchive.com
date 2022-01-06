@@ -6,7 +6,7 @@ declare(strict_types=1);
 use Dotenv\Dotenv;
 use yii\console\Application;
 
-if (php_uname('n') !== 'api.plusarchive.com') {
+if (php_uname('n') !== 'plusarchive.com') {
     defined('YII_DEBUG') or define('YII_DEBUG', true);
     defined('YII_ENV') or define('YII_ENV', 'dev');
 }
@@ -14,7 +14,7 @@ if (php_uname('n') !== 'api.plusarchive.com') {
 require __DIR__.'/vendor/autoload.php';
 require __DIR__.'/vendor/yiisoft/yii2/Yii.php';
 
-if (defined('YII_DEBUG')) {
+if (YII_DEBUG) {
     Dotenv::createImmutable(__DIR__)->load();
 }
 

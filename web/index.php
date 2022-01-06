@@ -13,7 +13,7 @@ if (preg_match('/\A(127.0.0.1|localhost|dev.api.plusarchive)\z/', $_SERVER['SERV
 require __DIR__.'/../vendor/yiisoft/yii2/Yii.php';
 require __DIR__.'/../vendor/autoload.php';
 
-if (defined('YII_DEBUG')) {
+if (YII_DEBUG) {
     Dotenv::createImmutable(dirname(__DIR__))->load();
 }
 
