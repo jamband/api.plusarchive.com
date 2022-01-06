@@ -24,7 +24,8 @@
     }
   },
   "scripts": {
-    "serve": "@php yii serve 127.0.0.1:8000",
+    "dev": "@composer i --quiet",
+    "serve": "@php -S 127.0.0.1:8000 -t web",
     "test": ["@test:console", "@test:feature", "@test:unit"],
     "test:console": "phpunit --bootstrap tests/console/bootstrap.php --testsuite console",
     "test:feature": "phpunit --bootstrap tests/feature/bootstrap.php --testsuite feature",
