@@ -18,13 +18,13 @@ class ErrorController extends Controller
         $exception = Yii::$app->errorHandler->exception;
 
         if ($exception instanceof NotFoundHttpException) {
-            $data['message'] = 'Not Found';
+            return ['message' => 'Not Found.'];
         }
 
         if ($exception instanceof  MethodNotAllowedHttpException) {
-            $data['message'] = 'Method Not Allowed';
+            return ['message' => 'Method Not Allowed.'];
         }
 
-        return $data ?? [];
+        return ['message' => $exception->getMessage()];
     }
 }

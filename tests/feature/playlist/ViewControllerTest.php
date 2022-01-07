@@ -24,7 +24,7 @@ class ViewControllerTest extends TestCase
 
     public function testNotFound(): void
     {
-        $this->expectException(NotFoundHttpException::class);
+        $this->expectExceptionObject(new NotFoundHttpException('Not Found.'));
         $this->endpoint('GET /playlists/'.Yii::$app->hashids->encode(1));
     }
 

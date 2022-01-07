@@ -9,7 +9,6 @@ use app\models\Bookmark;
 use app\models\BookmarkTag;
 use app\tests\Database;
 use app\tests\feature\TestCase;
-use Yii;
 use yii\web\BadRequestHttpException;
 
 /** @see SearchController */
@@ -25,9 +24,9 @@ class SearchControllerTest extends TestCase
         $this->db->createTable(BookmarkTag::tableName().'_assn');
     }
 
-    public function testBadRequest(): void
+    public function testMissingParameters(): void
     {
-        $this->expectException(BadRequestHttpException::class);
+        $this->expectExceptionObject(new BadRequestHttpException('Missing required parameters: q'));
         $this->endpoint('GET /bookmarks/search');
     }
 

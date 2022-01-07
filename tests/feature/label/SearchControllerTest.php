@@ -24,9 +24,9 @@ class SearchControllerTest extends TestCase
         $this->db->createTable(LabelTag::tableName().'_assn');
     }
 
-    public function testBadRequest(): void
+    public function testMissingParameters(): void
     {
-        $this->expectException(BadRequestHttpException::class);
+        $this->expectExceptionObject(new BadRequestHttpException('Missing required parameters: q'));
         $this->endpoint('GET /labels/search');
     }
 

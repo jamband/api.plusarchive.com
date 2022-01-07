@@ -21,7 +21,7 @@ class ViewController extends Controller
         );
 
         if (null === $model) {
-            throw new NotFoundHttpException('Not found.');
+            throw new NotFoundHttpException('Not Found.');
         }
 
         return $model;
