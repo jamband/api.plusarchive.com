@@ -7,6 +7,7 @@ namespace app\tests\console;
 use app\commands\TapeController;
 use app\models\Music;
 use app\models\MusicGenre;
+use app\tests\console\fixtures\TapeFixture;
 use app\tests\Database;
 use app\tests\TestCase;
 use DateTime;
@@ -20,8 +21,6 @@ class TapeControllerTest extends TestCase
 
     protected function setUp(): void
     {
-        parent::setUp();
-
         $this->db = new Database;
         $this->db->createTable(Music::tableName());
         $this->db->createTable(MusicGenre::tableName());
@@ -37,14 +36,17 @@ class TapeControllerTest extends TestCase
         parent::tearDown();
     }
 
+    public function fixtures(): array
+    {
+        return [
+            'tape' => TapeFixture::class,
+        ];
+    }
+
     /** @see TapeController::actionFavorites() */
     public function testFavorites(): void
     {
-        $this->db->seeder('music', ['id'], [
-            ['url1', Music::PROVIDER_BANDCAMP, 'key1', 'Foo1 Bar1', 'image1', Music::TYPE_TRACK, true, time(), time()],
-            ['url2', Music::PROVIDER_BANDCAMP, 'key2', 'Foo2 Bar2', 'image2', Music::TYPE_TRACK, false, time(), time()],
-            ['url3', Music::PROVIDER_BANDCAMP, 'key3', 'Foo3 Bar3', 'image3', Music::TYPE_TRACK, true, time(), time()],
-        ]);
+        $this->getFixture('tape')->load();
 
         $this->assertSame(0, $this->controller->run('favorites', [1, 'Test Tape 1']));
         $this->assertSame('Created: '.Yii::getAlias('@runtime/tape')."/test-tape-1.json\n", $this->controller->flushStdOutBuffer());
