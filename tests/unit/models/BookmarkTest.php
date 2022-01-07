@@ -9,7 +9,7 @@ use app\models\BookmarkTag;
 use app\queries\BookmarkQuery;
 use app\tests\Database;
 use app\tests\TestCase;
-use app\tests\unit\fixtures\BookmarkFixture;
+use app\tests\unit\fixtures\bookmark\BookmarkFixture;
 use creocoder\taggable\TaggableBehavior;
 
 /** @see Bookmark */

@@ -7,7 +7,7 @@ namespace app\tests\unit\models;
 use app\models\BookmarkTag;
 use app\tests\Database;
 use app\tests\TestCase;
-use app\tests\unit\fixtures\BookmarkTagFixture;
+use app\tests\unit\fixtures\bookmark\BookmarkTagFixture;
 
 /** @see BookmarkTag */
 class BookmarkTagTest extends TestCase
