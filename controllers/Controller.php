@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace app\controllers;
 
 use app\filters\AccessControl;
+use app\rest\Serializer;
 use Yii;
 use yii\filters\ContentNegotiator;
 use yii\filters\Cors;
 use yii\filters\VerbFilter;
-use yii\rest\Serializer;
 use yii\web\Controller as BaseController;
 use yii\web\HttpException;
 use yii\web\Response;
@@ -18,7 +18,6 @@ class Controller extends BaseController
 {
     public array $serializer = [
         'class' => Serializer::class,
-        'collectionEnvelope' => 'items',
     ];
 
     protected array $roles = [];
