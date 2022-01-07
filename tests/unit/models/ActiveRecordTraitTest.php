@@ -9,6 +9,7 @@ use app\tests\Database;
 use app\tests\TestCase;
 use Yii;
 use yii\db\ActiveRecord;
+use yii\test\ActiveFixture;
 
 /** @see ActiveRecordTrait */
 class ActiveRecordTraitTest extends TestCase
@@ -34,17 +35,20 @@ class ActiveRecordTraitTest extends TestCase
         ];
 
         Yii::$app->getDb()->createCommand()
-            ->createTable('foo', $columns)
+            ->createTable($this->model::tableName(), $columns)
             ->execute();
+    }
+
+    public function fixtures(): array
+    {
+        return [
+            'activeRecordTrait' => ActiveRecordTraitFixture::class,
+        ];
     }
 
     public function testNames(): void
     {
-        $this->db->seeder('foo', ['id'], [
-            ['name3', 'country3'],
-            ['name1', 'country1'],
-            ['name2', 'country2'],
-        ]);
+        $this->getFixture('activeRecordTrait')->load();
 
         $expected = ['name1', 'name2', 'name3'];
         $this->assertSame($expected, $this->model::names());
@@ -52,11 +56,7 @@ class ActiveRecordTraitTest extends TestCase
 
     public function testCountries(): void
     {
-        $this->db->seeder('foo', ['id'], [
-            ['name3', 'country3'],
-            ['name1', 'country1'],
-            ['name2', 'country2'],
-        ]);
+        $this->getFixture('activeRecordTrait')->load();
 
         $expected = ['country1', 'country2', 'country3'];
         $this->assertSame($expected, $this->model::countries());
@@ -64,16 +64,35 @@ class ActiveRecordTraitTest extends TestCase
 
     public function testHasName(): void
     {
-        $this->db->seeder('foo', ['id'], [
-            ['name1', 'country1'],
-            ['name2', 'country2'],
-            ['name3', 'country3'],
-        ]);
+        $this->getFixture('activeRecordTrait')->load();
 
         $names = $this->model::names();
         $this->assertSame(true, $this->model::hasName($names[0]));
         $this->assertSame(true, $this->model::hasName($names[1]));
         $this->assertSame(true, $this->model::hasName($names[2]));
         $this->assertSame(false, $this->model::hasName('name4'));
+    }
+}
+
+class ActiveRecordTraitFixture extends ActiveFixture
+{
+    public $tableName = 'foo';
+
+    protected function getData(): array
+    {
+        return [
+            [
+                'name' => 'name3',
+                'country' => 'country3',
+            ],
+            [
+                'name' => 'name1',
+                'country' => 'country1',
+            ],
+            [
+                'name' => 'name2',
+                'country' => 'country2',
+            ],
+        ];
     }
 }
