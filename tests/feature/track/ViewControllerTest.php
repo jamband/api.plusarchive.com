@@ -6,6 +6,7 @@ namespace app\tests\feature\track;
 
 use app\controllers\track\ViewController;
 use app\models\Music;
+use app\models\MusicGenre;
 use app\tests\Database;
 use app\tests\feature\TestCase;
 use Yii;
@@ -16,18 +17,18 @@ class ViewControllerTest extends TestCase
 {
     protected function setUp(): void
     {
-        $this->db = new Database;
-        $this->db->createTable('music');
-        $this->db->createTable('music_genre');
-        $this->db->createTable('music_genre_assn');
-
         parent::setUp();
+
+        $this->db = new Database;
+        $this->db->createTable(Music::tableName());
+        $this->db->createTable(MusicGenre::tableName());
+        $this->db->createTable(MusicGenre::tableName().'_assn');
     }
 
     public function testNotFound(): void
     {
         $this->expectException(NotFoundHttpException::class);
-        $this->request('GET', '/tracks/'.Yii::$app->hashids->encode(1));
+        $this->endpoint('GET /tracks/'.Yii::$app->hashids->encode(1));
     }
 
     public function test(): void
@@ -36,8 +37,8 @@ class ViewControllerTest extends TestCase
             ['url1', Music::PROVIDER_BANDCAMP, 'key1', 'title1', 'image1', Music::TYPE_TRACK, false, time(), time()],
         ]);
 
-        $data = $this->request('GET', '/tracks/'.Yii::$app->hashids->encode(1));
-        $this->assertSame(200, Yii::$app->response->statusCode);
+        $data = $this->endpoint('GET /tracks/'.Yii::$app->hashids->encode(1));
+        $this->assertSame(200, $this->response->statusCode);
 
         $this->assertSame('url1', $data['url']);
     }

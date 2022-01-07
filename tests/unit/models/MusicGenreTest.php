@@ -8,14 +8,13 @@ use app\models\MusicGenre;
 use app\tests\Database;
 use app\tests\TestCase;
 
+/** @see MusicGenre */
 class MusicGenreTest extends TestCase
 {
     public function setUp(): void
     {
         $this->db = new Database;
-        $this->db->createTable('music_genre');
-
-        parent::setUp();
+        $this->db->createTable(MusicGenre::tableName());
     }
 
     public function testTableName(): void

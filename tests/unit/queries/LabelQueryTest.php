@@ -5,19 +5,20 @@ declare(strict_types=1);
 namespace app\tests\unit\queries;
 
 use app\models\Label;
+use app\models\LabelTag;
+use app\queries\LabelQuery;
 use app\tests\Database;
 use app\tests\TestCase;
 
+/** @see LabelQuery */
 class LabelQueryTest extends TestCase
 {
     public function setUp(): void
     {
         $this->db = new Database;
-        $this->db->createTable('label');
-        $this->db->createTable('label_tag');
-        $this->db->createTable('label_tag_assn');
-
-        parent::setUp();
+        $this->db->createTable(Label::tableName());
+        $this->db->createTable(LabelTag::tableName());
+        $this->db->createTable(LabelTag::tableName().'_assn');
     }
 
     public function testInit(): void

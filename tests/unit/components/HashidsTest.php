@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace app\tests\unit\components;
 
+use app\components\Hashids;
 use app\tests\TestCase;
 use Yii;
 
+/** @see Hashids */
 class HashidsTest extends TestCase
 {
     public function testSalt(): void

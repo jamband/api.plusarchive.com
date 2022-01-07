@@ -10,6 +10,7 @@ use app\tests\TestCase;
 use Yii;
 use yii\db\ActiveRecord;
 
+/** @see ActiveRecordTrait */
 class ActiveRecordTraitTest extends TestCase
 {
     public function setUp(): void

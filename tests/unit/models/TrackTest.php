@@ -5,22 +5,22 @@ declare(strict_types=1);
 namespace app\tests\unit\models;
 
 use app\models\Music;
+use app\models\MusicGenre;
 use app\models\Track;
 use app\queries\TrackQuery;
 use app\tests\Database;
 use app\tests\TestCase;
 use creocoder\taggable\TaggableBehavior;
 
+/** @see Track */
 class TrackTest extends TestCase
 {
     public function setUp(): void
     {
         $this->db = new Database;
-        $this->db->createTable('music');
-        $this->db->createTable('music_genre');
-        $this->db->createTable('music_genre_assn');
-
-        parent::setUp();
+        $this->db->createTable(Music::tableName());
+        $this->db->createTable(MusicGenre::tableName());
+        $this->db->createTable(MusicGenre::tableName().'_assn');
     }
 
     public function testFields(): void

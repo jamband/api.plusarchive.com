@@ -5,9 +5,10 @@ declare(strict_types=1);
 namespace app\tests\feature\store;
 
 use app\controllers\store\SearchController;
+use app\models\Store;
+use app\models\StoreTag;
 use app\tests\Database;
 use app\tests\feature\TestCase;
-use Yii;
 use yii\web\BadRequestHttpException;
 
 /** @see SearchController */
@@ -15,18 +16,18 @@ class SearchControllerTest extends TestCase
 {
     protected function setUp(): void
     {
-        $this->db = new Database;
-        $this->db->createTable('store');
-        $this->db->createTable('store_tag');
-        $this->db->createTable('store_tag_assn');
-
         parent::setUp();
+
+        $this->db = new Database;
+        $this->db->createTable(Store::tableName());
+        $this->db->createTable(StoreTag::tableName());
+        $this->db->createTable(StoreTag::tableName().'_assn');
     }
 
     public function testBadRequest(): void
     {
         $this->expectException(BadRequestHttpException::class);
-        $this->request('GET', '/stores/search');
+        $this->endpoint('GET /stores/search');
     }
 
     public function test(): void
@@ -37,14 +38,14 @@ class SearchControllerTest extends TestCase
             ['baz', 'country3', 'url3', 'link3', time() + 3, time()],
         ]);
 
-        $data = $this->request('GET', '/stores/search?expand=tags&q=o');
-        $this->assertSame(200, Yii::$app->response->statusCode);
+        $data = $this->endpoint('GET /stores/search?expand=tags&q=o');
+        $this->assertSame(200, $this->response->statusCode);
 
         $this->assertSame(1, $data['_meta']['totalCount']);
         $this->assertSame('foo', $data['items'][0]['name']);
 
-        $data = $this->request('GET', '/stores/search?expand=tags&q=ba');
-        $this->assertSame(200, Yii::$app->response->statusCode);
+        $data = $this->endpoint('GET /stores/search?expand=tags&q=ba');
+        $this->assertSame(200, $this->response->statusCode);
 
         $this->assertSame(2, $data['_meta']['totalCount']);
         $this->assertSame('bar', $data['items'][0]['name']);

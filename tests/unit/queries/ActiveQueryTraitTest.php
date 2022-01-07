@@ -11,6 +11,7 @@ use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 use Yii;
 
+/** @see ActiveQueryTrait */
 class ActiveQueryTraitTest extends TestCase
 {
     public function setUp(): void

@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace app\tests\feature\bookmark;
 
 use app\controllers\bookmark\SearchController;
+use app\models\Bookmark;
+use app\models\BookmarkTag;
 use app\tests\Database;
 use app\tests\feature\TestCase;
 use Yii;
@@ -15,18 +17,18 @@ class SearchControllerTest extends TestCase
 {
     protected function setUp(): void
     {
-        $this->db = new Database;
-        $this->db->createTable('bookmark');
-        $this->db->createTable('bookmark_tag');
-        $this->db->createTable('bookmark_tag_assn');
-
         parent::setUp();
+
+        $this->db = new Database;
+        $this->db->createTable(Bookmark::tableName());
+        $this->db->createTable(BookmarkTag::tableName());
+        $this->db->createTable(BookmarkTag::tableName().'_assn');
     }
 
     public function testBadRequest(): void
     {
         $this->expectException(BadRequestHttpException::class);
-        $this->request('GET', '/bookmarks/search');
+        $this->endpoint('GET /bookmarks/search');
     }
 
     public function test(): void
@@ -37,14 +39,14 @@ class SearchControllerTest extends TestCase
             ['baz', 'country3', 'url3', 'link3', time() + 3, time()],
         ]);
 
-        $data = $this->request('GET', '/bookmarks/search?expand=tags&q=o');
-        $this->assertSame(200, Yii::$app->response->statusCode);
+        $data = $this->endpoint('GET /bookmarks/search?expand=tags&q=o');
+        $this->assertSame(200, $this->response->statusCode);
 
         $this->assertSame(1, $data['_meta']['totalCount']);
         $this->assertSame('foo', $data['items'][0]['name']);
 
-        $data = $this->request('GET', '/bookmarks/search?expand=tags&q=ba');
-        $this->assertSame(200, Yii::$app->response->statusCode);
+        $data = $this->endpoint('GET /bookmarks/search?expand=tags&q=ba');
+        $this->assertSame(200, $this->response->statusCode);
 
         $this->assertSame(2, $data['_meta']['totalCount']);
         $this->assertSame('bar', $data['items'][0]['name']);

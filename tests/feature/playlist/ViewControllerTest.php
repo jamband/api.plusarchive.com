@@ -16,16 +16,16 @@ class ViewControllerTest extends TestCase
 {
     protected function setUp(): void
     {
-        $this->db = new Database;
-        $this->db->createTable('music');
-
         parent::setUp();
+
+        $this->db = new Database;
+        $this->db->createTable(Music::tableName());
     }
 
     public function testNotFound(): void
     {
         $this->expectException(NotFoundHttpException::class);
-        $this->request('GET', '/playlists/'.Yii::$app->hashids->encode(1));
+        $this->endpoint('GET /playlists/'.Yii::$app->hashids->encode(1));
     }
 
     public function test(): void
@@ -34,7 +34,7 @@ class ViewControllerTest extends TestCase
             ['url1', Music::PROVIDER_SOUNDCLOUD, 'key1', 'title1', 'image1', Music::TYPE_PLAYLIST, false, time(), time()],
         ]);
 
-        $data = $this->request('GET', '/playlists/'.Yii::$app->hashids->encode(1));
+        $data = $this->endpoint('GET /playlists/'.Yii::$app->hashids->encode(1));
         $this->assertSame('url1', $data['url']);
     }
 }

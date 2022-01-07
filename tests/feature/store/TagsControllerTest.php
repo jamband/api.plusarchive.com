@@ -5,20 +5,21 @@ declare(strict_types=1);
 namespace app\tests\feature\store;
 
 use app\controllers\store\TagsController;
+use app\models\Store;
+use app\models\StoreTag;
 use app\tests\Database;
 use app\tests\feature\TestCase;
-use Yii;
 
 /** @see TagsController */
 class TagsControllerTest extends TestCase
 {
     protected function setUp(): void
     {
-        $this->db = new Database;
-        $this->db->createTable('store');
-        $this->db->createTable('store_tag');
-
         parent::setUp();
+
+        $this->db = new Database;
+        $this->db->createTable(Store::tableName());
+        $this->db->createTable(StoreTag::tableName());
     }
 
     public function test(): void
@@ -36,8 +37,8 @@ class TagsControllerTest extends TestCase
             ['tag3', 1, time(), time()],
         ]);
 
-        $data = $this->request('GET', '/stores/tags');
-        $this->assertSame(200, Yii::$app->response->statusCode);
+        $data = $this->endpoint('GET /stores/tags');
+        $this->assertSame(200, $this->response->statusCode);
         $this->assertSame(['tag1', 'tag2', 'tag3'], $data);
     }
 }

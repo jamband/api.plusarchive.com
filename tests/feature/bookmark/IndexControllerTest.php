@@ -5,21 +5,22 @@ declare(strict_types=1);
 namespace app\tests\feature\bookmark;
 
 use app\controllers\bookmark\IndexController;
+use app\models\Bookmark;
+use app\models\BookmarkTag;
 use app\tests\Database;
 use app\tests\feature\TestCase;
-use Yii;
 
 /** @see IndexController */
 class IndexControllerTest extends TestCase
 {
     protected function setUp(): void
     {
-        $this->db = new Database;
-        $this->db->createTable('bookmark');
-        $this->db->createTable('bookmark_tag');
-        $this->db->createTable('bookmark_tag_assn');
-
         parent::setUp();
+
+        $this->db = new Database;
+        $this->db->createTable(Bookmark::tableName());
+        $this->db->createTable(BookmarkTag::tableName());
+        $this->db->createTable(BookmarkTag::tableName().'_assn');
     }
 
     public function test(): void
@@ -30,8 +31,8 @@ class IndexControllerTest extends TestCase
             ['name3', 'country3', 'url3', 'link3', time() + 3, time()],
         ]);
 
-        $data = $this->request('GET', '/bookmarks?expand=tags');
-        $this->assertSame(200, Yii::$app->response->statusCode);
+        $data = $this->endpoint('GET /bookmarks?expand=tags');
+        $this->assertSame(200, $this->response->statusCode);
 
         $this->assertSame(3, $data['_meta']['totalCount']);
         $this->assertSame('name3', $data['items'][0]['name']);
@@ -47,15 +48,15 @@ class IndexControllerTest extends TestCase
             ['name3', 'foo', 'url3', 'link3', time() + 3, time()],
         ]);
 
-        $data = $this->request('GET', '/bookmarks?expand=tags&country=foo');
-        $this->assertSame(200, Yii::$app->response->statusCode);
+        $data = $this->endpoint('GET /bookmarks?expand=tags&country=foo');
+        $this->assertSame(200, $this->response->statusCode);
 
         $this->assertSame(2, $data['_meta']['totalCount']);
         $this->assertSame('name3', $data['items'][0]['name']);
         $this->assertSame('name1', $data['items'][1]['name']);
 
-        $data = $this->request('GET', '/bookmarks?expand=tags&country=bar');
-        $this->assertSame(200, Yii::$app->response->statusCode);
+        $data = $this->endpoint('GET /bookmarks?expand=tags&country=bar');
+        $this->assertSame(200, $this->response->statusCode);
 
         $this->assertSame(1, $data['_meta']['totalCount']);
         $this->assertSame('name2', $data['items'][0]['name']);
@@ -81,8 +82,8 @@ class IndexControllerTest extends TestCase
             [3, 2],
         ]);
 
-        $data = $this->request('GET', '/bookmarks?expand=tags&tag=tag1');
-        $this->assertSame(200, Yii::$app->response->statusCode);
+        $data = $this->endpoint('GET /bookmarks?expand=tags&tag=tag1');
+        $this->assertSame(200, $this->response->statusCode);
 
         $this->assertSame(2, $data['_meta']['totalCount']);
         $this->assertSame('name1', $data['items'][0]['name']);
@@ -106,12 +107,12 @@ class IndexControllerTest extends TestCase
             [1, 1],
         ]);
 
-        $data = $this->request('GET', '/bookmarks?expand=tags&tag=tag1');
-        $this->assertSame(200, Yii::$app->response->statusCode);
+        $data = $this->endpoint('GET /bookmarks?expand=tags&tag=tag1');
+        $this->assertSame(200, $this->response->statusCode);
         $this->assertSame(1, $data['_meta']['totalCount']);
 
-        $data = $this->request('GET', '/bookmarks?expand=tags&tag=tag2');
-        $this->assertSame(200, Yii::$app->response->statusCode);
+        $data = $this->endpoint('GET /bookmarks?expand=tags&tag=tag2');
+        $this->assertSame(200, $this->response->statusCode);
         $this->assertSame(0, $data['_meta']['totalCount']);
     }
 
@@ -135,16 +136,16 @@ class IndexControllerTest extends TestCase
             [3, 2],
         ]);
 
-        $data = $this->request('GET', '/bookmarks?expand=tags&country=foo&tag=tag1');
-        $this->assertSame(200, Yii::$app->response->statusCode);
+        $data = $this->endpoint('GET /bookmarks?expand=tags&country=foo&tag=tag1');
+        $this->assertSame(200, $this->response->statusCode);
 
         $this->assertSame(1, $data['_meta']['totalCount']);
         $this->assertSame('name1', $data['items'][0]['name']);
         $this->assertSame('tag1', $data['items'][0]['tags'][0]['name']);
         $this->assertSame('tag2', $data['items'][0]['tags'][1]['name']);
 
-        $data = $this->request('GET', '/bookmarks?expand=tags&country=bar&tag=tag1');
-        $this->assertSame(200, Yii::$app->response->statusCode);
+        $data = $this->endpoint('GET /bookmarks?expand=tags&country=bar&tag=tag1');
+        $this->assertSame(200, $this->response->statusCode);
 
         $this->assertSame(1, $data['_meta']['totalCount']);
         $this->assertSame('name2', $data['items'][0]['name']);

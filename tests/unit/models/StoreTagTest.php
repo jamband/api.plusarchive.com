@@ -8,14 +8,13 @@ use app\models\StoreTag;
 use app\tests\Database;
 use app\tests\TestCase;
 
+/** @see StoreTag */
 class StoreTagTest extends TestCase
 {
     public function setUp(): void
     {
         $this->db = new Database;
-        $this->db->createTable('store_tag');
-
-        parent::setUp();
+        $this->db->createTable(StoreTag::tableName());
     }
 
     public function testTableName(): void

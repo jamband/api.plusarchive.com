@@ -5,19 +5,20 @@ declare(strict_types=1);
 namespace app\tests\unit\queries;
 
 use app\models\Store;
+use app\models\StoreTag;
+use app\queries\StoreQuery;
 use app\tests\Database;
 use app\tests\TestCase;
 
+/** @see StoreQuery */
 class StoreQueryTest extends TestCase
 {
     public function setUp(): void
     {
         $this->db = new Database;
-        $this->db->createTable('store');
-        $this->db->createTable('store_tag');
-        $this->db->createTable('store_tag_assn');
-
-        parent::setUp();
+        $this->db->createTable(Store::tableName());
+        $this->db->createTable(StoreTag::tableName());
+        $this->db->createTable(StoreTag::tableName().'_assn');
     }
 
     public function testInit(): void

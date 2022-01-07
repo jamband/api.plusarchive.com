@@ -5,19 +5,19 @@ declare(strict_types=1);
 namespace app\tests\feature\bookmark;
 
 use app\controllers\bookmark\CountriesController;
+use app\models\Bookmark;
 use app\tests\Database;
 use app\tests\feature\TestCase;
-use Yii;
 
 /** @see CountriesController */
 class CountriesControllerTest extends TestCase
 {
     protected function setUp(): void
     {
-        $this->db = new Database;
-        $this->db->createTable('bookmark');
-
         parent::setUp();
+
+        $this->db = new Database;
+        $this->db->createTable(Bookmark::tableName());
     }
 
     public function test(): void
@@ -29,8 +29,8 @@ class CountriesControllerTest extends TestCase
             ['name4', 'foo', 'url4', 'link4', time(), time()],
         ]);
 
-        $data = $this->request('GET', '/bookmarks/countries');
-        $this->assertSame(200, Yii::$app->response->statusCode);
+        $data = $this->endpoint('GET /bookmarks/countries');
+        $this->assertSame(200, $this->response->statusCode);
         $this->assertSame(['bar', 'baz', 'foo'], $data);
     }
 }

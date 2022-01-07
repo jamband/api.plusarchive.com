@@ -5,20 +5,21 @@ declare(strict_types=1);
 namespace app\tests\feature\bookmark;
 
 use app\controllers\bookmark\TagsController;
+use app\models\Bookmark;
+use app\models\BookmarkTag;
 use app\tests\Database;
 use app\tests\feature\TestCase;
-use Yii;
 
 /** @see TagsController */
 class TagsControllerTest extends TestCase
 {
     protected function setUp(): void
     {
-        $this->db = new Database;
-        $this->db->createTable('bookmark');
-        $this->db->createTable('bookmark_tag');
-
         parent::setUp();
+
+        $this->db = new Database;
+        $this->db->createTable(Bookmark::tableName());
+        $this->db->createTable(BookmarkTag::tableName());
     }
 
     public function test(): void
@@ -36,8 +37,8 @@ class TagsControllerTest extends TestCase
             ['tag3', 1, time(), time()],
         ]);
 
-        $data = $this->request('GET', '/bookmarks/tags');
-        $this->assertSame(200, Yii::$app->response->statusCode);
+        $data = $this->endpoint('GET /bookmarks/tags');
+        $this->assertSame(200, $this->response->statusCode);
         $this->assertSame(['tag1', 'tag2', 'tag3'], $data);
     }
 }

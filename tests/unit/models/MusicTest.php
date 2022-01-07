@@ -7,6 +7,7 @@ namespace app\tests\unit\models;
 use app\models\Music;
 use app\tests\TestCase;
 
+/** @see Music */
 class MusicTest extends TestCase
 {
     public function testTableName(): void

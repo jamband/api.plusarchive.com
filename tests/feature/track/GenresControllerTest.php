@@ -5,19 +5,19 @@ declare(strict_types=1);
 namespace app\tests\feature\track;
 
 use app\controllers\track\GenresController;
+use app\models\MusicGenre;
 use app\tests\Database;
 use app\tests\feature\TestCase;
-use Yii;
 
 /** @see GenresController */
 class GenresControllerTest extends TestCase
 {
     protected function setUp(): void
     {
-        $this->db = new Database;
-        $this->db->createTable('music_genre');
-
         parent::setUp();
+
+        $this->db = new Database;
+        $this->db->createTable(MusicGenre::tableName());
     }
 
     public function test(): void
@@ -28,8 +28,8 @@ class GenresControllerTest extends TestCase
             ['genre3', 1, time(), time()],
         ]);
 
-        $data = $this->request('GET', '/tracks/genres');
-        $this->assertSame(200, Yii::$app->response->statusCode);
+        $data = $this->endpoint('GET /tracks/genres');
+        $this->assertSame(200, $this->response->statusCode);
         $this->assertSame(['genre1', 'genre2', 'genre3'], $data);
     }
 }

@@ -6,17 +6,17 @@ namespace app\tests\unit\queries;
 
 use app\models\Music;
 use app\models\Playlist;
+use app\queries\PlaylistQuery;
 use app\tests\Database;
 use app\tests\TestCase;
 
+/** @see PlaylistQuery */
 class PlaylistQueryTest extends TestCase
 {
     public function setUp(): void
     {
         $this->db = new Database;
-        $this->db->createTable('music');
-
-        parent::setUp();
+        $this->db->createTable(Music::tableName());
     }
 
     public function testInit(): void

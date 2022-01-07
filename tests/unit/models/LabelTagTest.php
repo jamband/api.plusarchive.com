@@ -8,14 +8,13 @@ use app\models\LabelTag;
 use app\tests\Database;
 use app\tests\TestCase;
 
+/** @see LabelTag */
 class LabelTagTest extends TestCase
 {
     protected function setUp(): void
     {
         $this->db = new Database;
-        $this->db->createTable('label_tag');
-
-        parent::setUp();
+        $this->db->createTable(LabelTag::tableName());
     }
 
     public function testTableName(): void

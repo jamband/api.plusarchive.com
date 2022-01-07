@@ -9,19 +9,6 @@ use yii\db\Connection;
 
 class Database
 {
-    public const TABLE_BOOKMARK = 'bookmark';
-    public const TABLE_BOOKMARK_TAG = 'bookmark_tag';
-    public const TABLE_BOOKMARK_TAG_ASSN = 'bookmark_tag_assn';
-    public const TABLE_LABEL = 'label';
-    public const TABLE_LABEL_TAG = 'label_tag';
-    public const TABLE_LABEL_TAG_ASSN = 'label_tag_assn';
-    public const TABLE_MUSIC = 'music';
-    public const TABLE_MUSIC_GENRE = 'music_genre';
-    public const TABLE_MUSIC_GENRE_ASSN = 'music_genre_assn';
-    public const TABLE_STORE = 'store';
-    public const TABLE_STORE_TAG = 'store_tag';
-    public const TABLE_STORE_TAG_ASSN = 'store_tag_assn';
-
     public function __construct()
     {
         Yii::$app->set('db', [

@@ -9,12 +9,13 @@ use app\tests\Database;
 use app\tests\TestCase;
 use app\tests\unit\fixtures\BookmarkTagFixture;
 
+/** @see BookmarkTag */
 class BookmarkTagTest extends TestCase
 {
     public function setUp(): void
     {
         $this->db = new Database;
-        $this->db->createTable(Database::TABLE_BOOKMARK_TAG);
+        $this->db->createTable(BookmarkTag::tableName());
     }
 
     public function fixtures(): array

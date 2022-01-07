@@ -5,21 +5,21 @@ declare(strict_types=1);
 namespace app\tests\unit\models;
 
 use app\models\Label;
+use app\models\LabelTag;
 use app\queries\LabelQuery;
 use app\tests\Database;
 use app\tests\TestCase;
 use creocoder\taggable\TaggableBehavior;
 
+/** @see Label */
 class LabelTest extends TestCase
 {
     public function setUp(): void
     {
         $this->db = new Database;
-        $this->db->createTable('label');
-        $this->db->createTable('label_tag');
-        $this->db->createTable('label_tag_assn');
-
-        parent::setUp();
+        $this->db->createTable(Label::tableName());
+        $this->db->createTable(LabelTag::tableName());
+        $this->db->createTable(LabelTag::tableName().'_assn');
     }
 
     public function testTableName(): void

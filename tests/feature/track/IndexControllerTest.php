@@ -6,21 +6,21 @@ namespace app\tests\feature\track;
 
 use app\controllers\track\IndexController;
 use app\models\Music;
+use app\models\MusicGenre;
 use app\tests\Database;
 use app\tests\feature\TestCase;
-use Yii;
 
 /** @see IndexController */
 class IndexControllerTest extends TestCase
 {
     protected function setUp(): void
     {
-        $this->db = new Database;
-        $this->db->createTable('music');
-        $this->db->createTable('music_genre');
-        $this->db->createTable('music_genre_assn');
-
         parent::setUp();
+
+        $this->db = new Database;
+        $this->db->createTable(Music::tableName());
+        $this->db->createTable(MusicGenre::tableName());
+        $this->db->createTable(MusicGenre::tableName().'_assn');
     }
 
     public function test(): void
@@ -31,8 +31,8 @@ class IndexControllerTest extends TestCase
             ['url3', Music::PROVIDER_SOUNDCLOUD, 'key3', 'title3', 'image3', Music::TYPE_PLAYLIST, false, time() + 1, time()],
         ]);
 
-        $data = $this->request('GET', '/tracks?expand=genres');
-        $this->assertSame(200, Yii::$app->response->statusCode);
+        $data = $this->endpoint('GET /tracks?expand=genres');
+        $this->assertSame(200, $this->response->statusCode);
 
         $this->assertSame(2, $data['_meta']['totalCount']);
         $this->assertSame('title2', $data['items'][0]['title']);
@@ -47,14 +47,14 @@ class IndexControllerTest extends TestCase
             ['url3', Music::PROVIDER_SOUNDCLOUD, 'key3', 'title3', 'image3', Music::TYPE_TRACK, false, time() + 3, time()],
         ]);
 
-        $data = $this->request('GET', '/tracks?expand=genres&provider=Bandcamp');
-        $this->assertSame(200, Yii::$app->response->statusCode);
+        $data = $this->endpoint('GET /tracks?expand=genres&provider=Bandcamp');
+        $this->assertSame(200, $this->response->statusCode);
 
         $this->assertSame(1, $data['_meta']['totalCount']);
         $this->assertSame('title1', $data['items'][0]['title']);
 
-        $data = $this->request('GET', '/tracks?expand=genres&provider=SoundCloud');
-        $this->assertSame(200, Yii::$app->response->statusCode);
+        $data = $this->endpoint('GET /tracks?expand=genres&provider=SoundCloud');
+        $this->assertSame(200, $this->response->statusCode);
 
         $this->assertSame(2, $data['_meta']['totalCount']);
         $this->assertSame('title3', $data['items'][0]['title']);
@@ -81,8 +81,8 @@ class IndexControllerTest extends TestCase
             [3, 2],
         ]);
 
-        $data = $this->request('GET', '/tracks?expand=genres&genre=genre1');
-        $this->assertSame(200, Yii::$app->response->statusCode);
+        $data = $this->endpoint('GET /tracks?expand=genres&genre=genre1');
+        $this->assertSame(200, $this->response->statusCode);
 
         $this->assertSame(2, $data['_meta']['totalCount']);
         $this->assertSame('title1', $data['items'][0]['title']);
@@ -106,12 +106,12 @@ class IndexControllerTest extends TestCase
             [1, 1],
         ]);
 
-        $data = $this->request('GEt', '/tracks?expand=genres&genre=genre1');
-        $this->assertSame(200, Yii::$app->response->statusCode);
+        $data = $this->endpoint('GET /tracks?expand=genres&genre=genre1');
+        $this->assertSame(200, $this->response->statusCode);
         $this->assertSame(1, $data['_meta']['totalCount']);
 
-        $data = $this->request('GET', '/tracks?expand=genres&genre=genre2');
-        $this->assertSame(200, Yii::$app->response->statusCode);
+        $data = $this->endpoint('GET /tracks?expand=genres&genre=genre2');
+        $this->assertSame(200, $this->response->statusCode);
         $this->assertSame(0, $data['_meta']['totalCount']);
     }
 
@@ -135,16 +135,16 @@ class IndexControllerTest extends TestCase
             [3, 2],
         ]);
 
-        $data = $this->request('GET', '/tracks?expand=genres&provider=Bandcamp&genre=genre1');
-        $this->assertSame(200, Yii::$app->response->statusCode);
+        $data = $this->endpoint('GET /tracks?expand=genres&provider=Bandcamp&genre=genre1');
+        $this->assertSame(200, $this->response->statusCode);
 
         $this->assertSame(1, $data['_meta']['totalCount']);
         $this->assertSame('title1', $data['items'][0]['title']);
         $this->assertSame('genre1', $data['items'][0]['genres'][0]['name']);
         $this->assertSame('genre2', $data['items'][0]['genres'][1]['name']);
 
-        $data = $this->request('GET', '/tracks?expand=genres&provider=SoundCloud&genre=genre1');
-        $this->assertSame(200, Yii::$app->response->statusCode);
+        $data = $this->endpoint('GET /tracks?expand=genres&provider=SoundCloud&genre=genre1');
+        $this->assertSame(200, $this->response->statusCode);
         $this->assertSame(1, $data['_meta']['totalCount']);
         $this->assertSame('title2', $data['items'][0]['title']);
         $this->assertSame('genre1', $data['items'][0]['genres'][0]['name']);

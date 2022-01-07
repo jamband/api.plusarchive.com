@@ -5,19 +5,19 @@ declare(strict_types=1);
 namespace app\tests\feature\track;
 
 use app\controllers\track\MinimalGenresController;
+use app\models\MusicGenre;
 use app\tests\Database;
 use app\tests\feature\TestCase;
-use Yii;
 
 /** @see MinimalGenresController */
 class MinimalGenresControllerTest extends TestCase
 {
     protected function setUp(): void
     {
-        $this->db = new Database;
-        $this->db->createTable('music_genre');
-
         parent::setUp();
+
+        $this->db = new Database;
+        $this->db->createTable(MusicGenre::tableName());
     }
 
     public function test(): void
@@ -30,8 +30,8 @@ class MinimalGenresControllerTest extends TestCase
             ['genre5', 8, time(), time()],
         ]);
 
-        $data = $this->request('GET', '/tracks/minimal-genres?limit=3');
-        $this->assertSame(200, Yii::$app->response->statusCode);
+        $data = $this->endpoint('GET /tracks/minimal-genres?limit=3');
+        $this->assertSame(200, $this->response->statusCode);
         $this->assertSame(['genre2', 'genre4', 'genre5'], $data);
     }
 }

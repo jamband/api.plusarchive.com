@@ -5,19 +5,20 @@ declare(strict_types=1);
 namespace app\tests\unit\queries;
 
 use app\models\Bookmark;
+use app\models\BookmarkTag;
+use app\queries\BookmarkQuery;
 use app\tests\Database;
 use app\tests\TestCase;
 
+/** @see BookmarkQuery */
 class BookmarkQueryTest extends TestCase
 {
     public function setUp(): void
     {
         $this->db = new Database;
-        $this->db->createTable('bookmark');
-        $this->db->createTable('bookmark_tag');
-        $this->db->createTable('bookmark_tag_assn');
-
-        parent::setUp();
+        $this->db->createTable(Bookmark::tableName());
+        $this->db->createTable(BookmarkTag::tableName());
+        $this->db->createTable(BookmarkTag::tableName().'_assn');
     }
 
     public function testInit(): void

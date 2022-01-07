@@ -6,21 +6,21 @@ namespace app\tests\feature\track;
 
 use app\controllers\track\FavoritesController;
 use app\models\Music;
+use app\models\MusicGenre;
 use app\tests\Database;
 use app\tests\feature\TestCase;
-use Yii;
 
 /** @see FavoritesController */
 class FavoritesControllerTest extends TestCase
 {
     protected function setUp(): void
     {
-        $this->db = new Database;
-        $this->db->createTable('music');
-        $this->db->createTable('music_genre');
-        $this->db->createTable('music_genre_assn');
-
         parent::setUp();
+
+        $this->db = new Database;
+        $this->db->createTable(Music::tableName());
+        $this->db->createTable(MusicGenre::tableName());
+        $this->db->createTable(MusicGenre::tableName().'_assn');
     }
 
     public function test(): void
@@ -45,8 +45,8 @@ class FavoritesControllerTest extends TestCase
             [4, 2],
         ]);
 
-        $data = $this->request('GET', '/tracks/favorites?expand=genres');
-        $this->assertSame(200, Yii::$app->response->statusCode);
+        $data = $this->endpoint('GET /tracks/favorites?expand=genres');
+        $this->assertSame(200, $this->response->statusCode);
 
         $this->assertSame('title2', $data['items'][0]['title']);
         $this->assertSame('genre1', $data['items'][0]['genres'][0]['name']);

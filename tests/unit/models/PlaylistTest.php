@@ -10,14 +10,13 @@ use app\queries\PlaylistQuery;
 use app\tests\Database;
 use app\tests\TestCase;
 
+/** @see Playlist */
 class PlaylistTest extends TestCase
 {
     public function setUp(): void
     {
         $this->db = new Database;
-        $this->db->createTable('music');
-
-        parent::setUp();
+        $this->db->createTable(Music::tableName());
     }
 
     public function testTableName(): void

@@ -6,6 +6,7 @@ namespace app\tests\console;
 
 use app\commands\TapeController;
 use app\models\Music;
+use app\models\MusicGenre;
 use app\tests\Database;
 use app\tests\TestCase;
 use DateTime;
@@ -22,9 +23,9 @@ class TapeControllerTest extends TestCase
         parent::setUp();
 
         $this->db = new Database;
-        $this->db->createTable('music');
-        $this->db->createTable('music_genre');
-        $this->db->createTable('music_genre_assn');
+        $this->db->createTable(Music::tableName());
+        $this->db->createTable(MusicGenre::tableName());
+        $this->db->createTable(MusicGenre::tableName().'_assn');
 
         $this->controller = new BufferedTapeController('tape', Yii::$app);
     }

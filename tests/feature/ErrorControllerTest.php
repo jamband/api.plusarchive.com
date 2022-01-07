@@ -13,6 +13,6 @@ class ErrorControllerTest extends TestCase
     public function testNotFound(): void
     {
         $this->expectException(InvalidRouteException::class);
-        $this->request('GET', '/');
+        $this->endpoint('GET /');
     }
 }

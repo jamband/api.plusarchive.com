@@ -8,17 +8,16 @@ use app\controllers\playlist\IndexController;
 use app\models\Music;
 use app\tests\Database;
 use app\tests\feature\TestCase;
-use Yii;
 
 /** @see IndexController */
 class IndexControllerTest extends TestCase
 {
     protected function setUp(): void
     {
-        $this->db = new Database;
-        $this->db->createTable('music');
-
         parent::setUp();
+
+        $this->db = new Database;
+        $this->db->createTable(Music::tableName());
     }
 
     public function test(): void
@@ -29,8 +28,8 @@ class IndexControllerTest extends TestCase
             ['url3', Music::PROVIDER_YOUTUBE, 'key3', 'title3', 'image3', Music::TYPE_TRACK, false, time() + 1, time()],
         ]);
 
-        $data = $this->request('GET', '/playlists');
-        $this->assertSame(200, Yii::$app->response->statusCode);
+        $data = $this->endpoint('GET /playlists');
+        $this->assertSame(200, $this->response->statusCode);
 
         $this->assertSame(2, count($data['items']));
         $this->assertSame('url2', $data['items'][0]['url']);

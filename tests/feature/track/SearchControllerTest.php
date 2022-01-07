@@ -6,9 +6,9 @@ namespace app\tests\feature\track;
 
 use app\controllers\track\SearchController;
 use app\models\Music;
+use app\models\MusicGenre;
 use app\tests\Database;
 use app\tests\feature\TestCase;
-use Yii;
 use yii\web\BadRequestHttpException;
 
 /** @see SearchController */
@@ -16,18 +16,18 @@ class SearchControllerTest extends TestCase
 {
     protected function setUp(): void
     {
-        $this->db = new Database;
-        $this->db->createTable('music');
-        $this->db->createTable('music_genre');
-        $this->db->createTable('music_genre_assn');
-
         parent::setUp();
+
+        $this->db = new Database;
+        $this->db->createTable(Music::tableName());
+        $this->db->createTable(MusicGenre::tableName());
+        $this->db->createTable(MusicGenre::tableName().'_assn');
     }
 
     public function testBadRequest(): void
     {
         $this->expectException(BadRequestHttpException::class);
-        $this->request('GET', '/track/search');
+        $this->endpoint('GET /track/search');
     }
 
     public function test(): void
@@ -38,14 +38,14 @@ class SearchControllerTest extends TestCase
             ['url3', Music::PROVIDER_BANDCAMP, 'key3', 'baz', 'image3', Music::TYPE_TRACK, false, time() + 3, time()],
         ]);
 
-        $data = $this->request('GET', '/tracks/search?expand=genres&q=o');
-        $this->assertSame(200, Yii::$app->response->statusCode);
+        $data = $this->endpoint('GET /tracks/search?expand=genres&q=o');
+        $this->assertSame(200, $this->response->statusCode);
 
         $this->assertSame(1, $data['_meta']['totalCount']);
         $this->assertSame('foo', $data['items'][0]['title']);
 
-        $data = $this->request('GET', '/tracks/search?expand=genres&q=ba');
-        $this->assertSame(200, Yii::$app->response->statusCode);
+        $data = $this->endpoint('GET /tracks/search?expand=genres&q=ba');
+        $this->assertSame(200, $this->response->statusCode);
 
         $this->assertSame(2, $data['_meta']['totalCount']);
         $this->assertSame('bar', $data['items'][0]['title']);

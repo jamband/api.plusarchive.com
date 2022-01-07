@@ -5,20 +5,22 @@ declare(strict_types=1);
 namespace app\tests\unit\models;
 
 use app\models\Bookmark;
+use app\models\BookmarkTag;
 use app\queries\BookmarkQuery;
 use app\tests\Database;
 use app\tests\TestCase;
 use app\tests\unit\fixtures\BookmarkFixture;
 use creocoder\taggable\TaggableBehavior;
 
+/** @see Bookmark */
 class BookmarkTest extends TestCase
 {
     public function setUp(): void
     {
         $this->db = new Database;
-        $this->db->createTable(Database::TABLE_BOOKMARK);
-        $this->db->createTable(Database::TABLE_BOOKMARK_TAG);
-        $this->db->createTable(Database::TABLE_BOOKMARK_TAG_ASSN);
+        $this->db->createTable(Bookmark::tableName());
+        $this->db->createTable(BookmarkTag::tableName());
+        $this->db->createTable(BookmarkTag::tableName().'_assn');
     }
 
     public function fixtures(): array

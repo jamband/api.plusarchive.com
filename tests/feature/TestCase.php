@@ -5,46 +5,43 @@ declare(strict_types=1);
 namespace app\tests\feature;
 
 use Yii;
+use yii\web\Request;
 use yii\web\Response;
+use app\tests\TestCase as BaseTestCase;
 
-class TestCase extends \app\tests\TestCase
+/**
+ * @property Request $request
+ * @property Response $response
+ */
+class TestCase extends BaseTestCase
 {
     protected function setUp(): void
     {
-        Yii::$app->set('response', new Response);
+        $this->request = Yii::$app->getRequest();
+        $this->response = Yii::$app->getResponse();
 
-        parent::setUp();
-    }
-
-    protected function tearDown(): void
-    {
         unset($_SERVER['REQUEST_METHOD']);
-
-        parent::tearDown();
     }
 
-    public function request(string $method, string $url, array $params = []): mixed
+    public function endpoint(string $url): mixed
     {
+        [$method, $url] = explode(' ', $url);
         $_SERVER['REQUEST_METHOD'] = $method;
 
-        if (!str_contains($url, '?')) {
-            $path = $url;
-        } else {
+        if (str_contains($url, '?')) {
             [$path, $query] = explode('?', $url);
             parse_str($query, $queries);
-            Yii::$app->request->setQueryParams($queries);
+            $this->request->setQueryParams($queries);
 
             if (isset($queries['expand'])) {
                 unset($queries['expand']);
             }
+        } else {
+            $path = $url;
         }
 
-        if (!empty($params)) {
-            Yii::$app->request->setBodyParams($params);
-        }
-
-        Yii::$app->request->setPathInfo($path);
-        $routeAndParams = Yii::$app->urlManager->parseRequest(Yii::$app->request);
+        $this->request->setPathInfo($path);
+        $routeAndParams = Yii::$app->getUrlManager()->parseRequest($this->request);
 
         if (false === $routeAndParams) {
             return Yii::$app->runAction($path);

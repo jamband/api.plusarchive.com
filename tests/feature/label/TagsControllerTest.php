@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace app\tests\feature\label;
 
 use app\controllers\label\TagsController;
+use app\models\Label;
+use app\models\LabelTag;
 use app\tests\Database;
 use app\tests\feature\TestCase;
 
@@ -13,11 +15,11 @@ class TagsControllerTest extends TestCase
 {
     protected function setUp(): void
     {
-        $this->db = new Database;
-        $this->db->createTable('label');
-        $this->db->createTable('label_tag');
-
         parent::setUp();
+
+        $this->db = new Database;
+        $this->db->createTable(Label::tableName());
+        $this->db->createTable(LabelTag::tableName());
     }
 
     public function test(): void
@@ -35,7 +37,7 @@ class TagsControllerTest extends TestCase
             ['tag3', 1, time(), time()],
         ]);
 
-        $data = $this->request('GET', '/labels/tags');
+        $data = $this->endpoint('GET /labels/tags');
         $this->assertSame(['tag1', 'tag2', 'tag3'], $data);
     }
 }
