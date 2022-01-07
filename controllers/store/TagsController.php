@@ -9,7 +9,8 @@ use app\models\StoreTag;
 
 class TagsController extends Controller
 {
-    protected array $verbs = ['GET'];
+    protected string $role = '';
+    protected string $verb = 'GET';
 
     public function actionIndex(): array
     {

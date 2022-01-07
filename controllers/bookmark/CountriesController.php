@@ -9,7 +9,8 @@ use app\models\Bookmark;
 
 class CountriesController extends Controller
 {
-    protected array $verbs = ['GET'];
+    protected string $role = '';
+    protected string $verb = 'GET';
 
     public function actionIndex(): array
     {

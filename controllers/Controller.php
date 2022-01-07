@@ -8,7 +8,6 @@ use app\filters\AccessControl;
 use app\rest\Serializer;
 use Yii;
 use yii\filters\Cors;
-use yii\filters\VerbFilter;
 use yii\web\Controller as BaseController;
 use yii\web\HttpException;
 
@@ -18,15 +17,21 @@ class Controller extends BaseController
         'class' => Serializer::class,
     ];
 
-    protected array $roles = [];
-    protected array $verbs = [];
+    protected string $role;
+    protected string $verb;
 
     public function behaviors(): array
     {
         return [
             'access' => [
                 'class' => AccessControl::class,
-                'rules' => [['allow' => true, 'roles' => $this->roles]],
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => '' === $this->role ? [] : [$this->role],
+                        'verbs' => [$this->verb],
+                    ],
+                ],
             ],
             'corsFilter' => [
                 'class' => Cors::class,
@@ -37,10 +42,6 @@ class Controller extends BaseController
                     'Access-Control-Allow-Credentials' => true,
                     'Access-Control-Max-Age' => 3600,
                 ],
-            ],
-            'verbFilter' => [
-                'class' => VerbFilter::class,
-                'actions' => ['index' => $this->verbs],
             ],
         ];
     }
