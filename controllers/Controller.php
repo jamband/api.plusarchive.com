@@ -7,12 +7,10 @@ namespace app\controllers;
 use app\filters\AccessControl;
 use app\rest\Serializer;
 use Yii;
-use yii\filters\ContentNegotiator;
 use yii\filters\Cors;
 use yii\filters\VerbFilter;
 use yii\web\Controller as BaseController;
 use yii\web\HttpException;
-use yii\web\Response;
 
 class Controller extends BaseController
 {
@@ -43,10 +41,6 @@ class Controller extends BaseController
             'verbFilter' => [
                 'class' => VerbFilter::class,
                 'actions' => ['index' => $this->verbs],
-            ],
-            'contentNegotiator' => [
-                'class' => ContentNegotiator::class,
-                'formats' => ['application/json' => Response::FORMAT_JSON],
             ],
         ];
     }
