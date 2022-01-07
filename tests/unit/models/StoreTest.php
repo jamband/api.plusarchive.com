@@ -9,6 +9,9 @@ use app\models\StoreTag;
 use app\queries\StoreQuery;
 use app\tests\Database;
 use app\tests\TestCase;
+use app\tests\unit\fixtures\store\StoreFixture;
+use app\tests\unit\fixtures\store\StoreTagAssnFixture;
+use app\tests\unit\fixtures\store\StoreTagFixture;
 use creocoder\taggable\TaggableBehavior;
 
 /** @see Store */
@@ -22,6 +25,15 @@ class StoreTest extends TestCase
         $this->db->createTable(StoreTag::tableName().'_assn');
     }
 
+    public function fixtures(): array
+    {
+        return [
+            'store' => StoreFixture::class,
+            'tag' => StoreTagFixture::class,
+            'tagAssn' => StoreTagAssnFixture::class,
+        ];
+    }
+
     public function testTableName(): void
     {
         $this->assertSame('store', Store::tableName());
@@ -29,17 +41,17 @@ class StoreTest extends TestCase
 
     public function testFields(): void
     {
-        $this->db->seeder('store', ['id'], [
-            ['name1', 'country1', 'url1', 'link1', time(), time()],
-        ]);
+        /** @var StoreFixture $fixture */
+        $fixture = $this->getFixture('store');
+        $fixture->load();
+        $store1Fixture = $fixture->data['store1'];
 
         $data = Store::findOne(1)->toArray();
-        $this->assertSame('name1', $data['name']);
-        $this->assertSame('country1', $data['country']);
-        $this->assertSame('url1', $data['url']);
-        $this->assertSame('link1', $data['link']);
-        $this->assertArrayNotHasKey('created_at', $data);
-        $this->assertArrayNotHasKey('updated_at', $data);
+        $this->assertCount(4, $data);
+        $this->assertSame($store1Fixture['name'], $data['name']);
+        $this->assertSame($store1Fixture['country'], $data['country']);
+        $this->assertSame($store1Fixture['url'], $data['url']);
+        $this->assertSame($store1Fixture['link'], $data['link']);
     }
 
     public function testFind(): void
@@ -50,20 +62,17 @@ class StoreTest extends TestCase
 
     public function testGetTags(): void
     {
-        $this->db->seeder('store', ['id'], [
-            ['name1', 'country1', 'url1', 'link1', time(), time()],
-        ]);
+        $this->getFixture('store')->load();
 
-        $this->db->seeder('store_tag', ['id'], [
-            ['tag1', 1, time(), time()],
-        ]);
+        /** @var StoreTagFixture $fixture */
+        $fixture = $this->getFixture('tag');
+        $fixture->load();
+        $tag1Fixture = $fixture->data['tag1'];
 
-        $this->db->seeder('store_tag_assn', [], [
-            [1, 1],
-        ]);
+        $this->getFixture('tagAssn')->load();
 
         $data = Store::find()->all();
-        $this->assertSame('tag1', $data[0]->tags[0]->name);
+        $this->assertSame($tag1Fixture['name'], $data[0]->tags[0]->name);
     }
 
     public function testTrait(): void

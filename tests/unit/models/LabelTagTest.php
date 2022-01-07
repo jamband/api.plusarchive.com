@@ -7,6 +7,7 @@ namespace app\tests\unit\models;
 use app\models\LabelTag;
 use app\tests\Database;
 use app\tests\TestCase;
+use app\tests\unit\fixtures\label\LabelTagFixture;
 
 /** @see LabelTag */
 class LabelTagTest extends TestCase
@@ -17,6 +18,13 @@ class LabelTagTest extends TestCase
         $this->db->createTable(LabelTag::tableName());
     }
 
+    public function fixtures(): array
+    {
+        return [
+            'tag' => LabelTagFixture::class,
+        ];
+    }
+
     public function testTableName(): void
     {
         $this->assertSame('label_tag', LabelTag::tableName());
@@ -24,16 +32,14 @@ class LabelTagTest extends TestCase
 
     public function testFields(): void
     {
-        $this->db->seeder('label_tag', ['id'], [
-            ['name1', 1, time(), time()],
-        ]);
+        /** @var LabelTagFixture $fixture */
+        $fixture = $this->getFixture('tag');
+        $fixture->load();
+        $tag1Fixture = $fixture->data['tag1'];
 
         $data = LabelTag::findOne(1)->toArray();
-        $this->assertArrayNotHasKey('id', $data);
-        $this->assertSame('name1', $data['name']);
-        $this->assertArrayNotHasKey('frequency', $data);
-        $this->assertArrayNotHasKey('created_at', $data);
-        $this->assertArrayNotHasKey('updated_at', $data);
+        $this->assertCount(1, $data);
+        $this->assertSame($tag1Fixture['name'], $data['name']);
     }
 
     public function testTrait(): void

@@ -9,6 +9,7 @@ use app\models\Playlist;
 use app\queries\PlaylistQuery;
 use app\tests\Database;
 use app\tests\TestCase;
+use app\tests\unit\fixtures\music\PlaylistFixture;
 
 /** @see Playlist */
 class PlaylistTest extends TestCase
@@ -19,6 +20,13 @@ class PlaylistTest extends TestCase
         $this->db->createTable(Music::tableName());
     }
 
+    public function fixtures(): array
+    {
+        return [
+            'playlist' => PlaylistFixture::class,
+        ];
+    }
+
     public function testTableName(): void
     {
         $this->assertSame('music', Playlist::tableName());
@@ -26,21 +34,18 @@ class PlaylistTest extends TestCase
 
     public function testFields(): void
     {
-        $this->db->seeder('music', ['id'], [
-            ['url1', Music::PROVIDER_SOUNDCLOUD, 'key1', 'title1', 'image1', Music::TYPE_PLAYLIST, false, time(), time()],
-        ]);
+        /** @var PlaylistFixture $fixture */
+        $fixture = $this->getFixture('playlist');
+        $fixture->load();
+        $playlist1Fixture = $fixture->data['playlist1'];
 
         $data = Playlist::findOne(1)->toArray();
+        $this->assertCount(5, $data);
         $this->assertMatchesRegularExpression('/\A[\w-]{11}\z/', $data['id']);
-        $this->assertSame('url1', $data['url']);
-        $this->assertSame('SoundCloud', $data['provider']);
-        $this->assertSame('key1', $data['provider_key']);
-        $this->assertSame('title1', $data['title']);
-        $this->assertArrayNotHasKey('image', $data);
-        $this->assertArrayNotHasKey('type', $data);
-        $this->assertArrayNotHasKey('urge', $data);
-        $this->assertArrayNotHasKey('created_at', $data);
-        $this->assertArrayNotHasKey('updated_at', $data);
+        $this->assertSame($playlist1Fixture['url'], $data['url']);
+        $this->assertSame(Music::PROVIDERS[$playlist1Fixture['provider']], $data['provider']);
+        $this->assertSame($playlist1Fixture['provider_key'], $data['provider_key']);
+        $this->assertSame($playlist1Fixture['title'], $data['title']);
     }
 
     public function testFind(): void

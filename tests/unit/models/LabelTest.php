@@ -9,6 +9,9 @@ use app\models\LabelTag;
 use app\queries\LabelQuery;
 use app\tests\Database;
 use app\tests\TestCase;
+use app\tests\unit\fixtures\label\LabelFixture;
+use app\tests\unit\fixtures\label\LabelTagAssnFixture;
+use app\tests\unit\fixtures\label\LabelTagFixture;
 use creocoder\taggable\TaggableBehavior;
 
 /** @see Label */
@@ -22,6 +25,15 @@ class LabelTest extends TestCase
         $this->db->createTable(LabelTag::tableName().'_assn');
     }
 
+    public function fixtures(): array
+    {
+        return [
+            'label' => LabelFixture::class,
+            'tag' => LabelTagFixture::class,
+            'tagAssn' => LabelTagAssnFixture::class,
+        ];
+    }
+
     public function testTableName(): void
     {
         $this->assertSame('label', Label::tableName());
@@ -29,17 +41,17 @@ class LabelTest extends TestCase
 
     public function testFields(): void
     {
-        $this->db->seeder('label', ['id'], [
-            ['name1', 'country1', 'url1', 'link1', time(), time()],
-        ]);
+        /** @var LabelFixture $fixture */
+        $fixture = $this->getFixture('label');
+        $fixture->load();
+        $label1Fixture = $fixture->data['label1'];
 
         $data = Label::findOne(1)->toArray();
-        $this->assertSame('name1', $data['name']);
-        $this->assertSame('country1', $data['country']);
-        $this->assertSame('url1', $data['url']);
-        $this->assertSame('link1', $data['link']);
-        $this->assertArrayNotHasKey('created_at', $data);
-        $this->assertArrayNotHasKey('updated_at', $data);
+        $this->assertCount(4, $data);
+        $this->assertSame($label1Fixture['name'], $data['name']);
+        $this->assertSame($label1Fixture['country'], $data['country']);
+        $this->assertSame($label1Fixture['url'], $data['url']);
+        $this->assertSame($label1Fixture['link'], $data['link']);
     }
 
     public function testFind(): void
@@ -50,20 +62,17 @@ class LabelTest extends TestCase
 
     public function testGetTags(): void
     {
-        $this->db->seeder('label', ['id'], [
-            ['name1', 'country1', 'url1', 'link1', time(), time()],
-        ]);
+        $this->getFixture('label')->load();
 
-        $this->db->seeder('label_tag', ['id'], [
-            ['tag1', 1, time(), time()],
-        ]);
+        /** @var LabelTagFixture $fixture */
+        $fixture = $this->getFixture('tag');
+        $fixture->load();
+        $tag1Fixture = $fixture->data['tag1'];
 
-        $this->db->seeder('label_tag_assn', [], [
-            [1, 1],
-        ]);
+        $this->getFixture('tagAssn')->load();
 
         $data = Label::find()->all();
-        $this->assertSame('tag1', $data[0]->tags[0]->name);
+        $this->assertSame($tag1Fixture['name'], $data[0]->tags[0]->name);
     }
 
     public function testTrait(): void

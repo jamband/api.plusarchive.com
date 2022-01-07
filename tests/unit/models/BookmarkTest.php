@@ -10,6 +10,8 @@ use app\queries\BookmarkQuery;
 use app\tests\Database;
 use app\tests\TestCase;
 use app\tests\unit\fixtures\bookmark\BookmarkFixture;
+use app\tests\unit\fixtures\bookmark\BookmarkTagAssnFixture;
+use app\tests\unit\fixtures\bookmark\BookmarkTagFixture;
 use creocoder\taggable\TaggableBehavior;
 
 /** @see Bookmark */
@@ -27,6 +29,8 @@ class BookmarkTest extends TestCase
     {
         return [
             'bookmark' => BookmarkFixture::class,
+            'tag' => BookmarkTagFixture::class,
+            'tagAssn' => BookmarkTagAssnFixture::class,
         ];
     }
 
@@ -58,20 +62,17 @@ class BookmarkTest extends TestCase
 
     public function testGetTags(): void
     {
-        $this->db->seeder('bookmark', ['id'], [
-            ['name1', 'country1', 'url1', 'link1', time(), time()],
-        ]);
+        $this->getFixture('bookmark')->load();
 
-        $this->db->seeder('bookmark_tag', ['id'], [
-            ['tag1', 1, time(), time()],
-        ]);
+        /** @var BookmarkTagFixture $fixture */
+        $fixture = $this->getFixture('tag');
+        $fixture->load();
+        $tag1Fixture = $fixture->data['tag1'];
 
-        $this->db->seeder('bookmark_tag_assn', [], [
-            [1, 1],
-        ]);
+        $this->getFixture('tagAssn')->load();
 
         $data = Bookmark::find()->all();
-        $this->assertSame('tag1', $data[0]->tags[0]->name);
+        $this->assertSame($tag1Fixture['name'], $data[0]->tags[0]->name);
     }
 
     public function testTrait(): void

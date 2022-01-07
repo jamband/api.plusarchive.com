@@ -10,7 +10,11 @@ use app\models\Track;
 use app\queries\TrackQuery;
 use app\tests\Database;
 use app\tests\TestCase;
+use app\tests\unit\fixtures\music\TrackFixture;
+use app\tests\unit\fixtures\music\TrackGenreAssnFixture;
+use app\tests\unit\fixtures\music\TrackGenreFixture;
 use creocoder\taggable\TaggableBehavior;
+use Yii;
 
 /** @see Track */
 class TrackTest extends TestCase
@@ -23,23 +27,33 @@ class TrackTest extends TestCase
         $this->db->createTable(MusicGenre::tableName().'_assn');
     }
 
+    public function fixtures(): array
+    {
+        return [
+            'track' => TrackFixture::class,
+            'genre' => TrackGenreFixture::class,
+            'genreAssn' => TrackGenreAssnFixture::class,
+        ];
+    }
+
     public function testFields(): void
     {
-        $this->db->seeder('music', ['id'], [
-            ['url1', Music::PROVIDER_BANDCAMP, 'key1', 'title1', 'image1', Music::TYPE_TRACK, false, time(), time()],
-        ]);
+        /** @var TrackFixture $fixture */
+        $fixture = $this->getFixture('track');
+        $fixture->load();
+        $track1Fixture = $fixture->data['track1'];
 
         $data = Track::findOne(1)->toArray();
+        $this->assertCount(7, $data);
         $this->assertMatchesRegularExpression('/[\w-]{11}/', $data['id']);
-        $this->assertSame('url1', $data['url']);
-        $this->assertSame('Bandcamp', $data['provider']);
-        $this->assertSame('key1', $data['provider_key']);
-        $this->assertSame('title1', $data['title']);
-        $this->assertSame('image1', $data['image']);
-        $this->assertArrayNotHasKey('type', $data);
-        $this->assertArrayNotHasKey('urge', $data);
-        $this->assertMatchesRegularExpression('/\A[0-9]{4}\.[0-9]{2}\.[0-9]{2}\z/', $data['created_at']);
-        $this->assertArrayNotHasKey('updated_at', $data);
+        $this->assertSame($track1Fixture['url'], $data['url']);
+        $this->assertSame(Music::PROVIDERS[$track1Fixture['provider']], $data['provider']);
+        $this->assertSame($track1Fixture['provider_key'], $data['provider_key']);
+        $this->assertSame($track1Fixture['title'], $data['title']);
+        $this->assertSame($track1Fixture['image'], $data['image']);
+
+        $format = fn(int $value): string => Yii::$app->formatter->asDate($value);
+        $this->assertSame($format($track1Fixture['created_at']), $data['created_at']);
     }
 
     public function testFind(): void
@@ -50,20 +64,17 @@ class TrackTest extends TestCase
 
     public function testGetGenres(): void
     {
-        $this->db->seeder('music', ['id'], [
-            ['url1', Music::PROVIDER_BANDCAMP, 'key1', 'title1', 'image1', Music::TYPE_TRACK, false, time(), time()],
-        ]);
+        $this->getFixture('track')->load();
 
-        $this->db->seeder('music_genre', ['id'], [
-            ['genre1', 1, time(), time()],
-        ]);
+        /** @var TrackGenreFixture $fixture */
+        $fixture = $this->getFixture('genre');
+        $fixture->load();
+        $genre1Fixture = $fixture->data['genre1'];
 
-        $this->db->seeder('music_genre_assn', [], [
-            [1, 1],
-        ]);
+        $this->getFixture('genreAssn')->load();
 
         $data = Track::find()->all();
-        $this->assertSame('genre1', $data[0]->genres[0]->name);
+        $this->assertSame($genre1Fixture['name'], $data[0]->genres[0]->name);
     }
 
     public function testBehaviors(): void

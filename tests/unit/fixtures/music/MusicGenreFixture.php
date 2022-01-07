@@ -2,20 +2,20 @@
 
 declare(strict_types=1);
 
-namespace app\tests\unit\fixtures\bookmark;
+namespace app\tests\unit\fixtures\music;
 
-use app\models\BookmarkTag;
+use app\models\MusicGenre;
 use yii\test\ActiveFixture;
 
-class BookmarkTagFixture extends ActiveFixture
+class MusicGenreFixture extends ActiveFixture
 {
-    public $modelClass = BookmarkTag::class;
+    public $modelClass = MusicGenre::class;
 
     protected function getData(): array
     {
         return [
-            'tag1' => [
-                'name' => 'tag1',
+            'genre1' => [
+                'name' => 'genre1',
                 'frequency' => 1,
                 'created_at' => time(),
                 'updated_at' => time(),

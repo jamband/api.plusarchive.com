@@ -7,6 +7,8 @@ namespace app\tests\unit\models;
 use app\models\MusicGenre;
 use app\tests\Database;
 use app\tests\TestCase;
+use app\tests\unit\fixtures\music\MusicGenreFixture;
+use app\tests\unit\fixtures\music\MusicGenreMinimalFixture;
 
 /** @see MusicGenre */
 class MusicGenreTest extends TestCase
@@ -17,6 +19,15 @@ class MusicGenreTest extends TestCase
         $this->db->createTable(MusicGenre::tableName());
     }
 
+    public function fixtures(): array
+    {
+        return [
+            'genre' => MusicGenreFixture::class,
+            'genreMinimal' => MusicGenreMinimalFixture::class,
+
+        ];
+    }
+
     public function testTableName(): void
     {
         $this->assertSame('music_genre', MusicGenre::tableName());
@@ -24,32 +35,26 @@ class MusicGenreTest extends TestCase
 
     public function testFields(): void
     {
-        $this->db->seeder('music_genre', ['id'], [
-            ['name1', 1, time(), time()],
-        ]);
+        /** @var MusicGenreFixture $fixture */
+        $fixture = $this->getFixture('genre');
+        $fixture->load();
+        $genre1Fixture = $fixture->data['genre1'];
 
         $data = MusicGenre::findOne(1)->toArray();
-        $this->assertArrayNotHasKey('id', $data);
-        $this->assertSame('name1', $data['name']);
-        $this->assertArrayNotHasKey('frequency', $data);
-        $this->assertArrayNotHasKey('created_at', $data);
-        $this->assertArrayNotHasKey('updated_at', $data);
+        $this->assertCount(1, $data);
+        $this->assertSame($genre1Fixture['name'], $data['name']);
     }
 
     public function testMinimal(): void
     {
-        $this->db->seeder('music_genre', ['id'], [
-            ['name1', 3, time(), time()],
-            ['name2', 8, time(), time()],
-            ['name3', 2, time(), time()],
-            ['name4', 1, time(), time()],
-            ['name5', 5, time(), time()],
-        ]);
+        /** @var MusicGenreMinimalFixture $fixture */
+        $fixture = $this->getFixture('genreMinimal');
+        $fixture->load();
 
         $data = MusicGenre::minimal(3);
-        $this->assertSame('name1', $data[0]);
-        $this->assertSame('name2', $data[1]);
-        $this->assertSame('name5', $data[2]);
+        $this->assertSame($fixture->data['genre1']['name'], $data[0]);
+        $this->assertSame($fixture->data['genre2']['name'], $data[1]);
+        $this->assertSame($fixture->data['genre5']['name'], $data[2]);
     }
 
     public function testTrait(): void

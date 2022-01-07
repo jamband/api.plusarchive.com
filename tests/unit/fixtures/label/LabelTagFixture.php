@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace app\tests\unit\fixtures\bookmark;
+namespace app\tests\unit\fixtures\label;
 
-use app\models\BookmarkTag;
+use app\models\LabelTag;
 use yii\test\ActiveFixture;
 
-class BookmarkTagFixture extends ActiveFixture
+class LabelTagFixture extends ActiveFixture
 {
-    public $modelClass = BookmarkTag::class;
+    public $modelClass = LabelTag::class;
 
     protected function getData(): array
     {

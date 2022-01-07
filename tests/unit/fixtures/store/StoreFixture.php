@@ -2,19 +2,19 @@
 
 declare(strict_types=1);
 
-namespace app\tests\unit\fixtures\bookmark;
+namespace app\tests\unit\fixtures\store;
 
-use app\models\Bookmark;
+use app\models\Store;
 use yii\test\ActiveFixture;
 
-class BookmarkFixture extends ActiveFixture
+class StoreFixture extends ActiveFixture
 {
-    public $modelClass = Bookmark::class;
+    public $modelClass = Store::class;
 
     protected function getData(): array
     {
         return [
-            'bookmark1' => [
+            'store1' => [
                 'name' => 'name1',
                 'country' => 'country1',
                 'url' => 'url1',

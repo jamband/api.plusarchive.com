@@ -7,6 +7,9 @@ namespace app\tests\unit\models;
 use app\models\StoreTag;
 use app\tests\Database;
 use app\tests\TestCase;
+use app\tests\unit\fixtures\store\StoreFixture;
+use app\tests\unit\fixtures\store\StoreTagAssnFixture;
+use app\tests\unit\fixtures\store\StoreTagFixture;
 
 /** @see StoreTag */
 class StoreTagTest extends TestCase
@@ -17,6 +20,15 @@ class StoreTagTest extends TestCase
         $this->db->createTable(StoreTag::tableName());
     }
 
+    public function fixtures(): array
+    {
+        return [
+            'store' => StoreFixture::class,
+            'tag' => StoreTagFixture::class,
+            'tagAssn' => StoreTagAssnFixture::class,
+        ];
+    }
+
     public function testTableName(): void
     {
         $this->assertSame('store_tag', StoreTag::tableName());
@@ -24,16 +36,14 @@ class StoreTagTest extends TestCase
 
     public function testFields(): void
     {
-        $this->db->seeder('store_tag', ['id'], [
-            ['name1', 1, time(), time()],
-        ]);
+        /** @var StoreTagFixture $fixture */
+        $fixture = $this->getFixture('tag');
+        $fixture->load();
+        $tag1Fixture = $fixture->data['tag1'];
 
         $data = StoreTag::findOne(1)->toArray();
-        $this->assertArrayNotHasKey('id', $data);
-        $this->assertSame('name1', $data['name']);
-        $this->assertArrayNotHasKey('frequency', $data);
-        $this->assertArrayNotHasKey('created_at', $data);
-        $this->assertArrayNotHasKey('updated_at', $data);
+        $this->assertCount(1, $data);
+        $this->assertSame($tag1Fixture['name'], $data['name']);
     }
 
     public function testTrait(): void
