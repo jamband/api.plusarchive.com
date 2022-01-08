@@ -28,10 +28,12 @@ class Database
             ->execute();
     }
 
-    public function createTable(string $table): void
+    public function createTable(string $table, array $columns = []): void
     {
         Yii::$app->getDb()->createCommand()
-            ->createTable($table, require sprintf(__DIR__.'/schema/%s.php', $table))
-            ->execute();
+            ->createTable($table, empty($columns)
+                ? require sprintf(__DIR__.'/schema/%s.php', $table)
+                : $columns
+            )->execute();
     }
 }
