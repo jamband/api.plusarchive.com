@@ -13,8 +13,6 @@ new Application(ArrayHelper::merge(require __DIR__.'/../../config/web.php', [
         'db' => null,
         'cache' => null,
         'log' => null,
-        'hashids' => [
-            'salt' => 'test',
-        ],
+        'hashids' => require __DIR__.'/../config/hashids.php',
     ],
 ]));
