@@ -26,6 +26,7 @@ class Controller extends BaseController
         return [
             'access' => [
                 'class' => AccessControl::class,
+                'only' => ['index'],
                 'rules' => [
                     [
                         'allow' => true,
