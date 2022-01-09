@@ -8,6 +8,11 @@ use app\tests\fixtures\BaseStoreFixture;
 
 class StoreFixture extends BaseStoreFixture
 {
+    public $depends = [
+        StoreTagFixture::class,
+        StoreTagAssnFixture::class,
+    ];
+
     protected function getData(): array
     {
         return [

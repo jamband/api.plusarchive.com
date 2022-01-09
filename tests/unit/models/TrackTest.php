@@ -10,7 +10,6 @@ use app\models\Track;
 use app\queries\TrackQuery;
 use app\tests\Database;
 use app\tests\unit\fixtures\music\TrackFixture;
-use app\tests\unit\fixtures\music\TrackGenreAssnFixture;
 use app\tests\unit\fixtures\music\TrackGenreFixture;
 use creocoder\taggable\TaggableBehavior;
 use PHPUnit\Framework\TestCase;
@@ -35,7 +34,6 @@ class TrackTest extends TestCase
         return [
             'track' => TrackFixture::class,
             'genre' => TrackGenreFixture::class,
-            'genreAssn' => TrackGenreAssnFixture::class,
         ];
     }
 
@@ -67,14 +65,11 @@ class TrackTest extends TestCase
 
     public function testGetGenres(): void
     {
-        $this->getFixture('track')->load();
+        $this->loadFixtures();
 
         /** @var TrackGenreFixture $fixture */
         $fixture = $this->getFixture('genre');
-        $fixture->load();
         $genre1Fixture = $fixture->data['genre1'];
-
-        $this->getFixture('genreAssn')->load();
 
         $data = Track::find()->all();
         $this->assertSame($genre1Fixture['name'], $data[0]->genres[0]->name);

@@ -9,7 +9,6 @@ use app\models\LabelTag;
 use app\queries\LabelQuery;
 use app\tests\Database;
 use app\tests\unit\fixtures\label\LabelFixture;
-use app\tests\unit\fixtures\label\LabelTagAssnFixture;
 use app\tests\unit\fixtures\label\LabelTagFixture;
 use creocoder\taggable\TaggableBehavior;
 use PHPUnit\Framework\TestCase;
@@ -33,7 +32,6 @@ class LabelTest extends TestCase
         return [
             'label' => LabelFixture::class,
             'tag' => LabelTagFixture::class,
-            'tagAssn' => LabelTagAssnFixture::class,
         ];
     }
 
@@ -65,14 +63,11 @@ class LabelTest extends TestCase
 
     public function testGetTags(): void
     {
-        $this->getFixture('label')->load();
+        $this->loadFixtures();
 
         /** @var LabelTagFixture $fixture */
         $fixture = $this->getFixture('tag');
-        $fixture->load();
         $tag1Fixture = $fixture->data['tag1'];
-
-        $this->getFixture('tagAssn')->load();
 
         $data = Label::find()->all();
         $this->assertSame($tag1Fixture['name'], $data[0]->tags[0]->name);

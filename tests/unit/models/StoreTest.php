@@ -9,7 +9,6 @@ use app\models\StoreTag;
 use app\queries\StoreQuery;
 use app\tests\Database;
 use app\tests\unit\fixtures\store\StoreFixture;
-use app\tests\unit\fixtures\store\StoreTagAssnFixture;
 use app\tests\unit\fixtures\store\StoreTagFixture;
 use creocoder\taggable\TaggableBehavior;
 use PHPUnit\Framework\TestCase;
@@ -33,7 +32,6 @@ class StoreTest extends TestCase
         return [
             'store' => StoreFixture::class,
             'tag' => StoreTagFixture::class,
-            'tagAssn' => StoreTagAssnFixture::class,
         ];
     }
 
@@ -65,14 +63,11 @@ class StoreTest extends TestCase
 
     public function testGetTags(): void
     {
-        $this->getFixture('store')->load();
+        $this->loadFixtures();
 
         /** @var StoreTagFixture $fixture */
         $fixture = $this->getFixture('tag');
-        $fixture->load();
         $tag1Fixture = $fixture->data['tag1'];
-
-        $this->getFixture('tagAssn')->load();
 
         $data = Store::find()->all();
         $this->assertSame($tag1Fixture['name'], $data[0]->tags[0]->name);

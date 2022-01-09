@@ -8,7 +8,6 @@ use app\models\Bookmark;
 use app\models\BookmarkTag;
 use app\queries\BookmarkQuery;
 use app\tests\Database;
-use app\tests\unit\fixtures\bookmark\BookmarkFieldsFixture;
 use app\tests\unit\fixtures\bookmark\BookmarkFixture;
 use app\tests\unit\fixtures\bookmark\BookmarkTagFixture;
 use creocoder\taggable\TaggableBehavior;
@@ -31,7 +30,6 @@ class BookmarkTest extends TestCase
     public function fixtures(): array
     {
         return [
-            'fields' => BookmarkFieldsFixture::class,
             'bookmark' => BookmarkFixture::class,
             'tag' => BookmarkTagFixture::class,
         ];
@@ -44,7 +42,7 @@ class BookmarkTest extends TestCase
 
     public function testFields(): void
     {
-        $fixture = $this->getFixture('fields');
+        $fixture = $this->getFixture('bookmark');
         $fixture->load();
         $bookmark1Fixture = $fixture->data['bookmark1'];
 

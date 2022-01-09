@@ -9,6 +9,11 @@ use app\tests\fixtures\BaseTrackFixture;
 
 class TrackFixture extends BaseTrackFixture
 {
+    public $depends = [
+        TrackGenreFixture::class,
+        TrackGenreAssnFixture::class,
+    ];
+
     protected function getData(): array
     {
         return [
