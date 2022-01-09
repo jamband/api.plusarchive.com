@@ -20,7 +20,7 @@ class TapeControllerTest extends TestCase
 {
     use FixtureTrait;
 
-    private BufferedTapeController $controller;
+    private BufferedTapeController $action;
 
     protected function setUp(): void
     {
@@ -29,14 +29,12 @@ class TapeControllerTest extends TestCase
         $this->db->createTable(MusicGenre::tableName());
         $this->db->createTable(MusicGenre::tableName().'_assn');
 
-        $this->controller = new BufferedTapeController('tape', Yii::$app);
+        $this->action = new BufferedTapeController('tape', Yii::$app);
     }
 
     protected function tearDown(): void
     {
         FileHelper::removeDirectory(Yii::getAlias('@runtime/tape'));
-
-        parent::tearDown();
     }
 
     public function fixtures(): array
@@ -51,8 +49,8 @@ class TapeControllerTest extends TestCase
     {
         $this->getFixture('tape')->load();
 
-        $this->assertSame(0, $this->controller->run('favorites', [1, 'Test Tape 1']));
-        $this->assertSame('Created: '.Yii::getAlias('@runtime/tape')."/test-tape-1.json\n", $this->controller->flushStdOutBuffer());
+        $this->assertSame(0, $this->action->run('favorites', [1, 'Test Tape 1']));
+        $this->assertSame('Created: '.Yii::getAlias('@runtime/tape')."/test-tape-1.json\n", $this->action->flushStdOutBuffer());
         $this->assertFileExists(Yii::getAlias('@tape/test-tape-1.json'));
 
         $tape = file_get_contents(Yii::getAlias('@tape/test-tape-1.json'));
