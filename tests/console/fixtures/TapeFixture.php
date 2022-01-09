@@ -5,12 +5,10 @@ declare(strict_types=1);
 namespace app\tests\console\fixtures;
 
 use app\models\Music;
-use yii\test\ActiveFixture;
+use app\tests\fixtures\BaseMusicFixture;
 
-class TapeFixture extends ActiveFixture
+class TapeFixture extends BaseMusicFixture
 {
-    public $modelClass = Music::class;
-
     protected function getData(): array
     {
         return [

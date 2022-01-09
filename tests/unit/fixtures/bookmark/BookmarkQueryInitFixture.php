@@ -6,7 +6,7 @@ namespace app\tests\unit\fixtures\bookmark;
 
 use app\tests\fixtures\BaseBookmarkFixture;
 
-class BookmarkFixture extends BaseBookmarkFixture
+class BookmarkQueryInitFixture extends BaseBookmarkFixture
 {
     public $depends = [
         BookmarkTagFixture::class,

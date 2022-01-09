@@ -6,13 +6,8 @@ namespace app\tests\unit\fixtures\bookmark;
 
 use app\tests\fixtures\BaseBookmarkFixture;
 
-class BookmarkFixture extends BaseBookmarkFixture
+class BookmarkFieldsFixture extends BaseBookmarkFixture
 {
-    public $depends = [
-        BookmarkTagFixture::class,
-        BookmarkTagAssnFixture::class,
-    ];
-
     protected function getData(): array
     {
         return [

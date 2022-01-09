@@ -5,13 +5,10 @@ declare(strict_types=1);
 namespace app\tests\unit\fixtures\music;
 
 use app\models\Music;
-use app\models\Track;
-use yii\test\ActiveFixture;
+use app\tests\fixtures\BaseTrackFixture;
 
-class TrackFixture extends ActiveFixture
+class TrackFixture extends BaseTrackFixture
 {
-    public $modelClass = Track::class;
-
     protected function getData(): array
     {
         return [
