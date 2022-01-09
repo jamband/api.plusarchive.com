@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace app\tests\unit\components;
 
 use app\components\Hashids;
-use app\tests\TestCase;
+use PHPUnit\Framework\TestCase;
 use Yii;
 
 /** @see Hashids */

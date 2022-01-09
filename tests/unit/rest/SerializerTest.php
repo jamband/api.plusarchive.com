@@ -10,10 +10,13 @@ use app\tests\feature\TestCase;
 use yii\data\ActiveDataProvider;
 use yii\db\ActiveRecord;
 use yii\test\ActiveFixture;
+use yii\test\FixtureTrait;
 
 /** @see Serializer */
 class SerializerTest extends TestCase
 {
+    use FixtureTrait;
+
     protected function setUp(): void
     {
         parent::setUp();

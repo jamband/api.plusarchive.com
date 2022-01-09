@@ -8,12 +8,15 @@ use app\models\Music;
 use app\models\Playlist;
 use app\queries\PlaylistQuery;
 use app\tests\Database;
-use app\tests\TestCase;
 use app\tests\unit\fixtures\music\PlaylistFixture;
+use PHPUnit\Framework\TestCase;
+use yii\test\FixtureTrait;
 
 /** @see Playlist */
 class PlaylistTest extends TestCase
 {
+    use FixtureTrait;
+
     public function setUp(): void
     {
         $this->db = new Database;

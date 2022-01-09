@@ -6,13 +6,16 @@ namespace app\tests\unit\models;
 
 use app\models\MusicGenre;
 use app\tests\Database;
-use app\tests\TestCase;
 use app\tests\unit\fixtures\music\MusicGenreFixture;
 use app\tests\unit\fixtures\music\MusicGenreMinimalFixture;
+use PHPUnit\Framework\TestCase;
+use yii\test\FixtureTrait;
 
 /** @see MusicGenre */
 class MusicGenreTest extends TestCase
 {
+    use FixtureTrait;
+
     public function setUp(): void
     {
         $this->db = new Database;

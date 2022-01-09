@@ -6,12 +6,15 @@ namespace app\tests\unit\models;
 
 use app\models\LabelTag;
 use app\tests\Database;
-use app\tests\TestCase;
 use app\tests\unit\fixtures\label\LabelTagFixture;
+use PHPUnit\Framework\TestCase;
+use yii\test\FixtureTrait;
 
 /** @see LabelTag */
 class LabelTagTest extends TestCase
 {
+    use FixtureTrait;
+
     protected function setUp(): void
     {
         $this->db = new Database;

@@ -8,15 +8,18 @@ use app\models\Bookmark;
 use app\models\BookmarkTag;
 use app\queries\BookmarkQuery;
 use app\tests\Database;
-use app\tests\TestCase;
+use app\tests\unit\fixtures\bookmark\BookmarkFieldsFixture;
 use app\tests\unit\fixtures\bookmark\BookmarkFixture;
-use app\tests\unit\fixtures\bookmark\BookmarkTagAssnFixture;
 use app\tests\unit\fixtures\bookmark\BookmarkTagFixture;
 use creocoder\taggable\TaggableBehavior;
+use PHPUnit\Framework\TestCase;
+use yii\test\FixtureTrait;
 
 /** @see Bookmark */
 class BookmarkTest extends TestCase
 {
+    use FixtureTrait;
+
     public function setUp(): void
     {
         $this->db = new Database;
@@ -28,9 +31,9 @@ class BookmarkTest extends TestCase
     public function fixtures(): array
     {
         return [
+            'fields' => BookmarkFieldsFixture::class,
             'bookmark' => BookmarkFixture::class,
             'tag' => BookmarkTagFixture::class,
-            'tagAssn' => BookmarkTagAssnFixture::class,
         ];
     }
 
@@ -41,8 +44,7 @@ class BookmarkTest extends TestCase
 
     public function testFields(): void
     {
-        /** @var BookmarkFixture $fixture */
-        $fixture = $this->getFixture('bookmark');
+        $fixture = $this->getFixture('fields');
         $fixture->load();
         $bookmark1Fixture = $fixture->data['bookmark1'];
 
@@ -62,14 +64,9 @@ class BookmarkTest extends TestCase
 
     public function testGetTags(): void
     {
-        $this->getFixture('bookmark')->load();
-
-        /** @var BookmarkTagFixture $fixture */
+        $this->loadFixtures();
         $fixture = $this->getFixture('tag');
-        $fixture->load();
         $tag1Fixture = $fixture->data['tag1'];
-
-        $this->getFixture('tagAssn')->load();
 
         $data = Bookmark::find()->all();
         $this->assertSame($tag1Fixture['name'], $data[0]->tags[0]->name);

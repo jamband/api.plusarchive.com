@@ -8,11 +8,14 @@ use app\models\Label;
 use app\models\LabelTag;
 use app\queries\LabelQuery;
 use app\tests\Database;
-use app\tests\TestCase;
+use PHPUnit\Framework\TestCase;
+use yii\test\FixtureTrait;
 
 /** @see LabelQuery */
 class LabelQueryTest extends TestCase
 {
+    use FixtureTrait;
+
     public function setUp(): void
     {
         $this->db = new Database;

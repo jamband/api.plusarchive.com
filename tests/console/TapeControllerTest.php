@@ -9,14 +9,17 @@ use app\models\Music;
 use app\models\MusicGenre;
 use app\tests\console\fixtures\TapeFixture;
 use app\tests\Database;
-use app\tests\TestCase;
 use DateTime;
+use PHPUnit\Framework\TestCase;
 use Yii;
 use yii\helpers\FileHelper;
+use yii\test\FixtureTrait;
 
 /** @see TapeController */
 class TapeControllerTest extends TestCase
 {
+    use FixtureTrait;
+
     private BufferedTapeController $controller;
 
     protected function setUp(): void

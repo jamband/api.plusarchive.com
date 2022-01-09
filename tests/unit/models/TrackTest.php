@@ -9,16 +9,19 @@ use app\models\MusicGenre;
 use app\models\Track;
 use app\queries\TrackQuery;
 use app\tests\Database;
-use app\tests\TestCase;
 use app\tests\unit\fixtures\music\TrackFixture;
 use app\tests\unit\fixtures\music\TrackGenreAssnFixture;
 use app\tests\unit\fixtures\music\TrackGenreFixture;
 use creocoder\taggable\TaggableBehavior;
+use PHPUnit\Framework\TestCase;
 use Yii;
+use yii\test\FixtureTrait;
 
 /** @see Track */
 class TrackTest extends TestCase
 {
+    use FixtureTrait;
+
     public function setUp(): void
     {
         $this->db = new Database;

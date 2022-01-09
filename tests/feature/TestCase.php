@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace app\tests\feature;
 
+use PHPUnit\Framework\TestCase as BaseTestCase;
 use Yii;
 use yii\web\Request;
 use yii\web\Response;
-use app\tests\TestCase as BaseTestCase;
 
 /**
  * @property Request $request

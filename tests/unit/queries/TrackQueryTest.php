@@ -9,11 +9,14 @@ use app\models\MusicGenre;
 use app\models\Track;
 use app\queries\TrackQuery;
 use app\tests\Database;
-use app\tests\TestCase;
+use PHPUnit\Framework\TestCase;
+use yii\test\FixtureTrait;
 
 /** @see TrackQuery */
 class TrackQueryTest extends TestCase
 {
+    use FixtureTrait;
+
     public function setUp(): void
     {
         $this->db = new Database;

@@ -6,13 +6,16 @@ namespace app\tests\unit\models;
 
 use app\models\ActiveRecordTrait;
 use app\tests\Database;
-use app\tests\TestCase;
+use PHPUnit\Framework\TestCase;
 use yii\db\ActiveRecord;
 use yii\test\ActiveFixture;
+use yii\test\FixtureTrait;
 
 /** @see ActiveRecordTrait */
 class ActiveRecordTraitTest extends TestCase
 {
+    use FixtureTrait;
+
     public function setUp(): void
     {
         $this->db = new Database;
@@ -27,13 +30,13 @@ class ActiveRecordTraitTest extends TestCase
     public function fixtures(): array
     {
         return [
-            'activeRecordTrait' => ActiveRecordTraitFixture::class,
+            'foo' => FooFixture::class,
         ];
     }
 
     public function testNames(): void
     {
-        $this->getFixture('activeRecordTrait')->load();
+        $this->getFixture('foo')->load();
 
         $expected = ['name1', 'name2', 'name3'];
         $this->assertSame($expected, Foo::names());
@@ -41,7 +44,7 @@ class ActiveRecordTraitTest extends TestCase
 
     public function testCountries(): void
     {
-        $this->getFixture('activeRecordTrait')->load();
+        $this->getFixture('foo')->load();
 
         $expected = ['country1', 'country2', 'country3'];
         $this->assertSame($expected, Foo::countries());
@@ -49,7 +52,7 @@ class ActiveRecordTraitTest extends TestCase
 
     public function testHasName(): void
     {
-        $this->getFixture('activeRecordTrait')->load();
+        $this->getFixture('foo')->load();
 
         $names = Foo::names();
         $this->assertSame(true, Foo::hasName($names[0]));
@@ -69,7 +72,7 @@ class Foo extends ActiveRecord
     }
 }
 
-class ActiveRecordTraitFixture extends ActiveFixture
+class FooFixture extends ActiveFixture
 {
     public $modelClass = Foo::class;
 

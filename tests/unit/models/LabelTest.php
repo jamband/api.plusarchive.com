@@ -8,15 +8,18 @@ use app\models\Label;
 use app\models\LabelTag;
 use app\queries\LabelQuery;
 use app\tests\Database;
-use app\tests\TestCase;
 use app\tests\unit\fixtures\label\LabelFixture;
 use app\tests\unit\fixtures\label\LabelTagAssnFixture;
 use app\tests\unit\fixtures\label\LabelTagFixture;
 use creocoder\taggable\TaggableBehavior;
+use PHPUnit\Framework\TestCase;
+use yii\test\FixtureTrait;
 
 /** @see Label */
 class LabelTest extends TestCase
 {
+    use FixtureTrait;
+
     public function setUp(): void
     {
         $this->db = new Database;
