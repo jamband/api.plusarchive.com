@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use yii\data\Pagination;
+use yii\filters\ContentNegotiator;
 use yii\helpers\ArrayHelper;
 use yii\web\JsonParser;
 use yii\web\JsonResponseFormatter;
@@ -10,6 +11,14 @@ use yii\web\Response;
 
 return ArrayHelper::merge(require __DIR__.'/base.php', [
     'id' => 'web',
+    'bootstrap' => [
+        [
+            'class' => ContentNegotiator::class,
+            'formats' => [
+                'application/json' => Response::FORMAT_JSON,
+            ],
+        ],
+    ],
     'components' => [
         'user' => [
             'identityClass' => '',

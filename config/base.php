@@ -5,21 +5,11 @@ declare(strict_types=1);
 use app\components\Hashids;
 use yii\caching\ApcCache;
 use yii\db\Connection;
-use yii\filters\ContentNegotiator;
 use yii\log\FileTarget;
-use yii\web\Response;
 
 return [
     'basePath' => dirname(__DIR__),
-    'bootstrap' => [
-        'log',
-        [
-            'class' => ContentNegotiator::class,
-            'formats' => [
-                'application/json' => Response::FORMAT_JSON,
-            ],
-        ],
-    ],
+    'bootstrap' => ['log'],
     'components' => [
         'db' => [
             'class' => Connection::class,
