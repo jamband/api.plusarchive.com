@@ -39,12 +39,19 @@ class TapeController extends Controller
             ->asArray()
             ->all();
 
+        $aspectRatio = fn(string $provider) =>
+            Music::PROVIDER_BANDCAMP === (int)$provider || Music::PROVIDER_SOUNDCLOUD === (int)$provider
+                ? '1/1'
+                : '16/9';
+
         $items = [];
         foreach ($tracks as $i => $item) {
             $items[$i]['title'] = $item['title'];
             $items[$i]['provider'] = Music::PROVIDERS[$item['provider']];
             $items[$i]['provider_key'] = $item['provider_key'];
             $items[$i]['image'] = $item['image'];
+            $items[$i]['image_aspect_ratio'] = $aspectRatio($item['provider']);
+            $items[$i]['embed_aspect_ratio'] = $aspectRatio($item['provider']);
             $items[$i]['slug'] = Inflector::slug($item['title']);
         }
 
