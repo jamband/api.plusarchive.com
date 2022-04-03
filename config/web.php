@@ -5,6 +5,7 @@ declare(strict_types=1);
 use yii\data\Pagination;
 use yii\filters\ContentNegotiator;
 use yii\helpers\ArrayHelper;
+use yii\web\GroupUrlRule;
 use yii\web\JsonParser;
 use yii\web\JsonResponseFormatter;
 use yii\web\Response;
@@ -42,30 +43,51 @@ return ArrayHelper::merge(require __DIR__.'/base.php', [
             'enableStrictParsing' => true,
             'showScriptName' => false,
             'rules' => [
-                'bookmarks/countries' => 'bookmark/countries',
-                'bookmarks/search' => 'bookmark/search',
-                'bookmarks/tags' => 'bookmark/tags',
-                'bookmarks' => 'bookmark/index',
-
-                'labels/countries' => 'label/countries',
-                'labels/search' => 'label/search',
-                'labels/tags' => 'label/tags',
-                'labels' => 'label/index',
-
-                'playlists/<id:[\w-]{11}>' => 'playlist/view',
-                'playlists' => 'playlist/index',
-
-                'stores/countries' => 'store/countries',
-                'stores/search' => 'store/search',
-                'stores/tags' => 'store/tags',
-                'stores' => 'store/index',
-
-                'tracks/favorites' => 'track/favorites',
-                'tracks/genres' => 'track/genres',
-                'tracks/minimal-genres' => 'track/minimal-genres',
-                'tracks/search' => 'track/search',
-                'tracks/<id:[\w-]{11}>' => 'track/view',
-                'tracks' => 'track/index',
+                new GroupUrlRule([
+                'prefix' => 'bookmarks',
+                    'rules' => [
+                        'countries' => 'countries',
+                        'search' => 'search',
+                        'tags' => 'tags',
+                        '' => 'index',
+                    ],
+                ]),
+                new GroupUrlRule([
+                    'prefix' => 'labels',
+                    'rules' => [
+                        'countries' => 'countries',
+                        'search' => 'search',
+                        'tags' => 'tags',
+                        '' => 'index',
+                    ],
+                ]),
+                new GroupUrlRule([
+                    'prefix' => 'playlists',
+                    'rules' => [
+                        '<id:[\w-]{11}>' => 'view',
+                        '' => 'index',
+                    ],
+                ]),
+                new GroupUrlRule([
+                    'prefix' => 'stores',
+                    'rules' => [
+                        'countries' => 'countries',
+                        'search' => 'search',
+                        'tags' => 'tags',
+                        '' => 'index',
+                    ],
+                ]),
+                new GroupUrlRule([
+                    'prefix' => 'tracks',
+                    'rules' => [
+                        'favorites' => 'favorites',
+                        'genres' => 'genres',
+                        'minimal-genres' => 'minimal-genres',
+                        'search' => 'search',
+                        '<id:[\w-]{11}>' => 'view',
+                        '' => 'index',
+                    ],
+                ]),
             ],
         ],
         'errorHandler' => [
