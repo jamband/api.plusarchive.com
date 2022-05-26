@@ -34,11 +34,7 @@ class TrackQuery extends ActiveQuery
     {
         $provider = array_search($provider, Music::PROVIDERS, true);
 
-        if (false !== $provider) {
-            return $this->andWhere(['provider' => $provider]);
-        }
-
-        return $this->nothing();
+        return $this->andWhere(['provider' => false !== $provider ? $provider : null]);
     }
 
     public function searchInTitleOrder(string $search): TrackQuery

@@ -86,6 +86,9 @@ class TrackQueryTest extends TestCase
 
         $data = Track::find()->provider('YouTube')->all();
         $this->assertSame(0, count($data));
+
+        $data = Track::find()->provider('InvalidValue')->all();
+        $this->assertSame(0, count($data));
     }
 
     public function testSearchInTitleOrder(): void
