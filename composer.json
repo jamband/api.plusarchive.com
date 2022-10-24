@@ -1,0 +1,47 @@
+{
+  "require": {
+    "php": "^8.0",
+    "ext-pdo": "*",
+    "guzzlehttp/guzzle": "^7.5",
+    "hashids/hashids": "^4.1",
+    "jamband/ripple": "^0.11.0",
+    "laravel/framework": "^9.36"
+  },
+  "require-dev": {
+    "brianium/paratest": "^6.4",
+    "fakerphp/faker": "^1.20",
+    "friendsofphp/php-cs-fixer": "^3.12",
+    "mockery/mockery": "^1.5",
+    "nunomaduro/collision": "^6.3",
+    "nunomaduro/larastan": "^2.2",
+    "phpunit/phpunit": "^9.5"
+  },
+  "autoload": {
+    "psr-4": {
+      "App\\": "app/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tests\\": "tests/"
+    }
+  },
+  "scripts": {
+    "post-autoload-dump": [
+      "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
+      "@php artisan package:discover --ansi"
+    ],
+    "post-update-cmd": "@php artisan vendor:publish --tag=laravel-assets --ansi --force",
+    "dev": "@composer i -q",
+    "format": "php-cs-fixer fix --dry-run",
+    "analyse": "phpstan analyse --memory-limit=2G",
+    "serve": "@php -S 127.0.0.1:8000 -t public",
+    "clean": "@php artisan dev:clean && rm -rf vendor"
+  },
+  "config": {
+    "optimize-autoloader": true,
+    "sort-packages": true
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true
+}

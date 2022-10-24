@@ -1,0 +1,29 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Groups\Tracks;
+
+use Illuminate\Http\JsonResponse;
+use Illuminate\Routing\Controller;
+use Illuminate\Routing\ResponseFactory;
+
+class StopAllUrges extends Controller
+{
+    public function __construct(
+        private ResponseFactory $response,
+        private Track $track,
+    ) {
+        $this->middleware('verified');
+        $this->middleware('auth');
+    }
+
+    public function __invoke(): JsonResponse
+    {
+        $this->track->stopAllUrges();
+
+        return $this->response->json(
+            status: 204,
+        );
+    }
+}
