@@ -42,7 +42,7 @@ class TrackGenreTest extends TestCase
         $this->assertSame(['bar', 'baz', 'foo'], $this->genre->getNames());
     }
 
-    public function testGetKeysByNames(): void
+    public function testGetIdsByNames(): void
     {
         $this->assertDatabaseCount($this->genre::class, 0);
 

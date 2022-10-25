@@ -42,7 +42,7 @@ class LabelTagTest extends TestCase
         $this->assertSame(['bar', 'baz', 'foo'], $this->tag->getNames());
     }
 
-    public function testGetKeyNamesByNames(): void
+    public function testGetIdsByNames(): void
     {
         $this->assertDatabaseCount($this->tag::class, 0);
 
