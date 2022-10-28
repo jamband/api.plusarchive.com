@@ -11,6 +11,7 @@ use Illuminate\Routing\ResponseFactory;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
 
@@ -43,6 +44,13 @@ class Handler extends ExceptionHandler
             return $this->response->json(
                 data: ['message' => 'Model Not Found.'],
                 status: 404,
+            );
+        }
+
+        if ($e instanceof MethodNotAllowedHttpException) {
+            return $this->response->json(
+                data: ['message' => 'Method Not Allowed.'],
+                status: $e->getStatusCode(),
             );
         }
 
