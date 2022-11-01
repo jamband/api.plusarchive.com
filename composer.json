@@ -10,7 +10,7 @@
   "require-dev": {
     "brianium/paratest": "^6.4",
     "fakerphp/faker": "^1.20",
-    "friendsofphp/php-cs-fixer": "^3.12",
+    "friendsofphp/php-cs-fixer": "^3.13",
     "mockery/mockery": "^1.5",
     "nunomaduro/collision": "^6.3",
     "nunomaduro/larastan": "^2.2",
