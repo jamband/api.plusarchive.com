@@ -26,9 +26,6 @@ class MultipleUrlsRule implements Rule
 
     public function message(): string
     {
-        $message = __('validation.multiple_urls');
-        assert(is_string($message));
-
-        return $message;
+        return __('validation.multiple_urls');
     }
 }

@@ -21,9 +21,6 @@ class RippleImageRule implements Rule
 
     public function message(): string
     {
-        $message = __('validation.ripple.image');
-        assert(is_string($message));
-
-        return $message;
+        return __('validation.ripple.image');
     }
 }

@@ -17,9 +17,6 @@ class TaggableRule implements Taggable
 
     public function message(): string
     {
-        $message = __('validation.taggable');
-        assert(is_string($message));
-
-        return $message;
+        return __('validation.taggable');
     }
 }

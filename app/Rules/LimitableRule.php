@@ -25,9 +25,6 @@ class LimitableRule implements Rule
 
     public function message(): string
     {
-        $message = __('validation.limitable', ['limit' => $this->limit]);
-        assert(is_string($message));
-
-        return $message;
+        return __('validation.limitable', ['limit' => $this->limit]);
     }
 }
