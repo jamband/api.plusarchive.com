@@ -34,7 +34,7 @@
     "post-update-cmd": "@php artisan vendor:publish --tag=laravel-assets --ansi --force",
     "dev": "@composer i -q",
     "format": "php-cs-fixer fix --dry-run",
-    "analyse": "phpstan analyse --memory-limit=2G",
+    "analyse": "phpstan analyse --memory-limit=2G --xdebug",
     "serve": "@php -S 127.0.0.1:8000 -t public",
     "clean": "@php artisan dev:clean && rm -rf vendor"
   },
