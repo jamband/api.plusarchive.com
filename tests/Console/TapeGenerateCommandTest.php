@@ -113,7 +113,7 @@ class TapeGenerateCommandTest extends TestCase
         $date = new Carbon();
 
         $this->assertCount(5, get_object_vars($tape));
-        $this->assertSame('777', $tape->id);
+        $this->assertSame(777, $tape->id);
         $this->assertSame('Test / Tape', $tape->title);
         $this->assertSame('/'.$date->format('Y').'/'.$date->format('m').'/test-tape', $tape->path);
         $this->assertSame($date->format('M d, Y'), $tape->date);

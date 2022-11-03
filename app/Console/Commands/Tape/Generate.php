@@ -50,7 +50,7 @@ class Generate extends Command
 
         $now = Carbon::now();
 
-        $data['id'] = $id;
+        $data['id'] = (int)$id;
         $data['title'] = $title;
         $data['path'] = '/'.$now->format('Y').'/'.$now->format('m').'/'.Str::slug($title);
         $data['date'] = $now->format('M d, Y');
