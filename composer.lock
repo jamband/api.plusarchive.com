@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ee063aba721400675a32a3d5fabeb677",
+    "content-hash": "8724814a43ae4719748316720552bdbe",
     "packages": [
         {
             "name": "brick/math",
@@ -969,22 +969,24 @@
         },
         {
             "name": "jamband/ripple",
-            "version": "v0.12.0",
+            "version": "v0.13.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/jamband/ripple.git",
-                "reference": "1b4dcf9f8e2ed172dba819df99108020e1dde4fe"
+                "reference": "4da92c33e9e49ec87a25b18f2415812eff631c36"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jamband/ripple/zipball/1b4dcf9f8e2ed172dba819df99108020e1dde4fe",
-                "reference": "1b4dcf9f8e2ed172dba819df99108020e1dde4fe",
+                "url": "https://api.github.com/repos/jamband/ripple/zipball/4da92c33e9e49ec87a25b18f2415812eff631c36",
+                "reference": "4da92c33e9e49ec87a25b18f2415812eff631c36",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.4|^8.0"
+                "php": "^8.0"
             },
             "require-dev": {
+                "friendsofphp/php-cs-fixer": "^3.13",
+                "phpstan/phpstan": "^1.9",
                 "phpunit/phpunit": "^9.5"
             },
             "type": "library",
@@ -1017,9 +1019,9 @@
             ],
             "support": {
                 "issues": "https://github.com/jamband/ripple/issues",
-                "source": "https://github.com/jamband/ripple/tree/v0.12.0"
+                "source": "https://github.com/jamband/ripple/tree/v0.13.1"
             },
-            "time": "2022-10-27T14:30:02+00:00"
+            "time": "2022-11-28T16:25:54+00:00"
         },
         {
             "name": "laravel/framework",
@@ -1457,16 +1459,16 @@
         },
         {
             "name": "league/flysystem",
-            "version": "3.10.3",
+            "version": "3.10.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/flysystem.git",
-                "reference": "8013fb046c6a244b2b1b75cc95d732ed6bcdeb8a"
+                "reference": "a7790f3dd1b27af81d380e6b2afa77c16ab7e181"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/8013fb046c6a244b2b1b75cc95d732ed6bcdeb8a",
-                "reference": "8013fb046c6a244b2b1b75cc95d732ed6bcdeb8a",
+                "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/a7790f3dd1b27af81d380e6b2afa77c16ab7e181",
+                "reference": "a7790f3dd1b27af81d380e6b2afa77c16ab7e181",
                 "shasum": ""
             },
             "require": {
@@ -1528,7 +1530,7 @@
             ],
             "support": {
                 "issues": "https://github.com/thephpleague/flysystem/issues",
-                "source": "https://github.com/thephpleague/flysystem/tree/3.10.3"
+                "source": "https://github.com/thephpleague/flysystem/tree/3.10.4"
             },
             "funding": [
                 {
@@ -1544,7 +1546,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-11-14T10:42:43+00:00"
+            "time": "2022-11-26T19:48:01+00:00"
         },
         {
             "name": "league/mime-type-detection",
