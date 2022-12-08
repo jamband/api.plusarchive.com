@@ -5,7 +5,7 @@
     "guzzlehttp/guzzle": "^7.5",
     "hashids/hashids": "^4.1",
     "jamband/ripple": "^0.13.1",
-    "laravel/framework": "^9.42"
+    "laravel/framework": "^9.43"
   },
   "require-dev": {
     "brianium/paratest": "^6.4",
