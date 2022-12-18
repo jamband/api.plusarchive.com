@@ -138,7 +138,7 @@ class CreateTrackTest extends TestCase
     public function testCreateTrackWithGenres(): void
     {
         $track = new Track();
-        $pivotTable = $track->genres()->getTAble();
+        $pivotTable = $track->genres()->getTable();
 
         $provider = MusicProviderFactory::new()
             ->createOne();
