@@ -54,6 +54,6 @@ class GetCsrfCookieTest extends TestCase
     {
         return (new Carbon())
             ->addMinutes($this->app['config']['session.lifetime'])
-            ->format('D, d M Y H:i:s').' GMT';
+            ->format('D, d M Y H:i:s \G\M\T');
     }
 }
