@@ -35,11 +35,10 @@ class TrackImage
         assert(is_string($image));
 
         $response = $this->client->get($image);
+        assert($response instanceof Response);
 
-        if ($response instanceof Response) {
-            return $response->ok() ? $image : $this->url;
-        }
-
-        return $this->url;
+        return $response->ok()
+            ? $image
+            : $this->url;
     }
 }
