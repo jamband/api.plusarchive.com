@@ -11,8 +11,8 @@ use Illuminate\Routing\ResponseFactory;
 class GetLabelCountries extends Controller
 {
     public function __construct(
-        private Label $label,
-        private ResponseFactory $response,
+        private readonly Label $label,
+        private readonly ResponseFactory $response,
     ) {
     }
 

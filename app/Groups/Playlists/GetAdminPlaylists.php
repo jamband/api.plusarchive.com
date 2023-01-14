@@ -10,8 +10,8 @@ use Illuminate\Routing\Controller;
 class GetAdminPlaylists extends Controller
 {
     public function __construct(
-        private Playlist $playlist,
-        private Request $request,
+        private readonly Playlist $playlist,
+        private readonly Request $request,
     ) {
         $this->middleware('verified');
         $this->middleware('auth');

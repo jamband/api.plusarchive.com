@@ -13,9 +13,9 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 class ToggleUrgeTrack extends Controller
 {
     public function __construct(
-        private Hashids $hashids,
-        private Track $track,
-        private ResponseFactory $response,
+        private readonly Hashids $hashids,
+        private readonly Track $track,
+        private readonly ResponseFactory $response,
     ) {
         $this->middleware('verified');
         $this->middleware('auth');

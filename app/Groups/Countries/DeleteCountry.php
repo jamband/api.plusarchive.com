@@ -11,8 +11,8 @@ use Illuminate\Routing\ResponseFactory;
 class DeleteCountry extends Controller
 {
     public function __construct(
-        private Country $country,
-        private ResponseFactory $response,
+        private readonly Country $country,
+        private readonly ResponseFactory $response,
     ) {
         $this->middleware('verified');
         $this->middleware('auth');

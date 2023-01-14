@@ -12,9 +12,9 @@ use Illuminate\Routing\UrlGenerator;
 class CreateStore extends Controller
 {
     public function __construct(
-        private Store $store,
-        private ResponseFactory $response,
-        private UrlGenerator $url,
+        private readonly Store $store,
+        private readonly ResponseFactory $response,
+        private readonly UrlGenerator $url,
     ) {
         $this->middleware('verified');
         $this->middleware('auth');

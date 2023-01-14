@@ -12,9 +12,9 @@ use Illuminate\Routing\UrlGenerator;
 class CreateStoreTag extends Controller
 {
     public function __construct(
-        private StoreTag $tag,
-        private ResponseFactory $response,
-        private UrlGenerator $url,
+        private readonly StoreTag $tag,
+        private readonly ResponseFactory $response,
+        private readonly UrlGenerator $url,
     ) {
         $this->middleware('verified');
         $this->middleware('auth');

@@ -12,9 +12,9 @@ use Illuminate\Routing\UrlGenerator;
 class CreateBookmark extends Controller
 {
     public function __construct(
-        private Bookmark $bookmark,
-        private ResponseFactory $response,
-        private UrlGenerator $url,
+        private readonly Bookmark $bookmark,
+        private readonly ResponseFactory $response,
+        private readonly UrlGenerator $url,
     ) {
         $this->middleware('verified');
         $this->middleware('auth');

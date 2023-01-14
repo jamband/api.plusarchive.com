@@ -11,8 +11,8 @@ use Illuminate\Routing\ResponseFactory;
 class DeleteStore extends Controller
 {
     public function __construct(
-        private Store $store,
-        private ResponseFactory $response,
+        private readonly Store $store,
+        private readonly ResponseFactory $response,
     ) {
         $this->middleware('verified');
         $this->middleware('auth');

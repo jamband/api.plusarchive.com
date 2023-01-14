@@ -13,7 +13,7 @@ use Illuminate\Routing\ResponseFactory;
 class EnsureEmailIsVerified
 {
     public function __construct(
-        private ResponseFactory $response,
+        private readonly ResponseFactory $response,
     ) {
     }
 

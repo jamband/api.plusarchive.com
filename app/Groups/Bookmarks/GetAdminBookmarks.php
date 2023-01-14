@@ -10,8 +10,8 @@ use Illuminate\Routing\Controller;
 class GetAdminBookmarks extends Controller
 {
     public function __construct(
-        private Bookmark $bookmark,
-        private Request $request,
+        private readonly Bookmark $bookmark,
+        private readonly Request $request,
     ) {
         $this->middleware('verified');
         $this->middleware('auth');

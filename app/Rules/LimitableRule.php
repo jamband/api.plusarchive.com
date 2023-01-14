@@ -9,8 +9,8 @@ use Illuminate\Contracts\Validation\Rule;
 class LimitableRule implements Rule
 {
     public function __construct(
-        private int $count,
-        private int $limit,
+        private readonly int $count,
+        private readonly int $limit,
     ) {
     }
 

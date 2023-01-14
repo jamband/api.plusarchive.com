@@ -12,8 +12,8 @@ use Illuminate\Routing\ResponseFactory;
 class RedirectIfAuthenticated
 {
     public function __construct(
-        private AuthManager $auth,
-        private ResponseFactory $response,
+        private readonly AuthManager $auth,
+        private readonly ResponseFactory $response,
     ) {
     }
 

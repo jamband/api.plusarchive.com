@@ -12,8 +12,8 @@ use Illuminate\Routing\ResponseFactory;
 class GetLabelTags extends Controller
 {
     public function __construct(
-        private ResponseFactory $response,
-        private LabelTag $tag,
+        private readonly ResponseFactory $response,
+        private readonly LabelTag $tag,
     ) {
     }
 

@@ -10,8 +10,8 @@ use Illuminate\Routing\Controller;
 class GetAdminBookmarkTags extends Controller
 {
     public function __construct(
-        private BookmarkTag $tag,
-        private Request $request,
+        private readonly BookmarkTag $tag,
+        private readonly Request $request,
     ) {
         $this->middleware('verified');
         $this->middleware('auth');

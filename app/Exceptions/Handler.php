@@ -19,7 +19,7 @@ class Handler extends ExceptionHandler
 {
     public function __construct(
         Container $container,
-        private ResponseFactory $response,
+        private readonly ResponseFactory $response,
     ) {
         parent::__construct($container);
     }

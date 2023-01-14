@@ -10,8 +10,8 @@ use Illuminate\Routing\Controller;
 class GetSearchLabels extends Controller
 {
     public function __construct(
-        private Request $request,
-        private Label $label,
+        private readonly Request $request,
+        private readonly Label $label,
     ) {
     }
 

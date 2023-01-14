@@ -11,8 +11,8 @@ use Illuminate\Routing\ResponseFactory;
 class GetLabelTag extends Controller
 {
     public function __construct(
-        private LabelTag $tag,
-        private ResponseFactory $response,
+        private readonly LabelTag $tag,
+        private readonly ResponseFactory $response,
     ) {
         $this->middleware('verified');
         $this->middleware('auth');

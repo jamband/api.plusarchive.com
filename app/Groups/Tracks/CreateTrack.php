@@ -13,10 +13,10 @@ use Illuminate\Routing\UrlGenerator;
 class CreateTrack extends Controller
 {
     public function __construct(
-        private Track $track,
-        private ResponseFactory $response,
-        private UrlGenerator $url,
-        private Hashids $hashids,
+        private readonly Track $track,
+        private readonly ResponseFactory $response,
+        private readonly UrlGenerator $url,
+        private readonly Hashids $hashids,
     ) {
         $this->middleware('verified');
         $this->middleware('auth');

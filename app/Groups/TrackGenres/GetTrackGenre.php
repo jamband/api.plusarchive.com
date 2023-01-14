@@ -11,8 +11,8 @@ use Illuminate\Routing\ResponseFactory;
 class GetTrackGenre extends Controller
 {
     public function __construct(
-        private TrackGenre $genre,
-        private ResponseFactory $response,
+        private readonly TrackGenre $genre,
+        private readonly ResponseFactory $response,
     ) {
         $this->middleware('verified');
         $this->middleware('auth');

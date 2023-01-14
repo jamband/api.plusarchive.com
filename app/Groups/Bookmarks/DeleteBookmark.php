@@ -11,8 +11,8 @@ use Illuminate\Routing\ResponseFactory;
 class DeleteBookmark extends Controller
 {
     public function __construct(
-        private Bookmark $bookmark,
-        private ResponseFactory $response,
+        private readonly Bookmark $bookmark,
+        private readonly ResponseFactory $response,
     ) {
         $this->middleware('verified');
         $this->middleware('auth');

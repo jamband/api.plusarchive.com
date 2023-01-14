@@ -10,8 +10,8 @@ use Illuminate\Routing\Controller;
 class GetAdminTrackGenres extends Controller
 {
     public function __construct(
-        private TrackGenre $genre,
-        private Request $request,
+        private readonly TrackGenre $genre,
+        private readonly Request $request,
     ) {
         $this->middleware('verified');
         $this->middleware('auth');

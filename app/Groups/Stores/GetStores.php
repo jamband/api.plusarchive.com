@@ -10,8 +10,8 @@ use Illuminate\Routing\Controller;
 class GetStores extends Controller
 {
     public function __construct(
-        private Store $store,
-        private Request $request,
+        private readonly Store $store,
+        private readonly Request $request,
     ) {
     }
 

@@ -11,8 +11,8 @@ use Illuminate\Routing\ResponseFactory;
 class UpdateBookmarkTag extends Controller
 {
     public function __construct(
-        private BookmarkTag $tag,
-        private ResponseFactory $response,
+        private readonly BookmarkTag $tag,
+        private readonly ResponseFactory $response,
     ) {
         $this->middleware('verified');
         $this->middleware('auth');

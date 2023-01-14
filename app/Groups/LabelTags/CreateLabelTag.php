@@ -12,9 +12,9 @@ use Illuminate\Routing\UrlGenerator;
 class CreateLabelTag extends Controller
 {
     public function __construct(
-        private LabelTag $tag,
-        private ResponseFactory $response,
-        private UrlGenerator $url,
+        private readonly LabelTag $tag,
+        private readonly ResponseFactory $response,
+        private readonly UrlGenerator $url,
     ) {
         $this->middleware('verified');
         $this->middleware('auth');

@@ -12,9 +12,9 @@ use Illuminate\Routing\UrlGenerator;
 class CreateCountry extends Controller
 {
     public function __construct(
-        private Country $country,
-        private ResponseFactory $response,
-        private UrlGenerator $url,
+        private readonly Country $country,
+        private readonly ResponseFactory $response,
+        private readonly UrlGenerator $url,
     ) {
         $this->middleware('verified');
         $this->middleware('auth');

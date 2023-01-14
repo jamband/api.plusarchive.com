@@ -13,9 +13,9 @@ use Illuminate\Routing\ResponseFactory;
 class Logout extends Controller
 {
     public function __construct(
-        private AuthManager $auth,
-        private Request $request,
-        private ResponseFactory $response,
+        private readonly AuthManager $auth,
+        private readonly Request $request,
+        private readonly ResponseFactory $response,
     ) {
         $this->middleware('auth');
     }

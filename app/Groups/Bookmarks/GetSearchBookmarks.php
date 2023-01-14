@@ -10,8 +10,8 @@ use Illuminate\Routing\Controller;
 class GetSearchBookmarks extends Controller
 {
     public function __construct(
-        private Request $request,
-        private Bookmark $bookmark,
+        private readonly Request $request,
+        private readonly Bookmark $bookmark,
     ) {
     }
 

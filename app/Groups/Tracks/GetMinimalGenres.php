@@ -12,9 +12,9 @@ use Illuminate\Routing\ResponseFactory;
 class GetMinimalGenres extends Controller
 {
     public function __construct(
-        private Track $track,
-        private Request $request,
-        private ResponseFactory $response,
+        private readonly Track $track,
+        private readonly Request $request,
+        private readonly ResponseFactory $response,
     ) {
     }
 

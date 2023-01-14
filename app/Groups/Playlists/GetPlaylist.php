@@ -12,8 +12,8 @@ use Illuminate\Routing\ResponseFactory;
 class GetPlaylist extends Controller
 {
     public function __construct(
-        private Hashids $hashids,
-        private ResponseFactory $response,
+        private readonly Hashids $hashids,
+        private readonly ResponseFactory $response,
     ) {
     }
 

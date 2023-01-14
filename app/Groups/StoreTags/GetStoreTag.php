@@ -11,8 +11,8 @@ use Illuminate\Routing\ResponseFactory;
 class GetStoreTag extends Controller
 {
     public function __construct(
-        private StoreTag $tag,
-        private ResponseFactory $response,
+        private readonly StoreTag $tag,
+        private readonly ResponseFactory $response,
     ) {
         $this->middleware('verified');
         $this->middleware('auth');

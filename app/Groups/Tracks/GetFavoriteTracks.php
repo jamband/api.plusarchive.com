@@ -10,8 +10,8 @@ use Illuminate\Routing\ResponseFactory;
 class GetFavoriteTracks
 {
     public function __construct(
-        private Track $track,
-        private ResponseFactory $response,
+        private readonly Track $track,
+        private readonly ResponseFactory $response,
     ) {
     }
 

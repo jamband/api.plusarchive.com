@@ -12,9 +12,9 @@ use Illuminate\Routing\ResponseFactory;
 class UpdateTrack extends Controller
 {
     public function __construct(
-        private Track $track,
-        private Hashids $hashids,
-        private ResponseFactory $response,
+        private readonly Track $track,
+        private readonly Hashids $hashids,
+        private readonly ResponseFactory $response,
     ) {
         $this->middleware('verified');
         $this->middleware('auth');

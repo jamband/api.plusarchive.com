@@ -10,8 +10,8 @@ use Illuminate\Routing\Controller;
 class GetAdminLabels extends Controller
 {
     public function __construct(
-        private Label $label,
-        private Request $request,
+        private readonly Label $label,
+        private readonly Request $request,
     ) {
         $this->middleware('verified');
         $this->middleware('auth');

@@ -12,8 +12,8 @@ use Illuminate\Routing\ResponseFactory;
 class GetTrackProviders extends Controller
 {
     public function __construct(
-        private ResponseFactory $response,
-        private MusicProvider $provider,
+        private readonly ResponseFactory $response,
+        private readonly MusicProvider $provider,
     ) {
     }
 

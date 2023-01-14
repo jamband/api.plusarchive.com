@@ -11,8 +11,8 @@ use Illuminate\Routing\ResponseFactory;
 class GetBookmarkCountries extends Controller
 {
     public function __construct(
-        private Bookmark $bookmark,
-        private ResponseFactory $response,
+        private readonly Bookmark $bookmark,
+        private readonly ResponseFactory $response,
     ) {
     }
 

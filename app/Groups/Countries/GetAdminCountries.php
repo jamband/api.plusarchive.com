@@ -10,8 +10,8 @@ use Illuminate\Routing\Controller;
 class GetAdminCountries extends Controller
 {
     public function __construct(
-        private Country $country,
-        private Request $request,
+        private readonly Country $country,
+        private readonly Request $request,
     ) {
         $this->middleware('verified');
         $this->middleware('auth');

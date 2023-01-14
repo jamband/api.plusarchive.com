@@ -11,8 +11,8 @@ use Illuminate\Routing\ResponseFactory;
 class StopAllUrges extends Controller
 {
     public function __construct(
-        private ResponseFactory $response,
-        private Track $track,
+        private readonly ResponseFactory $response,
+        private readonly Track $track,
     ) {
         $this->middleware('verified');
         $this->middleware('auth');

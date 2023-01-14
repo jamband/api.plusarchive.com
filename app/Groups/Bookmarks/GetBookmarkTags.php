@@ -12,8 +12,8 @@ use Illuminate\Routing\ResponseFactory;
 class GetBookmarkTags extends Controller
 {
     public function __construct(
-        private ResponseFactory $response,
-        private BookmarkTag $tag,
+        private readonly ResponseFactory $response,
+        private readonly BookmarkTag $tag,
     ) {
     }
 

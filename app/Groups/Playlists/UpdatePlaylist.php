@@ -12,9 +12,9 @@ use Illuminate\Routing\ResponseFactory;
 class UpdatePlaylist extends Controller
 {
     public function __construct(
-        private Playlist $playlist,
-        private Hashids $hashids,
-        private ResponseFactory $response,
+        private readonly Playlist $playlist,
+        private readonly Hashids $hashids,
+        private readonly ResponseFactory $response,
     ) {
         $this->middleware('verified');
         $this->middleware('auth');

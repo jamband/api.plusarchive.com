@@ -10,7 +10,7 @@ use Jamband\Ripple\Ripple;
 class RippleUrlRule implements Rule
 {
     public function __construct(
-        private Ripple $ripple,
+        private readonly Ripple $ripple,
     ) {
     }
 

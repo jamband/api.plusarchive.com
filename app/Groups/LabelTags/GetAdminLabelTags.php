@@ -10,8 +10,8 @@ use Illuminate\Routing\Controller;
 class GetAdminLabelTags extends Controller
 {
     public function __construct(
-        private LabelTag $tag,
-        private Request $request,
+        private readonly LabelTag $tag,
+        private readonly Request $request,
     ) {
         $this->middleware('verified');
         $this->middleware('auth');

@@ -13,7 +13,7 @@ class TrackImage
     private string $provider;
 
     public function __construct(
-        private Client $client,
+        private readonly Client $client,
     ) {
     }
 

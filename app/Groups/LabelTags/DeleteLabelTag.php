@@ -11,8 +11,8 @@ use Illuminate\Routing\ResponseFactory;
 class DeleteLabelTag extends Controller
 {
     public function __construct(
-        private LabelTag $tag,
-        private ResponseFactory $response,
+        private readonly LabelTag $tag,
+        private readonly ResponseFactory $response,
     ) {
         $this->middleware('verified');
         $this->middleware('auth');

@@ -11,8 +11,8 @@ use Illuminate\Routing\ResponseFactory;
 class DeleteMusicProvider extends Controller
 {
     public function __construct(
-        private MusicProvider $provider,
-        private ResponseFactory $response,
+        private readonly MusicProvider $provider,
+        private readonly ResponseFactory $response,
     ) {
         $this->middleware('verified');
         $this->middleware('auth');

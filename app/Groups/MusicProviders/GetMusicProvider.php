@@ -11,8 +11,8 @@ use Illuminate\Routing\ResponseFactory;
 class GetMusicProvider extends Controller
 {
     public function __construct(
-        private ResponseFactory $response,
-        private MusicProvider $provider,
+        private readonly ResponseFactory $response,
+        private readonly MusicProvider $provider,
     ) {
         $this->middleware('verified');
         $this->middleware('auth');

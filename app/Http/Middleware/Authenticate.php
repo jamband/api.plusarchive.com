@@ -12,7 +12,7 @@ class Authenticate extends Middleware
 {
     public function __construct(
         Auth $auth,
-        private UrlGenerator $url,
+        private readonly UrlGenerator $url,
     ) {
         parent::__construct($auth);
     }

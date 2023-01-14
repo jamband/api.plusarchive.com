@@ -10,8 +10,8 @@ use Illuminate\Routing\Controller;
 class GetAdminStoreTags extends Controller
 {
     public function __construct(
-        private StoreTag $tag,
-        private Request $request,
+        private readonly StoreTag $tag,
+        private readonly Request $request,
     ) {
         $this->middleware('verified');
         $this->middleware('auth');

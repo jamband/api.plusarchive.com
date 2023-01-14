@@ -11,7 +11,7 @@ use Illuminate\Routing\ResponseFactory;
 class GetUser extends Controller
 {
     public function __construct(
-        private ResponseFactory $response,
+        private readonly ResponseFactory $response,
     ) {
         $this->middleware('auth');
     }
