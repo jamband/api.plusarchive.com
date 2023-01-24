@@ -12,22 +12,22 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 use Tests\TestMiddleware;
 
-class StopAllUrgesTest extends TestCase
+class StopUrgesTest extends TestCase
 {
     use RefreshDatabase;
     use TestMiddleware;
 
     public function testVerifiedMiddleware(): void
     {
-        $this->assertVerifiedMiddleware('PATCH /tracks/stop-all-urges');
+        $this->assertVerifiedMiddleware('PATCH /tracks/stop-urges');
     }
 
     public function testAuthMiddleware(): void
     {
-        $this->assertAuthMiddleware('PATCH /tracks/stop-all-urges');
+        $this->assertAuthMiddleware('PATCH /tracks/stop-urges');
     }
 
-    public function testStopAllUrges(): void
+    public function testStopUrges(): void
     {
         TrackFactory::new()
             ->count(4)
@@ -42,7 +42,7 @@ class StopAllUrgesTest extends TestCase
         ]);
 
         $this->actingAs(UserFactory::new()->makeOne())
-            ->patch('/tracks/stop-all-urges')
+            ->patch('/tracks/stop-urges')
             ->assertNoContent();
 
         $this->assertDatabaseMissing(Track::class, [

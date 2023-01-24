@@ -77,7 +77,7 @@ class TrackTest extends TestCase
         );
     }
 
-    public function testToggleUrgeTrack(): void
+    public function testToggleUrge(): void
     {
         /** @var array<int, Track> $tracks */
         $tracks = TrackFactory::new()
@@ -107,7 +107,7 @@ class TrackTest extends TestCase
         $this->assertSame(6, $this->track->where(['urge' => true])->count());
     }
 
-    public function testStopAllUrges(): void
+    public function testStopUrges(): void
     {
         TrackFactory::new()
             ->count(4)
@@ -117,7 +117,7 @@ class TrackTest extends TestCase
             ))
             ->create();
 
-        $this->track->stopAllUrges();
+        $this->track->stopUrges();
 
         $this->assertSame(4, $this->track->where('urge', false)->count());
         $this->assertSame(0, $this->track->where('urge', true)->count());

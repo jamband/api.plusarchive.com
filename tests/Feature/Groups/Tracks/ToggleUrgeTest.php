@@ -13,7 +13,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 use Tests\TestMiddleware;
 
-class ToggleUrgeTrackTest extends TestCase
+class ToggleUrgeTest extends TestCase
 {
     use RefreshDatabase;
     use TestMiddleware;
@@ -69,7 +69,7 @@ class ToggleUrgeTrackTest extends TestCase
             ->assertExactJson(['message' => 'Can\'t urge more.']);
     }
 
-    public function testToggleUrgeTrack(): void
+    public function testToggleUrge(): void
     {
         $track = TrackFactory::new()
             ->createOne();

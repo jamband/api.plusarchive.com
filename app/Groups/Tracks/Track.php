@@ -109,7 +109,7 @@ class Track extends Model
         return $track->save();
     }
 
-    public function stopAllUrges(): void
+    public function stopUrges(): void
     {
         $this->favorites()->update(['urge' => false]);
     }

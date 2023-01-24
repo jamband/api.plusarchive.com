@@ -10,7 +10,7 @@ use Illuminate\Routing\Controller;
 use Illuminate\Routing\ResponseFactory;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
-class ToggleUrgeTrack extends Controller
+class ToggleUrge extends Controller
 {
     public function __construct(
         private readonly Hashids $hashids,

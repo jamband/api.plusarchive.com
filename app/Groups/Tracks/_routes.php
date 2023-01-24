@@ -20,11 +20,11 @@ $router->prefix('tracks')->group(function (Router $router) {
     $router->get('providers', GetTrackProviders::class);
     $router->get('genres', GetTrackGenres::class);
     $router->get('search', GetSearchTracks::class);
-    $router->patch('stop-all-urges', StopAllUrges::class);
+    $router->patch('stop-urges', StopUrges::class);
 
     $router->get('{hash}', GetTrack::class);
     $router->put('{hash}', UpdateTrack::class);
     $router->delete('{hash}', DeleteTrack::class);
 
-    $router->patch('{hash}/toggle-urge', ToggleUrgeTrack::class);
+    $router->patch('{hash}/toggle-urge', ToggleUrge::class);
 });

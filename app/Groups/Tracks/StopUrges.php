@@ -8,7 +8,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Routing\ResponseFactory;
 
-class StopAllUrges extends Controller
+class StopUrges extends Controller
 {
     public function __construct(
         private readonly ResponseFactory $response,
@@ -20,7 +20,7 @@ class StopAllUrges extends Controller
 
     public function __invoke(): JsonResponse
     {
-        $this->track->stopAllUrges();
+        $this->track->stopUrges();
 
         return $this->response->json(
             status: 204,
