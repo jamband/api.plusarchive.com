@@ -5,12 +5,12 @@
     "guzzlehttp/guzzle": "^7.5",
     "hashids/hashids": "^4.1",
     "jamband/ripple": "^0.14.0",
-    "laravel/framework": "^9.48"
+    "laravel/framework": "^9.49"
   },
   "require-dev": {
     "brianium/paratest": "^6.8",
     "fakerphp/faker": "^1.21",
-    "friendsofphp/php-cs-fixer": "^3.13",
+    "friendsofphp/php-cs-fixer": "^3.14",
     "mockery/mockery": "^1.5",
     "nunomaduro/collision": "^6.4",
     "nunomaduro/larastan": "^2.4",
@@ -40,6 +40,7 @@
   },
   "config": {
     "optimize-autoloader": true,
+    "process-timeout": 0,
     "sort-packages": true
   },
   "minimum-stability": "dev",
