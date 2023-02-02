@@ -132,6 +132,35 @@ class UpdateTrackTest extends TestCase
         ]);
     }
 
+    public function testUpdateTrackWithUrgeIsTrue(): void
+    {
+        $track = TrackFactory::new()
+            ->createOne(['urge' => true]);
+
+        $this->partialMock(Ripple::class, function (MockInterface $mock) use ($track) {
+            $mock->shouldReceive('image')->andReturn($track->image);
+            $mock->shouldReceive('provider')->andReturn($track->provider->name);
+            $mock->shouldReceive('id')->andReturn($track->provider_key);
+        });
+
+        $this->actingAs(UserFactory::new()->makeOne())
+            ->putJson('/tracks/'.$this->hashids->encode($track->id), [
+                'title' => $track->title,
+                'url' => 'https://soundcloud.com/updated-foo/updated-bar',
+            ])
+            ->assertOk()
+            ->assertJson(function (AssertableJson $json) use ($track) {
+                $json->where('id', $this->hashids->encode($track->id))
+                    ->where('urge', true)
+                    ->etc();
+            });
+
+        $this->assertDatabaseHas(Track::class, [
+            'id' => $track->id,
+            'urge' => true,
+        ]);
+    }
+
     public function testUpdateTrackWithSomeEmptyAttributeValues(): void
     {
         $track = TrackFactory::new()

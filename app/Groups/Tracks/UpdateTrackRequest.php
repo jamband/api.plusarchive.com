@@ -125,7 +125,6 @@ class UpdateTrackRequest extends FormRequest
             }
 
             $track->image = $image;
-            $track->urge = false;
             $track->save();
 
             if (isset($data['genres'])) {
