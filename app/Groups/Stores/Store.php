@@ -23,7 +23,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @property Carbon $updated_at
  *
  * @property-read Country $country
- * @property-read array<StoreTag> $tags
+ * @property-read array<int, StoreTag> $tags
  *
  * @mixin Builder<self>
  */
@@ -53,7 +53,7 @@ class Store extends Model
     }
 
     /**
-     * @return array<string>
+     * @return array<int, string>
      */
     public function getCountryNames(): array
     {

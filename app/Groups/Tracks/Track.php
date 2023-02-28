@@ -25,7 +25,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @property Carbon $updated_at
  *
  * @property-read MusicProvider $provider
- * @property-read array<TrackGenre> $genres
+ * @property-read array<int, TrackGenre> $genres
  *
  * @mixin Builder<self>
  */
@@ -34,7 +34,6 @@ class Track extends Model
     use SortableScope;
     use TrackScope;
 
-    /** @var array<string, string> */
     protected $casts = [
         'urge' => 'boolean',
     ];
@@ -65,7 +64,7 @@ class Track extends Model
     }
 
     /**
-     * @return array<string>
+     * @return array<int, string>
      */
     public function getMinimalGenres(int $limit): array
     {

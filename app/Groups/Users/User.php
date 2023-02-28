@@ -26,13 +26,11 @@ class User extends Authenticatable implements MustVerifyEmail
 {
     use Notifiable;
 
-    /** @var array<int, string> */
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
-    /** @var array<string, string> */
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];

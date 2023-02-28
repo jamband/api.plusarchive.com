@@ -30,7 +30,7 @@ class MusicProvider extends Model
     }
 
     /**
-     * @return array<string>
+     * @return array<int, string>
      */
     public function getNames(): array
     {

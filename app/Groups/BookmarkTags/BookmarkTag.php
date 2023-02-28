@@ -22,7 +22,7 @@ class BookmarkTag extends Model
     public $timestamps = false;
 
     /**
-     * @return array<string>
+     * @return array<int, string>
      */
     public function getNames(): array
     {
@@ -35,7 +35,7 @@ class BookmarkTag extends Model
 
     /**
      * @param array<int, string> $names
-     * @return array<int>
+     * @return array<int, int>
      */
     public function getIdsByNames(array $names): array
     {
