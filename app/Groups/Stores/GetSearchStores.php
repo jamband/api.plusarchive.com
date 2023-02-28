@@ -19,6 +19,7 @@ class GetSearchStores extends Controller
     {
         /** @var Store $query */
         $query = $this->store::query()
+            ->with('country')
             ->with('tags');
 
         $search = $this->request->query('q');

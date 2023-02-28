@@ -19,6 +19,7 @@ class GetSearchLabels extends Controller
     {
         /** @var Label $query */
         $query = $this->label::query()
+            ->with('country')
             ->with('tags');
 
         $search = $this->request->query('q');

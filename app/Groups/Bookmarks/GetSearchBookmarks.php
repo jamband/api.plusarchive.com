@@ -19,6 +19,7 @@ class GetSearchBookmarks extends Controller
     {
         /** @var Bookmark $query */
         $query = $this->bookmark::query()
+            ->with('country')
             ->with('tags');
 
         $search = $this->request->query('q');
