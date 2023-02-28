@@ -135,7 +135,7 @@ class UpdateBookmarkRulesTest extends TestCase
     public function testTagsTaggableRule(): void
     {
         $this->request(['tags' => 'foo'])
-            ->assertJsonPath('errors.tags', __('validation.taggables', [
+            ->assertJsonPath('errors.tags', __('validation.taggables.array', [
                 'attribute' => 'tags',
             ]));
     }

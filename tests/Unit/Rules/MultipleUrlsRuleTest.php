@@ -5,88 +5,68 @@ declare(strict_types=1);
 namespace Tests\Unit\Rules;
 
 use App\Rules\MultipleUrlsRule;
+use Illuminate\Contracts\Translation\Translator;
+use Illuminate\Validation\Validator;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
-/**
- * Note that if the URL contains a path,
- * the validation will pass even if the delimiter is "," or "|".
- */
 class MultipleUrlsRuleTest extends TestCase
 {
-    public function testFailsWithEmptyString(): void
+    private Translator $translator;
+
+    protected function setUp(): void
     {
-        $rule = new MultipleUrlsRule();
-        $this->assertFalse($rule->passes('', ''));
+        parent::setUp();
+
+        $this->translator = $this->app->make(Translator::class);
     }
 
-    public function testFailsWithoutHttpProtocol(): void
+    #[DataProvider('providerFails')]
+    public function testFailsWithoutHttpProtocol(string $input): void
     {
-        $rule = new MultipleUrlsRule();
+        $validator = new Validator(
+            $this->translator,
+            ['foo' => $input],
+            ['foo' => new MultipleUrlsRule()]
+        );
 
-        $value = implode("\n", [
-            'example.com/foo',
-            'https://example.com/bar',
-            'https://example.com/baz',
-        ]);
-
-        $this->assertFalse($rule->passes('', $value));
+        $this->assertTrue($validator->fails());
     }
 
-    public function testFailsWithSshProtocol(): void
+    /**
+     * @return array<int, array<int, string>>
+     */
+    public static function providerFails(): array
     {
-        $rule = new MultipleUrlsRule();
-
-        $value = implode("\n", [
-            'https://example.com/foo',
-            'ssh://git@example.com:user/bar.git',
-            'https://example.com/baz',
-        ]);
-
-        $this->assertFalse($rule->passes('', $value));
-    }
-
-    public function testFailsWithMailToProtocol(): void
-    {
-        $rule = new MultipleUrlsRule();
-
-        $value = implode("\n", [
-            'https://example.com/foo',
-            'https://example.com/bar',
-            'mailto:baz@example.com',
-        ]);
-
-        $this->assertFalse($rule->passes('', $value));
-    }
-
-    public function testFailsWithInvalidSeparator(): void
-    {
-        $rule = new MultipleUrlsRule();
-
-        $value = implode(' ', [
-            'https://example.com/foo',
-            'https://example.com/bar',
-            'https://example.com/baz',
-        ]);
-
-        $this->assertFalse($rule->passes('', $value));
+        return [
+            ["example.com/foo\nhttps://example.com/bar\nhttps://example.com/baz"],
+            ["https://example.com/foo\nssh://git@example.com:user/bar.git\nhttps://example.com/baz"],
+            ["https://example.com/foo\nhttps://example.com/bar\nmailto:baz@example.com"],
+        ];
     }
 
     public function testPasses(): void
     {
-        $rule = new MultipleUrlsRule();
+        $validator = new Validator(
+            $this->translator,
+            ['foo' => "https://example.com/foo\nhttps://example.com/bar\nhttps://example.com/baz"],
+            ['foo' => new MultipleUrlsRule()]
+        );
 
-        $value = implode("\n", [
-            'https://example.com/foo',
-            'https://example.com/bar',
-            'https://example.com/baz',
-        ]);
-
-        $this->assertTrue($rule->passes('', $value));
+        $this->assertTrue($validator->passes());
     }
 
     public function testMessage(): void
     {
-        $rule = new MultipleUrlsRule();
-        $this->assertSame(__('validation.multiple_urls'), $rule->message());
+        $validator = new Validator(
+            $this->translator,
+            ['foo' => 'bar'],
+            ['foo' => new MultipleUrlsRule()]
+        );
+
+        $this->assertSame(
+            __('validation.multiple_urls', ['attribute' => 'foo']),
+            $validator->messages()->first()
+        );
     }
 }

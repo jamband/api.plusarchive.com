@@ -5,36 +5,86 @@ declare(strict_types=1);
 namespace Tests\Unit\Rules;
 
 use App\Rules\TaggableRule;
+use Illuminate\Contracts\Translation\Translator;
+use Illuminate\Validation\Validator;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
 class TaggableRuleTest extends TestCase
 {
-    public function testFails(): void
-    {
-        $rule = new TaggableRule();
+    private Translator $translator;
 
-        $this->assertFalse($rule->passes('', null));
-        $this->assertFalse($rule->passes('', true));
-        $this->assertFalse($rule->passes('', false));
-        $this->assertFalse($rule->passes('', 123));
-        $this->assertFalse($rule->passes('', ['foo']));
-        $this->assertFalse($rule->passes('', 'foo!'));
-        $this->assertFalse($rule->passes('', str_repeat('a', 31)));
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->translator = $this->app->make(Translator::class);
     }
 
-    public function testPasses(): void
+    #[DataProvider('providerFails')]
+    public function testFails(mixed $input): void
     {
-        $rule = new TaggableRule();
+        $validator = new Validator(
+            $this->translator,
+            ['foo' => $input],
+            ['foo' => new TaggableRule()]
+        );
 
-        $this->assertTrue($rule->passes('', 'foo'));
-        $this->assertTrue($rule->passes('', 'foo bar'));
-        $this->assertTrue($rule->passes('', 'foo-bar'));
-        $this->assertTrue($rule->passes('', 'foo_bar'));
+        $this->assertTrue($validator->fails());
+    }
+
+    /**
+     * @return array<int, array<int, mixed>>
+     */
+    public static function providerFails(): array
+    {
+        return [
+            [null],
+            [true],
+            [false],
+            [123],
+            [['foo']],
+            ['foo!'],
+            [str_repeat('a', 31)],
+        ];
+    }
+
+    #[DataProvider('providerPasses')]
+    public function testPasses(string $input): void
+    {
+        $validator = new Validator(
+            $this->translator,
+            ['foo' => $input],
+            ['foo' => new TaggableRule()]
+        );
+
+        $this->assertTrue($validator->passes());
+    }
+
+    /**
+     * @return array<int, array<int, string>>
+     */
+    public static function providerPasses(): array
+    {
+        return [
+            ['foo'],
+            ['foo bar'],
+            ['foo-bar'],
+            ['foo_bar'],
+        ];
     }
 
     public function testMessage(): void
     {
-        $rule = new TaggableRule();
-        $this->assertSame(__('validation.taggable'), $rule->message());
+        $validator = new Validator(
+            $this->translator,
+            ['foo' => null],
+            ['foo' => new TaggableRule()]
+        );
+
+        $this->assertSame(
+            __('validation.taggable', ['attribute' => 'foo']),
+            $validator->messages()->first()
+        );
     }
 }

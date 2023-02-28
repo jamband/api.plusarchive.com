@@ -105,7 +105,7 @@ class CreateTrackRulesTest extends TestCase
     public function testTagsTaggableRule(): void
     {
         $this->request(['genres' => 'foo'])
-            ->assertJsonPath('errors.genres', __('validation.taggables', [
+            ->assertJsonPath('errors.genres', __('validation.taggables.array', [
                 'attribute' => 'genres',
             ]));
     }

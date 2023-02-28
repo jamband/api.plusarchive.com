@@ -9,6 +9,9 @@ return [
     ],
     'limitable' => 'Only up to :limit :attribute can be set.',
     'multiple_urls' => 'The :attribute must be a valid URLs.',
-    'taggables' => 'The :attribute contains invalid values.',
+    'taggables' => [
+        'array' => 'The :attribute must be an array.',
+        'tag' => 'The :attribute contains invalid values.',
+    ],
     'taggable' => 'The :attribute must be between 2 and 30 characters using letters, hyphens, underscores, and spaces.',
 ];

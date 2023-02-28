@@ -4,19 +4,20 @@ declare(strict_types=1);
 
 namespace App\Rules;
 
+use Closure;
+use Illuminate\Translation\PotentiallyTranslatedString;
+
 class TaggableRule implements Taggable
 {
-    public function passes($attribute, $value): bool
+    /**
+     * @param string $attribute
+     * @param mixed $value
+     * @param Closure(string): PotentiallyTranslatedString $fail
+     */
+    public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        if (is_string($value) && preg_match(self::PATTERN, $value)) {
-            return true;
+        if (!is_string($value) || !preg_match(self::PATTERN, $value)) {
+            $fail('validation.taggable')->translate();
         }
-
-        return false;
-    }
-
-    public function message(): string
-    {
-        return __('validation.taggable');
     }
 }

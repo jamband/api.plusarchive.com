@@ -4,23 +4,27 @@ declare(strict_types=1);
 
 namespace App\Rules;
 
-use Illuminate\Contracts\Validation\Rule;
+use Closure;
+use Illuminate\Contracts\Validation\ValidationRule;
+use Illuminate\Translation\PotentiallyTranslatedString;
 use Jamband\Ripple\Ripple;
 
-class RippleImageRule implements Rule
+class RippleImageRule implements ValidationRule
 {
     public function __construct(
         private readonly Ripple $ripple,
     ) {
     }
 
-    public function passes($attribute, $value): bool
+    /**
+     * @param string $attribute
+     * @param mixed $value
+     * @param Closure(string): PotentiallyTranslatedString $fail
+     */
+    public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        return null !== $this->ripple->image();
-    }
-
-    public function message(): string
-    {
-        return __('validation.ripple.image');
+        if (null === $this->ripple->image()) {
+            $fail('validation.ripple.image')->translate();
+        }
     }
 }

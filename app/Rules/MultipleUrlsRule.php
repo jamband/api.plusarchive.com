@@ -4,11 +4,18 @@ declare(strict_types=1);
 
 namespace App\Rules;
 
-use Illuminate\Contracts\Validation\Rule;
+use Closure;
+use Illuminate\Contracts\Validation\ValidationRule;
+use Illuminate\Translation\PotentiallyTranslatedString;
 
-class MultipleUrlsRule implements Rule
+class MultipleUrlsRule implements ValidationRule
 {
-    public function passes($attribute, $value): bool
+    /**
+     * @param string $attribute
+     * @param mixed $value
+     * @param Closure(string): PotentiallyTranslatedString $fail
+     */
+    public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         foreach (explode("\n", $value) as $url) {
             if (
@@ -17,15 +24,8 @@ class MultipleUrlsRule implements Rule
             ) {
                 continue;
             } else {
-                return false;
+                $fail('validation.multiple_urls')->translate();
             }
         }
-
-        return true;
-    }
-
-    public function message(): string
-    {
-        return __('validation.multiple_urls');
     }
 }
