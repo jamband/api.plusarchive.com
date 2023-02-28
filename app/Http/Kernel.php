@@ -28,7 +28,6 @@ use Illuminate\Session\Middleware\StartSession;
 
 class Kernel extends HttpKernel
 {
-    /** @var array<int, class-string|string> */
     protected $middleware = [
         TrustProxies::class,
         HandleCors::class,
@@ -38,7 +37,6 @@ class Kernel extends HttpKernel
         ConvertEmptyStringsToNull::class,
     ];
 
-    /** @var array<string, array<int, class-string|string>> */
     protected $middlewareGroups = [
         'web' => [
             EncryptCookies::class,
@@ -50,7 +48,6 @@ class Kernel extends HttpKernel
         ],
     ];
 
-    /** @var array<string, class-string|string> */
     protected $middlewareAliases = [
         'auth' => Authenticate::class,
         'cache.headers' => SetCacheHeaders::class,
