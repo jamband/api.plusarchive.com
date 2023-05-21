@@ -2,14 +2,14 @@
   "require": {
     "php": "^8.1",
     "ext-pdo": "*",
-    "guzzlehttp/guzzle": "^7.5",
+    "guzzlehttp/guzzle": "^7.6",
     "hashids/hashids": "^5.0",
     "jamband/ripple": "^0.15.0",
-    "laravel/framework": "^10.10"
+    "laravel/framework": "^10.11"
   },
   "require-dev": {
     "brianium/paratest": "^7.1",
-    "fakerphp/faker": "^1.21",
+    "fakerphp/faker": "^1.22",
     "friendsofphp/php-cs-fixer": "^3.16",
     "mockery/mockery": "^1.5",
     "nunomaduro/collision": "^7.5",
