@@ -37,7 +37,7 @@ class HandlerTest extends TestCase
             ->post($this->uri, fn () => null);
 
         $this->get($this->uri)
-            ->assertStatus(405)
+            ->assertMethodNotAllowed()
             ->assertExactJson(['message' => 'Method Not Allowed.']);
     }
 }
