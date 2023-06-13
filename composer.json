@@ -5,16 +5,16 @@
     "guzzlehttp/guzzle": "^7.7",
     "hashids/hashids": "^5.0",
     "jamband/ripple": "^0.15.0",
-    "laravel/framework": "^10.12"
+    "laravel/framework": "^10.13"
   },
   "require-dev": {
     "brianium/paratest": "^7.1",
-    "fakerphp/faker": "^1.22",
+    "fakerphp/faker": "^1.23",
     "friendsofphp/php-cs-fixer": "^3.17",
-    "mockery/mockery": "^1.5",
+    "mockery/mockery": "^1.6",
     "nunomaduro/collision": "^7.5",
     "nunomaduro/larastan": "^2.6",
-    "phpunit/phpunit": "^10.1"
+    "phpunit/phpunit": "^10.2"
   },
   "autoload": {
     "psr-4": {
