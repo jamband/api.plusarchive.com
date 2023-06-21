@@ -8,11 +8,11 @@
     "laravel/framework": "^10.13"
   },
   "require-dev": {
-    "brianium/paratest": "^7.1",
+    "brianium/paratest": "^7.2",
     "fakerphp/faker": "^1.23",
-    "friendsofphp/php-cs-fixer": "^3.17",
+    "friendsofphp/php-cs-fixer": "^3.18",
     "mockery/mockery": "^1.6",
-    "nunomaduro/collision": "^7.5",
+    "nunomaduro/collision": "^7.6",
     "nunomaduro/larastan": "^2.6",
     "phpunit/phpunit": "^10.2"
   },
