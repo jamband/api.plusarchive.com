@@ -39,7 +39,7 @@ class UpdateStoreTest extends TestCase
         $this->actingAs(UserFactory::new()->makeOne())
             ->putJson('/stores/1', [
                 'name' => 'store1',
-                'country'=> $country->name,
+                'country' => $country->name,
                 'url' => 'https://url1.dev',
             ])
             ->assertNotFound()

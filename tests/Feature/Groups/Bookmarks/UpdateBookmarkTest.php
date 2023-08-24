@@ -39,7 +39,7 @@ class UpdateBookmarkTest extends TestCase
         $this->actingAs(UserFactory::new()->makeOne())
             ->putJson('/bookmarks/1', [
                 'name' => 'bookmark1',
-                'country'=> $country->name,
+                'country' => $country->name,
                 'url' => 'https://url1.dev',
             ])
             ->assertNotFound()

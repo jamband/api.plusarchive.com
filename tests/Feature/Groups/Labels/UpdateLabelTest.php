@@ -39,7 +39,7 @@ class UpdateLabelTest extends TestCase
         $this->actingAs(UserFactory::new()->makeOne())
             ->putJson('/labels/1', [
                 'name' => 'label1',
-                'country'=> $country->name,
+                'country' => $country->name,
                 'url' => 'https://url1.dev',
             ])
             ->assertNotFound()
