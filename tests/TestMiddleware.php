@@ -14,7 +14,7 @@ trait TestMiddleware
 
         $this->actingAs(UserFactory::new()->unverified()->makeOne())
             ->json($method, $uri)
-            ->assertStatus(409)
+            ->assertConflict()
             ->assertExactJson(['message' => 'Your email address is not verified.']);
     }
 
@@ -33,7 +33,7 @@ trait TestMiddleware
 
         $this->actingAs(UserFactory::new()->unverified()->makeOne())
             ->json($method, $uri)
-            ->assertStatus(400)
+            ->assertBadRequest()
             ->assertExactJson(['message' => 'Bad Request.']);
 
         $this->assertAuthenticated();

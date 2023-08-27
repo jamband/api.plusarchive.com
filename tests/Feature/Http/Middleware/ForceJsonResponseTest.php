@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Feature\Http\Middleware;
 
 use App\Http\Middleware\ForceJsonResponse;
+use Illuminate\Http\Response;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Str;
 use Tests\TestCase;
