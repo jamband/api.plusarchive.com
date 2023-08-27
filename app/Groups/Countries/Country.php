@@ -28,4 +28,23 @@ class Country extends Model
             ->where('name', $name)
             ->value('id');
     }
+
+    /**
+     * @return array<int, string>
+     */
+    public function getNames(): array
+    {
+        /** @var array<int, string> $items */
+        $items = static::query()
+            ->select('name')
+            ->orderBy('id')
+            ->pluck('name')
+            ->toArray();
+
+        $chunk = array_splice($items, 2);
+        sort($chunk, SORT_STRING);
+
+        return [...$items, ...$chunk];
+
+    }
 }

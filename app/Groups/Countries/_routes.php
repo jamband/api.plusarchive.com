@@ -11,6 +11,7 @@ use Illuminate\Routing\RouteRegistrar;
 $router->prefix('countries')->group(function (Router $router) {
     $router->pattern('id', '[\d]+');
 
+    $router->get('', GetCountries::class);
     $router->post('', CreateCountry::class);
 
     $router->get('admin', GetAdminCountries::class);
