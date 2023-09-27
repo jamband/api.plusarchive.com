@@ -5,12 +5,12 @@
     "guzzlehttp/guzzle": "^7.8",
     "hashids/hashids": "^5.0",
     "jamband/ripple": "^0.15.0",
-    "laravel/framework": "^10.24"
+    "laravel/framework": "^10.25"
   },
   "require-dev": {
     "brianium/paratest": "^7.2",
     "fakerphp/faker": "^1.23",
-    "friendsofphp/php-cs-fixer": "^3.27",
+    "friendsofphp/php-cs-fixer": "^3.30",
     "mockery/mockery": "^1.6",
     "nunomaduro/collision": "^7.9",
     "nunomaduro/larastan": "^2.6",
