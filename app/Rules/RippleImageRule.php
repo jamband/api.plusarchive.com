@@ -9,10 +9,10 @@ use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Translation\PotentiallyTranslatedString;
 use Jamband\Ripple\Ripple;
 
-class RippleImageRule implements ValidationRule
+readonly class RippleImageRule implements ValidationRule
 {
     public function __construct(
-        private readonly Ripple $ripple,
+        private Ripple $ripple,
     ) {
     }
 
