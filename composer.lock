@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c25829508eac7fed1ebe6f563392d16d",
+    "content-hash": "6d1a3aa9d6398210a2af3c5ddb1af99d",
     "packages": [
         {
             "name": "brick/math",
@@ -1041,16 +1041,16 @@
         },
         {
             "name": "jamband/ripple",
-            "version": "v0.16.0",
+            "version": "v0.16.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/jamband/ripple.git",
-                "reference": "7f0c9f131a8fca39dcb8f6085708a1f0828fb0be"
+                "reference": "8232c2446578d955869ce4c3de8b4f44dce4dd24"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jamband/ripple/zipball/7f0c9f131a8fca39dcb8f6085708a1f0828fb0be",
-                "reference": "7f0c9f131a8fca39dcb8f6085708a1f0828fb0be",
+                "url": "https://api.github.com/repos/jamband/ripple/zipball/8232c2446578d955869ce4c3de8b4f44dce4dd24",
+                "reference": "8232c2446578d955869ce4c3de8b4f44dce4dd24",
                 "shasum": ""
             },
             "require": {
@@ -1091,9 +1091,9 @@
             ],
             "support": {
                 "issues": "https://github.com/jamband/ripple/issues",
-                "source": "https://github.com/jamband/ripple/tree/v0.16.0"
+                "source": "https://github.com/jamband/ripple/tree/v0.16.1"
             },
-            "time": "2023-11-25T02:49:48+00:00"
+            "time": "2023-11-27T10:56:58+00:00"
         },
         {
             "name": "laravel/framework",
