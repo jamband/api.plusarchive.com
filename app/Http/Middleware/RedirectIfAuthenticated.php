@@ -9,11 +9,11 @@ use Illuminate\Auth\AuthManager;
 use Illuminate\Http\Request;
 use Illuminate\Routing\ResponseFactory;
 
-class RedirectIfAuthenticated
+readonly class RedirectIfAuthenticated
 {
     public function __construct(
-        private readonly AuthManager $auth,
-        private readonly ResponseFactory $response,
+        private AuthManager $auth,
+        private ResponseFactory $response,
     ) {
     }
 

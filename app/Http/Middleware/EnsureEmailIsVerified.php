@@ -10,10 +10,10 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\ResponseFactory;
 
-class EnsureEmailIsVerified
+readonly class EnsureEmailIsVerified
 {
     public function __construct(
-        private readonly ResponseFactory $response,
+        private ResponseFactory $response,
     ) {
     }
 
