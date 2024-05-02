@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Console\Commands\Session;
 
-use Illuminate\Config\Repository as Config;
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\Foundation\Application;
 
 class Flush extends Command
 {
@@ -14,12 +14,13 @@ class Flush extends Command
 
     protected $description = 'Flush all sessions';
 
-    public function handle(
-        Config $config,
-        Filesystem $filesystem,
-    ): int {
-        if ('file' === $config->get('session.driver')) {
-            foreach ($filesystem->files($config->get('session.files')) as $file) {
+    public function handle(Filesystem $filesystem): int
+    {
+        /** @var Application $app */
+        $app = $this->laravel;
+
+        if ('file' === $app['config']['session']['driver']) {
+            foreach ($filesystem->files($app['config']['session']['files']) as $file) {
                 if ('.gitignore' !== $file->getFilename()) {
                     $filesystem->delete($file->getPathname());
                 }

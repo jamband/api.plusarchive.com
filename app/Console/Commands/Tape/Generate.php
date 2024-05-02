@@ -8,6 +8,7 @@ use App\Groups\Tracks\Track;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\Foundation\Application;
 use Illuminate\Support\Str;
 
 class Generate extends Command
@@ -16,10 +17,11 @@ class Generate extends Command
 
     protected $description = 'Generate tapes from the favorite tracks';
 
-    public function handle(
-        Track $track,
-        Filesystem $file,
-    ): int {
+    public function handle(Track $track, Carbon $carbon, Filesystem $file): int
+    {
+        /** @var Application $app */
+        $app = $this->laravel;
+
         $id = $this->argument('id');
         assert(is_string($id));
 
@@ -48,7 +50,7 @@ class Generate extends Command
             $items[$i]['slug'] = Str::slug($item['title']);
         }
 
-        $now = Carbon::now();
+        $now = $carbon::now();
 
         $data['id'] = (int)$id;
         $data['title'] = $title;
@@ -70,7 +72,7 @@ class Generate extends Command
 
             assert(is_string($data));
 
-            $tapesPath = $this->laravel->storagePath('app/tapes');
+            $tapesPath = $app->storagePath('app/tapes');
             if (!file_exists($tapesPath)) {
                 $file->makeDirectory($tapesPath);
             }
