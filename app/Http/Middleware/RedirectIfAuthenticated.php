@@ -17,11 +17,8 @@ readonly class RedirectIfAuthenticated
     ) {
     }
 
-    public function handle(
-        Request $request,
-        Closure $next,
-        mixed ...$guards
-    ): mixed {
+    public function handle(Request $request, Closure $next, mixed ...$guards): mixed
+    {
         $guards = empty($guards) ? [null] : $guards;
 
         foreach ($guards as $guard) {
