@@ -7,22 +7,30 @@ namespace Tests\Feature\Groups\Auth;
 use App\Groups\Users\UserFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
-use Tests\TestMiddleware;
 
 class LogoutTest extends TestCase
 {
     use RefreshDatabase;
-    use TestMiddleware;
+
+    private UserFactory $userFactory;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->userFactory = new UserFactory();
+    }
 
     public function testAuthMiddleware(): void
     {
-        $this->assertAuthMiddleware('POST /auth/logout');
+        $this->post('/auth/logout')
+            ->assertUnauthorized();
     }
 
     public function testLogout(): void
     {
-        $this->actingAs(UserFactory::new()->makeOne())
-            ->postJson('/auth/logout')
+        $this->actingAs($this->userFactory->makeOne())
+            ->post('/auth/logout')
             ->assertNoContent();
 
         $this->assertGuest();

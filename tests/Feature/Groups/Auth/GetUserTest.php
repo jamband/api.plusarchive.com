@@ -7,22 +7,30 @@ namespace Tests\Feature\Groups\Auth;
 use App\Groups\Users\UserFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
-use Tests\TestMiddleware;
 
 class GetUserTest extends TestCase
 {
     use RefreshDatabase;
-    use TestMiddleware;
+
+    private UserFactory $userFactory;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->userFactory = new UserFactory();
+    }
 
     public function testAuthMiddleware(): void
     {
-        $this->assertAuthMiddleware('GET /auth/user');
+        $this->get('/auth/user')
+            ->assertUnauthorized();
     }
 
     public function testGetUser(): void
     {
-        $this->actingAs(UserFactory::new()->makeOne())
-            ->getJson('/auth/user')
+        $this->actingAs($this->userFactory->unverified()->makeOne())
+            ->get('/auth/user')
             ->assertOk()
             ->assertExactJson(['role' => 'admin']);
     }

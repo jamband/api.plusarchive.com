@@ -12,15 +12,15 @@ class LoginRulesTest extends TestCase
     /**
      * @param array<string, mixed> $data
      */
-    protected function request(array $data = []): TestResponse
+    protected function request(array $data): TestResponse
     {
-        return $this->postJson('/auth/login', $data)
+        return $this->post('/auth/login', $data)
             ->assertUnprocessable();
     }
 
     public function testEmailRequiredRule(): void
     {
-        $this->request()
+        $this->request(['email' => null])
             ->assertJsonPath('errors.email', __('validation.required', [
                 'attribute' => 'email',
             ]));
@@ -44,7 +44,7 @@ class LoginRulesTest extends TestCase
 
     public function testPasswordRequiredRule(): void
     {
-        $this->request()
+        $this->request(['password' => null])
             ->assertJsonPath('errors.password', __('validation.required', [
                 'attribute' => 'password',
             ]));
