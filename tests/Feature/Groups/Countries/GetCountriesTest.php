@@ -9,26 +9,38 @@ use App\Groups\Users\UserFactory;
 use Illuminate\Database\Eloquent\Factories\Sequence;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
-use Tests\TestMiddleware;
 
 class GetCountriesTest extends TestCase
 {
     use RefreshDatabase;
-    use TestMiddleware;
+
+    private UserFactory $userFactory;
+    private CountryFactory $countryFactory;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->userFactory = new UserFactory();
+        $this->countryFactory = new CountryFactory();
+    }
 
     public function testVerifiedMiddleware(): void
     {
-        $this->assertVerifiedMiddleware('GET /countries');
+        $this->actingAs($this->userFactory->unverified()->makeOne())
+            ->get('/countries')
+            ->assertConflict();
     }
 
     public function testAuthMiddleware(): void
     {
-        $this->assertAuthMiddleware('GET /countries');
+        $this->get('/countries')
+            ->assertUnauthorized();
     }
 
     public function testGetCountries(): void
     {
-        CountryFactory::new()
+        $this->countryFactory
             ->count(5)
             ->state(new Sequence(
                 ['name' => 'Unknown'],
@@ -39,8 +51,8 @@ class GetCountriesTest extends TestCase
             ))
             ->create();
 
-        $this->actingAs(UserFactory::new()->makeOne())
-            ->getJson('/countries')
+        $this->actingAs($this->userFactory->makeOne())
+            ->get('/countries')
             ->assertOk()
             ->assertExactJson(['Unknown', 'Worldwide', 'Bar', 'Baz', 'Foo']);
     }

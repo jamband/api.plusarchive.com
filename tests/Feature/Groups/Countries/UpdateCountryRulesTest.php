@@ -15,19 +15,30 @@ class UpdateCountryRulesTest extends TestCase
 {
     use RefreshDatabase;
 
+    private UserFactory $userFactory;
+    private CountryFactory $countryFactory;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->userFactory = new UserFactory();
+        $this->countryFactory = new CountryFactory();
+    }
+
     /**
      * @param array<string, mixed> $data
      */
-    protected function request(array $data = []): TestResponse
+    protected function request(array $data): TestResponse
     {
-        return $this->actingAs(UserFactory::new()->makeOne())
-            ->putJson('/countries/1', $data)
+        return $this->actingAs($this->userFactory->makeOne())
+            ->put('/countries/1', $data)
             ->assertUnprocessable();
     }
 
     public function testNameRequiredRule(): void
     {
-        $this->request()
+        $this->request(['name' => null])
             ->assertJsonPath('errors.name', __('validation.required', [
                 'attribute' => 'name',
             ]));
@@ -52,7 +63,7 @@ class UpdateCountryRulesTest extends TestCase
 
     public function testNameUniqueRule(): void
     {
-        CountryFactory::new()
+        $this->countryFactory
             ->count(2)
             ->state(new Sequence(
                 ['name' => 'foo'],

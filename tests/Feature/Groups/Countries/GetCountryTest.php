@@ -9,38 +9,50 @@ use App\Groups\Users\UserFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\TestCase;
-use Tests\TestMiddleware;
 
 class GetCountryTest extends TestCase
 {
     use RefreshDatabase;
-    use TestMiddleware;
+
+    private UserFactory $userFactory;
+    private CountryFactory $countryFactory;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->userFactory = new UserFactory();
+        $this->countryFactory = new CountryFactory();
+    }
 
     public function testVerifiedMiddleware(): void
     {
-        $this->assertVerifiedMiddleware('GET /countries/1');
+        $this->actingAs($this->userFactory->unverified()->makeOne())
+            ->get('/countries/1')
+            ->assertConflict();
     }
 
     public function testAuthMiddleware(): void
     {
-        $this->assertAuthMiddleware('GET /countries/1');
+        $this->get('/countries/1')
+            ->assertUnauthorized();
     }
 
     public function testModelNotFound(): void
     {
-        $this->actingAs(UserFactory::new()->makeOne())
-            ->getJson('/countries/1')
+        $this->actingAs($this->userFactory->makeOne())
+            ->get('/countries/1')
             ->assertNotFound()
             ->assertExactJson(['message' => 'Model Not Found.']);
     }
 
     public function testGetCountry(): void
     {
-        $country = CountryFactory::new()
+        $country = $this->countryFactory
             ->createOne();
 
-        $this->actingAs(UserFactory::new()->makeOne())
-            ->getJson('/countries/'.$country->id)
+        $this->actingAs($this->userFactory->makeOne())
+            ->get('/countries/'.$country->id)
             ->assertOk()
             ->assertJson(function (AssertableJson $json) use ($country) {
                 $json->where('id', $country->id)

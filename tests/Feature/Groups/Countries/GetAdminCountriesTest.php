@@ -11,32 +11,44 @@ use Illuminate\Database\Eloquent\Factories\Sequence;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\TestCase;
-use Tests\TestMiddleware;
 
 class GetAdminCountriesTest extends TestCase
 {
     use RefreshDatabase;
-    use TestMiddleware;
+
+    private UserFactory $userFactory;
+    private CountryFactory $countryFactory;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->userFactory = new UserFactory();
+        $this->countryFactory = new CountryFactory();
+    }
 
     public function testVerifiedMiddleware(): void
     {
-        $this->assertVerifiedMiddleware('GET /countries/admin');
+        $this->actingAs($this->userFactory->unverified()->makeOne())
+            ->get('/countries/admin')
+            ->assertConflict();
     }
 
     public function testAuthMiddleware(): void
     {
-        $this->assertAuthMiddleware('GET /countries/admin');
+        $this->get('/countries/admin')
+            ->assertUnauthorized();
     }
 
     public function testGetAdminCountries(): void
     {
         /** @var array<int, Country> $countries */
-        $countries = CountryFactory::new()
+        $countries = $this->countryFactory
             ->count(3)
             ->create();
 
-        $this->actingAs(UserFactory::new()->makeOne())
-            ->getJson('/countries/admin')
+        $this->actingAs($this->userFactory->makeOne())
+            ->get('/countries/admin')
             ->assertOk()
             ->assertJsonCount(3)
             ->assertJson(function (AssertableJson $json) use ($countries) {
@@ -60,7 +72,7 @@ class GetAdminCountriesTest extends TestCase
     public function testGetAdminCountriesWithSortAsc(): void
     {
         /** @var array<int, Country> $countries */
-        $countries = CountryFactory::new()
+        $countries = $this->countryFactory
             ->count(3)
             ->state(new Sequence(
                 ['name' => 'foo'],
@@ -69,8 +81,8 @@ class GetAdminCountriesTest extends TestCase
             ))
             ->create();
 
-        $this->actingAs(UserFactory::new()->makeOne())
-            ->getJson('/countries/admin?sort=name')
+        $this->actingAs($this->userFactory->makeOne())
+            ->get('/countries/admin?sort=name')
             ->assertOk()
             ->assertJsonCount(3)
             ->assertJson(function (AssertableJson $json) use ($countries) {
@@ -83,7 +95,7 @@ class GetAdminCountriesTest extends TestCase
     public function testGetAdminCountriesWithSortDesc(): void
     {
         /** @var array<int, Country> $countries */
-        $countries = CountryFactory::new()
+        $countries = $this->countryFactory
             ->count(3)
             ->state(new Sequence(
                 ['name' => 'foo'],
@@ -92,8 +104,8 @@ class GetAdminCountriesTest extends TestCase
             ))
             ->create();
 
-        $this->actingAs(UserFactory::new()->makeOne())
-            ->getJson('/countries/admin?sort=-name')
+        $this->actingAs($this->userFactory->makeOne())
+            ->get('/countries/admin?sort=-name')
             ->assertOk()
             ->assertJsonCount(3)
             ->assertJson(function (AssertableJson $json) use ($countries) {
@@ -106,7 +118,7 @@ class GetAdminCountriesTest extends TestCase
     public function testGetAdminCountriesWithName(): void
     {
         /** @var array<int, Country> $countries */
-        $countries = CountryFactory::new()
+        $countries = $this->countryFactory
             ->count(3)
             ->state(new Sequence(
                 ['name' => 'foo'],
@@ -115,8 +127,8 @@ class GetAdminCountriesTest extends TestCase
             ))
             ->create();
 
-        $this->actingAs(UserFactory::new()->makeOne())
-            ->getJson('/countries/admin?name=ba')
+        $this->actingAs($this->userFactory->makeOne())
+            ->get('/countries/admin?name=ba')
             ->assertOk()
             ->assertJsonCount(2)
             ->assertJson(function (AssertableJson $json) use ($countries) {
@@ -128,8 +140,8 @@ class GetAdminCountriesTest extends TestCase
 
     public function testQueryStringTypes(): void
     {
-        $this->actingAs(UserFactory::new()->makeOne())
-            ->getJson('/countries/admin?name[]=&sort[]=')
+        $this->actingAs($this->userFactory->makeOne())
+            ->get('/countries/admin?name[]=&sort[]=')
             ->assertOk();
     }
 }

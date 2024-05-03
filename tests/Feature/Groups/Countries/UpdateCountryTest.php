@@ -4,33 +4,44 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Groups\Countries;
 
-use App\Groups\Countries\Country;
 use App\Groups\Countries\CountryFactory;
 use App\Groups\Users\UserFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\TestCase;
-use Tests\TestMiddleware;
 
 class UpdateCountryTest extends TestCase
 {
     use RefreshDatabase;
-    use TestMiddleware;
+
+    private UserFactory $userFactory;
+    private CountryFactory $countryFactory;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->userFactory = new UserFactory();
+        $this->countryFactory = new CountryFactory();
+    }
 
     public function testVerifiedMiddleware(): void
     {
-        $this->assertVerifiedMiddleware('PUT /countries/1');
+        $this->actingAs($this->userFactory->unverified()->makeOne())
+            ->put('/countries/1')
+            ->assertConflict();
     }
 
     public function testAuthMiddleware(): void
     {
-        $this->assertAuthMiddleware('PUT /countries/1');
+        $this->put('/countries/1')
+            ->assertUnauthorized();
     }
 
     public function testModelNotFound(): void
     {
-        $this->actingAs(UserFactory::new()->makeOne())
-            ->putJson('/countries/1', [
+        $this->actingAs($this->userFactory->makeOne())
+            ->put('/countries/1', [
                 'name' => 'foo',
             ])
             ->assertNotFound()
@@ -39,13 +50,13 @@ class UpdateCountryTest extends TestCase
 
     public function testUpdateCountry(): void
     {
-        $country = CountryFactory::new()
+        $country = $this->countryFactory
             ->createOne();
 
-        $this->assertDatabaseCount(Country::class, 1);
+        $this->assertDatabaseCount($country::class, 1);
 
-        $this->actingAs(UserFactory::new()->makeOne())
-            ->putJson('/countries/'.$country->id, [
+        $this->actingAs($this->userFactory->makeOne())
+            ->put('/countries/'.$country->id, [
                 'name' => 'updated_country1',
             ])
             ->assertOk()
@@ -54,11 +65,10 @@ class UpdateCountryTest extends TestCase
                 $json->where('name', 'updated_country1');
             });
 
-        $this->assertDatabaseCount(Country::class, 1);
-
-        $this->assertDatabaseHas(Country::class, [
-            'id' => $country->id,
-            'name' => 'updated_country1',
-        ]);
+        $this->assertDatabaseCount($country::class, 1)
+            ->assertDatabaseHas($country::class, [
+                'id' => $country->id,
+                'name' => 'updated_country1',
+            ]);
     }
 }
