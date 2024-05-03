@@ -9,50 +9,58 @@ use Tests\TestCase;
 
 class GetCsrfCookieTest extends TestCase
 {
+    private string $token;
+    private string $session;
+    private Carbon $carbon;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->carbon = new Carbon();
+
+        [$token, $session] = $this->get('/csrf-cookie')
+            ->headers->all('set-cookie');
+
+        assert(is_string($token));
+        assert(is_string($session));
+
+        $this->token = $token;
+        $this->session = $session;
+    }
+
     public function testCsrfCookie(): void
     {
-        $response = $this->getJson('/csrf-cookie');
-        $setCookie = $response->headers->all('set-cookie');
-        $this->assertCount(2, $setCookie);
+        $attributes = explode('; ', $this->token);
+        $this->assertCount(5, $attributes);
 
-        [$token, ] = $setCookie;
-        assert(is_string($token));
-        $tokenValues = explode('; ', $token);
-        $this->assertCount(5, $tokenValues);
-
-        $this->assertMatchesRegularExpression('/\AXSRF-TOKEN=eyJpdiI.+\z/', $token);
-        $this->assertContains('expires='.$this->expires(), $tokenValues);
-        $this->assertContains('Max-Age=7200', $tokenValues);
-        $this->assertContains('path=/', $tokenValues);
-        $this->assertContains('samesite=lax', $tokenValues);
+        $this->assertMatchesRegularExpression('/\AXSRF-TOKEN=eyJpdiI.+\z/', $this->token);
+        $this->assertContains('expires='.$this->expires(), $attributes);
+        $this->assertContains('Max-Age=7200', $attributes);
+        $this->assertContains('path=/', $attributes);
+        $this->assertContains('samesite=lax', $attributes);
     }
 
     public function testSessionCookie(): void
     {
-        $response = $this->getJson('/csrf-cookie');
-        $setCookie = $response->headers->all('set-cookie');
-        $this->assertCount(2, $setCookie);
-
-        [, $session] = $setCookie;
-        assert(is_string($session));
-        $sessionValues = explode('; ', $session);
-        $this->assertCount(6, $sessionValues);
+        $attributes = explode('; ', $this->session);
+        $this->assertCount(6, $attributes);
 
         $this->assertMatchesRegularExpression(
             '/\A'.str_replace('.', '', strtolower($this->app['config']['app.name'])).'_session=eyJpdiI.+\z/',
-            $session
+            $this->session
         );
 
-        $this->assertContains('expires='.$this->expires(), $sessionValues);
-        $this->assertContains('Max-Age=7200', $sessionValues);
-        $this->assertContains('path=/', $sessionValues);
-        $this->assertContains('httponly', $sessionValues);
-        $this->assertContains('samesite=lax', $sessionValues);
+        $this->assertContains('expires='.$this->expires(), $attributes);
+        $this->assertContains('Max-Age=7200', $attributes);
+        $this->assertContains('path=/', $attributes);
+        $this->assertContains('httponly', $attributes);
+        $this->assertContains('samesite=lax', $attributes);
     }
 
     private function expires(): string
     {
-        return (new Carbon())
+        return $this->carbon::now()
             ->addMinutes($this->app['config']['session.lifetime'])
             ->format('D, d M Y H:i:s \G\M\T');
     }
