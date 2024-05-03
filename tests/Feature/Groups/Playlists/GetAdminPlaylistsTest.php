@@ -13,44 +13,51 @@ use Illuminate\Database\Eloquent\Factories\Sequence;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\TestCase;
-use Tests\TestMiddleware;
 
 class GetAdminPlaylistsTest extends TestCase
 {
     use RefreshDatabase;
-    use TestMiddleware;
 
+    private UserFactory $userFactory;
+    private PlaylistFactory $playlistFactory;
+    private Carbon $carbon;
     private Hashids $hashids;
 
     protected function setUp(): void
     {
         parent::setUp();
 
+        $this->userFactory = new UserFactory();
+        $this->playlistFactory = new PlaylistFactory();
+        $this->carbon = new Carbon();
         $this->hashids = $this->app->make(Hashids::class);
     }
 
     public function testVerifiedMiddleware(): void
     {
-        $this->assertVerifiedMiddleware('GET /playlists/admin');
+        $this->actingAs($this->userFactory->unverified()->makeOne())
+            ->get('/playlists/admin')
+            ->assertConflict();
     }
 
     public function testAuthMiddleware(): void
     {
-        $this->assertAuthMiddleware('GET /playlists/admin');
+        $this->get('/playlists/admin')
+            ->assertUnauthorized();
     }
 
     public function testGetAdminPlaylists(): void
     {
         /** @var array<int, Playlist> $playlists */
-        $playlists = PlaylistFactory::new()
+        $playlists = $this->playlistFactory
             ->count(2)
             ->state(new Sequence(fn (Sequence $sequence) => [
-                'created_at' => (new Carbon())->addMinutes($sequence->index + 1),
+                'created_at' => ($this->carbon::now())->addMinutes($sequence->index + 1),
             ]))
             ->create();
 
-        $this->actingAs(UserFactory::new()->makeOne())
-            ->getJson('/playlists/admin')
+        $this->actingAs($this->userFactory->makeOne())
+            ->get('/playlists/admin')
             ->assertOk()
             ->assertJsonCount(2, 'data')
             ->assertJson(function (AssertableJson $json) use ($playlists) {
@@ -72,15 +79,15 @@ class GetAdminPlaylistsTest extends TestCase
     public function testGetAdminPlaylistsWithSortAsc(): void
     {
         /** @var array<int, Playlist> $playlists */
-        $playlists = PlaylistFactory::new()
+        $playlists = $this->playlistFactory
             ->count(2)
             ->state(new Sequence(fn (Sequence $sequence) => [
                 'title' => 'title'.($sequence->index),
             ]))
             ->create();
 
-        $this->actingAs(UserFactory::new()->makeOne())
-            ->getJson('/playlists/admin?sort=title')
+        $this->actingAs($this->userFactory->makeOne())
+            ->get('/playlists/admin?sort=title')
             ->assertOk()
             ->assertJsonCount(2, 'data')
             ->assertJson(function (AssertableJson $json) use ($playlists) {
@@ -97,15 +104,15 @@ class GetAdminPlaylistsTest extends TestCase
     public function testGetAdminPlaylistsWithSortDesc(): void
     {
         /** @var array<int, Playlist> $playlists */
-        $playlists = PlaylistFactory::new()
+        $playlists = $this->playlistFactory
             ->count(2)
             ->state(new Sequence(fn (Sequence $sequence) => [
                 'title' => 'title'.($sequence->index),
             ]))
             ->create();
 
-        $this->actingAs(UserFactory::new()->makeOne())
-            ->getJson('/playlists/admin?sort=-title')
+        $this->actingAs($this->userFactory->makeOne())
+            ->get('/playlists/admin?sort=-title')
             ->assertOk()
             ->assertJsonCount(2, 'data')
             ->assertJson(function (AssertableJson $json) use ($playlists) {
@@ -122,7 +129,7 @@ class GetAdminPlaylistsTest extends TestCase
     public function testGetAdminPlaylistsWithSearchTitle(): void
     {
         /** @var array<int, Playlist> $playlists */
-        $playlists = PlaylistFactory::new()
+        $playlists = $this->playlistFactory
             ->count(3)
             ->state(new Sequence(
                 ['title' => 'foo'],
@@ -130,12 +137,12 @@ class GetAdminPlaylistsTest extends TestCase
                 ['title' => 'baz'],
             ))
             ->state(new Sequence(fn (Sequence $sequence) => [
-                'created_at' => (new Carbon())->addMinutes($sequence->index),
+                'created_at' => ($this->carbon::now())->addMinutes($sequence->index),
             ]))
         ->create();
 
-        $this->actingAs(UserFactory::new()->makeOne())
-            ->getJson('/playlists/admin?title=ba')
+        $this->actingAs($this->userFactory->makeOne())
+            ->get('/playlists/admin?title=ba')
             ->assertOk()
             ->assertJsonCount(2, 'data')
             ->assertJson(function (AssertableJson $json) use ($playlists) {
@@ -151,8 +158,8 @@ class GetAdminPlaylistsTest extends TestCase
 
     public function testQueryStringTypes(): void
     {
-        $this->actingAs(UserFactory::new()->makeOne())
-            ->getJson('/playlists/admin?title[]=provider=[]&sort[]=')
+        $this->actingAs($this->userFactory->makeOne())
+            ->get('/playlists/admin?title[]=provider=[]&sort[]=')
             ->assertOk();
     }
 }

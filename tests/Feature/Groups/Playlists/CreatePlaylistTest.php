@@ -13,47 +13,56 @@ use Illuminate\Testing\Fluent\AssertableJson;
 use Jamband\Ripple\Ripple;
 use Mockery\MockInterface;
 use Tests\TestCase;
-use Tests\TestMiddleware;
 
 class CreatePlaylistTest extends TestCase
 {
     use RefreshDatabase;
-    use TestMiddleware;
 
+    private UserFactory $userFactory;
+    private MusicProviderFactory $providerFactory;
+    private Playlist $playlist;
+    private Ripple $ripple;
     private Hashids $hashids;
 
     protected function setUp(): void
     {
         parent::setUp();
 
+        $this->userFactory = new UserFactory();
+        $this->providerFactory = new MusicProviderFactory();
+        $this->playlist = new Playlist();
+        $this->ripple = $this->app->make(Ripple::class);
         $this->hashids = $this->app->make(Hashids::class);
     }
 
     public function testVerifiedMiddleware(): void
     {
-        $this->assertVerifiedMiddleware('POST /playlists');
+        $this->actingAs($this->userFactory->unverified()->makeOne())
+            ->post('/playlists')
+            ->assertConflict();
     }
 
     public function testAuthMiddleware(): void
     {
-        $this->assertAuthMiddleware('POST /playlists');
+        $this->post('/playlists')
+            ->assertUnauthorized();
     }
 
     public function testCreatePlaylist(): void
     {
-        $provider = MusicProviderFactory::new()
+        $provider = $this->providerFactory
             ->createOne();
 
-        $this->partialMock(Ripple::class, function (MockInterface $mock) use ($provider) {
+        $this->partialMock($this->ripple::class, function (MockInterface $mock) use ($provider) {
             $mock->shouldReceive('image')->andReturn('image1');
             $mock->shouldReceive('provider')->andReturn($provider->name);
             $mock->shouldReceive('id')->andReturn('key1');
         });
 
-        $this->assertDatabaseCount(Playlist::class, 0);
+        $this->assertDatabaseCount($this->playlist::class, 0);
 
-        $this->actingAs(UserFactory::new()->makeOne())
-            ->postJson('/playlists', [
+        $this->actingAs($this->userFactory->makeOne())
+            ->post('/playlists', [
                 'url' => 'https://soundcloud.com/foo/sets/bar',
                 'title' => 'playlist1',
             ])
@@ -71,31 +80,30 @@ class CreatePlaylistTest extends TestCase
                     ->has('updated_at');
             });
 
-        $this->assertDatabaseCount(Playlist::class, 1);
-
-        $this->assertDatabaseHas(Playlist::class, [
-            'id' => 1,
-            'url' => 'https://soundcloud.com/foo/sets/bar',
-            'provider_id' => $provider->id,
-            'provider_key' => 'key1',
-            'title' => 'playlist1',
-        ]);
+        $this->assertDatabaseCount($this->playlist::class, 1)
+            ->assertDatabaseHas($this->playlist::class, [
+                'id' => 1,
+                'url' => 'https://soundcloud.com/foo/sets/bar',
+                'provider_id' => $provider->id,
+                'provider_key' => 'key1',
+                'title' => 'playlist1',
+            ]);
     }
 
     public function testCreatePlaylistWithSomeEmptyAttributeValues(): void
     {
-        $provider = MusicProviderFactory::new()
+        $provider = $this->providerFactory
             ->createOne();
 
-        $this->partialMock(Ripple::class, function (MockInterface $mock) use ($provider) {
+        $this->partialMock($this->ripple::class, function (MockInterface $mock) use ($provider) {
             $mock->shouldReceive('image')->andReturn('image1');
             $mock->shouldReceive('title')->andReturn('playlist1');
             $mock->shouldReceive('provider')->andReturn($provider->name);
             $mock->shouldReceive('id')->andReturn('key1');
         });
 
-        $this->actingAs(UserFactory::new()->makeOne())
-            ->postJson('/playlists', [
+        $this->actingAs($this->userFactory->makeOne())
+            ->post('/playlists', [
                 'url' => 'https://soundcloud.com/foo/sets/bar',
             ])
             ->assertCreated()
@@ -108,7 +116,7 @@ class CreatePlaylistTest extends TestCase
                     ->has('updated_at');
             });
 
-        $this->assertDatabaseHas(Playlist::class, [
+        $this->assertDatabaseHas($this->playlist::class, [
             'id' => 1,
             'url' => 'https://soundcloud.com/foo/sets/bar',
             'provider_id' => $provider->id,

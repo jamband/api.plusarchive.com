@@ -17,11 +17,16 @@ class UpdatePlaylistRulesTest extends TestCase
 {
     use RefreshDatabase;
 
+    private UserFactory $userFactory;
+    private PlaylistFactory $playlistFactory;
     private Hashids $hashids;
 
     protected function setUp(): void
     {
         parent::setUp();
+
+        $this->userFactory = new UserFactory();
+        $this->playlistFactory = new PlaylistFactory();
 
         $this->hashids = $this->app->make(Hashids::class);
 
@@ -34,16 +39,16 @@ class UpdatePlaylistRulesTest extends TestCase
     /**
      * @param array<string, mixed> $data
      */
-    protected function request(array $data = []): TestResponse
+    protected function request(array $data): TestResponse
     {
-        return $this->actingAs(UserFactory::new()->makeOne())
-            ->putJson('/playlists/'.$this->hashids->encode(1), $data)
+        return $this->actingAs($this->userFactory->makeOne())
+            ->put('/playlists/'.$this->hashids->encode(1), $data)
             ->assertUnprocessable();
     }
 
     public function testUrlRequiredRule(): void
     {
-        $this->request()
+        $this->request(['url' => null])
             ->assertJsonPath('errors.url', __('validation.required', [
                 'attribute' => 'url',
             ]));
@@ -59,7 +64,7 @@ class UpdatePlaylistRulesTest extends TestCase
 
     public function testUrlUniqueRule(): void
     {
-        PlaylistFactory::new()
+        $this->playlistFactory
             ->count(2)
             ->state(new Sequence(
                 ['url' => 'https://soundcloud.com/foo/set/bar'],

@@ -17,26 +17,30 @@ class GetPlaylistsTest extends TestCase
 {
     use RefreshDatabase;
 
+    private PlaylistFactory $playlistFactory;
+    private Carbon $carbon;
     private Hashids $hashids;
 
     protected function setUp(): void
     {
         parent::setUp();
 
+        $this->playlistFactory = new PlaylistFactory();
+        $this->carbon = new Carbon();
         $this->hashids = $this->app->make(Hashids::class);
     }
 
     public function testGetPlaylists(): void
     {
         /** @var array<int, Playlist> $playlists */
-        $playlists = PlaylistFactory::new()
+        $playlists = $this->playlistFactory
             ->count(2)
             ->state(new Sequence(fn (Sequence $sequence) => [
-                'created_at' => (new Carbon())->addMinutes($sequence->index),
+                'created_at' => ($this->carbon::now())->addMinutes($sequence->index),
             ]))
             ->create();
 
-        $this->getJson('/playlists')
+        $this->get('/playlists')
             ->assertOk()
             ->assertJsonCount(2)
             ->assertJson(function (AssertableJson $json) use ($playlists) {

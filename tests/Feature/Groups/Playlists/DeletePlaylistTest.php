@@ -4,76 +4,76 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Groups\Playlists;
 
-use App\Groups\Playlists\Playlist;
 use App\Groups\Playlists\PlaylistFactory;
 use App\Groups\Users\UserFactory;
 use Hashids\Hashids;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
-use Tests\TestMiddleware;
 
 class DeletePlaylistTest extends TestCase
 {
     use RefreshDatabase;
-    use TestMiddleware;
 
+    private UserFactory $userFactory;
+    private PlaylistFactory $playlistFactory;
     private Hashids $hashids;
 
     protected function setUp(): void
     {
         parent::setUp();
 
+        $this->userFactory = new UserFactory();
+        $this->playlistFactory = new PlaylistFactory();
         $this->hashids = $this->app->make(Hashids::class);
     }
 
     public function testVerifiedMiddleware(): void
     {
-        $this->assertVerifiedMiddleware(
-            'DELETE /playlists/'.str_repeat('a', 11)
-        );
+        $this->actingAs($this->userFactory->unverified()->makeOne())
+            ->delete('/playlists/'.str_repeat('a', 11))
+            ->assertConflict();
     }
 
     public function testAuthMiddleware(): void
     {
-        $this->assertAuthMiddleware(
-            'DELETE /playlists/'.str_repeat('a', 11)
-        );
+        $this->delete('/playlists/'.str_repeat('a', 11))
+            ->assertUnauthorized();
     }
 
     public function testNotFound(): void
     {
-        $this->deleteJson('/playlists/1')
+        $this->delete('/playlists/1')
             ->assertNotFound()
             ->assertExactJson(['message' => 'Not Found.']);
     }
 
     public function testModelNotFound(): void
     {
-        $this->actingAs(UserFactory::new()->makeOne())
-            ->deleteJson('/playlists/'.$this->hashids->encode(1))
+        $this->actingAs($this->userFactory->makeOne())
+            ->delete('/playlists/'.$this->hashids->encode(1))
             ->assertNotFound()
             ->assertExactJson(['message' => 'Model Not Found.']);
     }
 
     public function testModelNotFoundWithInvalidHashValue(): void
     {
-        $this->actingAs(UserFactory::new()->makeOne())
-            ->deleteJson('/playlists/'.str_repeat('a', 11))
+        $this->actingAs($this->userFactory->makeOne())
+            ->delete('/playlists/'.str_repeat('a', 11))
             ->assertNotFound()
             ->assertExactJson(['message' => 'Model Not Found.']);
     }
 
     public function testDeletePlaylist(): void
     {
-        $playlist = PlaylistFactory::new()
+        $playlist = $this->playlistFactory
             ->createOne();
 
-        $this->assertDatabaseCount(Playlist::class, 1);
+        $this->assertDatabaseCount($playlist::class, 1);
 
-        $this->actingAs(UserFactory::new()->makeOne())
-            ->deleteJson('/playlists/'.$this->hashids->encode($playlist->id))
+        $this->actingAs($this->userFactory->makeOne())
+            ->delete('/playlists/'.$this->hashids->encode($playlist->id))
             ->assertNoContent();
 
-        $this->assertDatabaseCount(Playlist::class, 0);
+        $this->assertDatabaseCount($playlist::class, 0);
     }
 }

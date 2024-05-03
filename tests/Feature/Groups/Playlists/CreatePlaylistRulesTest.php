@@ -15,9 +15,15 @@ class CreatePlaylistRulesTest extends TestCase
 {
     use RefreshDatabase;
 
+    private UserFactory $userFactory;
+    private PlaylistFactory $playlistFactory;
+
     protected function setUp(): void
     {
         parent::setUp();
+
+        $this->userFactory = new UserFactory();
+        $this->playlistFactory = new PlaylistFactory();
 
         $ripple = $this->app->make(Ripple::class);
         assert($ripple instanceof Ripple);
@@ -28,16 +34,16 @@ class CreatePlaylistRulesTest extends TestCase
     /**
      * @param array<string, mixed> $data
      */
-    protected function request(array $data = []): TestResponse
+    protected function request(array $data): TestResponse
     {
-        return $this->actingAs(UserFactory::new()->makeOne())
-            ->postJson('/playlists', $data)
+        return $this->actingAs($this->userFactory->makeOne())
+            ->post('/playlists', $data)
             ->assertUnprocessable();
     }
 
     public function testUrlRequiredRule(): void
     {
-        $this->request()
+        $this->request(['url' => null])
             ->assertJsonPath('errors.url', __('validation.required', [
                 'attribute' => 'url',
             ]));
@@ -53,7 +59,7 @@ class CreatePlaylistRulesTest extends TestCase
 
     public function testUrlUniqueRule(): void
     {
-        $playlist = PlaylistFactory::new()
+        $playlist = $this->playlistFactory
             ->createOne();
 
         $this->request(['url' => $playlist->url])

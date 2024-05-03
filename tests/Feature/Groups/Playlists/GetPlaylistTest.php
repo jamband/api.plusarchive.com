@@ -9,49 +9,49 @@ use Hashids\Hashids;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\TestCase;
-use Tests\TestMiddleware;
 
 class GetPlaylistTest extends TestCase
 {
     use RefreshDatabase;
-    use TestMiddleware;
 
+    private PlaylistFactory $playlistFactory;
     private Hashids $hashids;
 
     protected function setUp(): void
     {
         parent::setUp();
 
+        $this->playlistFactory = new PlaylistFactory();
         $this->hashids = $this->app->make(Hashids::class);
     }
 
     public function testNotFound(): void
     {
-        $this->getJson('/playlists/1')
+        $this->get('/playlists/1')
             ->assertNotFound()
             ->assertExactJson(['message' => 'Not Found.']);
     }
 
     public function testModelNotFound(): void
     {
-        $this->getJson('/playlists/'.$this->hashids->encode(1))
+        $this->get('/playlists/'.$this->hashids->encode(1))
             ->assertNotFound()
             ->assertExactJson(['message' => 'Model Not Found.']);
     }
 
     public function testModelNotFoundWithInvalidHashValue(): void
     {
-        $this->getJson('/playlists/'.str_repeat('a', 11))
+        $this->get('/playlists/'.str_repeat('a', 11))
             ->assertNotFound()
             ->assertExactJson(['message' => 'Model Not Found.']);
     }
 
     public function testGetPlaylist(): void
     {
-        $playlist = PlaylistFactory::new()
+        $playlist = $this->playlistFactory
             ->createOne();
 
-        $this->getJson('/playlists/'.$this->hashids->encode($playlist->id))
+        $this->get('/playlists/'.$this->hashids->encode($playlist->id))
             ->assertOk()
             ->assertJson(function (AssertableJson $json) use ($playlist) {
                 $json->where('id', $this->hashids->encode($playlist->id))
