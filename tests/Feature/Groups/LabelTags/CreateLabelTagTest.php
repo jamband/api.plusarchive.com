@@ -9,29 +9,41 @@ use App\Groups\Users\UserFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\TestCase;
-use Tests\TestMiddleware;
 
 class CreateLabelTagTest extends TestCase
 {
     use RefreshDatabase;
-    use TestMiddleware;
+
+    private UserFactory $userFactory;
+    private LabelTag $tag;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->userFactory = new UserFactory();
+        $this->tag = new LabelTag();
+    }
 
     public function testVerifiedMiddleware(): void
     {
-        $this->assertVerifiedMiddleware('POST /label-tags');
+        $this->actingAs($this->userFactory->unverified()->makeOne())
+            ->post('/label-tags')
+            ->assertConflict();
     }
 
     public function testAuthMiddleware(): void
     {
-        $this->assertAuthMiddleware('POST /label-tags');
+        $this->post('/label-tags')
+            ->assertUnauthorized();
     }
 
     public function testCreateLabelTag(): void
     {
-        $this->assertDatabaseCount(LabelTag::class, 0);
+        $this->assertDatabaseCount($this->tag::class, 0);
 
-        $this->actingAs(UserFactory::new()->makeOne())
-            ->postJson('/label-tags', [
+        $this->actingAs($this->userFactory->makeOne())
+            ->post('/label-tags', [
                 'name' => 'tag1',
             ])
             ->assertCreated()
@@ -43,11 +55,10 @@ class CreateLabelTagTest extends TestCase
                 ->where('id', 1)
                 ->where('name', 'tag1'));
 
-        $this->assertDatabaseCount(LabelTag::class, 1);
-
-        $this->assertDatabaseHas(LabelTag::class, [
-            'id' => 1,
-            'name' => 'tag1',
-        ]);
+        $this->assertDatabaseCount($this->tag::class, 1)
+            ->assertDatabaseHas($this->tag::class, [
+                'id' => 1,
+                'name' => 'tag1',
+            ]);
     }
 }

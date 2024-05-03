@@ -15,19 +15,30 @@ class UpdateLabelTagRulesTest extends TestCase
 {
     use RefreshDatabase;
 
+    private UserFactory $userFactory;
+    private LabelTagFactory $tagFactory;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->userFactory = new UserFactory();
+        $this->tagFactory = new LabelTagFactory();
+    }
+
     /**
      * @param array<string, mixed> $data
      */
-    protected function request(array $data = []): TestResponse
+    protected function request(array $data): TestResponse
     {
-        return $this->actingAs(UserFactory::new()->makeOne())
-            ->putJson('/label-tags/1', $data)
+        return $this->actingAs($this->userFactory->makeOne())
+            ->put('/label-tags/1', $data)
             ->assertUnprocessable();
     }
 
     public function testNameRequiredRule(): void
     {
-        $this->request()
+        $this->request(['name' => null])
             ->assertJsonPath('errors.name', __('validation.required', [
                 'attribute' => 'name',
             ]));
@@ -51,7 +62,7 @@ class UpdateLabelTagRulesTest extends TestCase
 
     public function testNameUniqueRule(): void
     {
-        LabelTagFactory::new()
+        $this->tagFactory
             ->count(2)
             ->state(new Sequence(
                 ['name' => 'foo'],

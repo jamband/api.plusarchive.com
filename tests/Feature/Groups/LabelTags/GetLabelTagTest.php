@@ -9,38 +9,50 @@ use App\Groups\Users\UserFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\TestCase;
-use Tests\TestMiddleware;
 
 class GetLabelTagTest extends TestCase
 {
     use RefreshDatabase;
-    use TestMiddleware;
+
+    private UserFactory $userFactory;
+    private LabelTagFactory $tagFactory;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->userFactory = new UserFactory();
+        $this->tagFactory = new LabelTagFactory();
+    }
 
     public function testVerifiedMiddleware(): void
     {
-        $this->assertVerifiedMiddleware('GET /label-tags/1');
+        $this->actingAs($this->userFactory->unverified()->makeOne())
+            ->get('/label-tags/1')
+            ->assertConflict();
     }
 
     public function testAuthMiddleware(): void
     {
-        $this->assertAuthMiddleware('GET /label-tags/1');
+        $this->get('/label-tags/1')
+            ->assertUnauthorized();
     }
 
     public function testModelNotFound(): void
     {
-        $this->actingAs(UserFactory::new()->makeOne())
-            ->getJson('/label-tags/1')
+        $this->actingAs($this->userFactory->makeOne())
+            ->get('/label-tags/1')
             ->assertNotFound()
             ->assertExactJson(['message' => 'Model Not Found.']);
     }
 
     public function testGetLabelTag(): void
     {
-        $tag = LabelTagFactory::new()
+        $tag = $this->tagFactory
             ->createOne();
 
-        $this->actingAs(UserFactory::new()->makeOne())
-            ->getJson('/label-tags/'.$tag->id)
+        $this->actingAs($this->userFactory->makeOne())
+            ->get('/label-tags/'.$tag->id)
             ->assertOk()
             ->assertJson(function (AssertableJson $json) use ($tag) {
                 $json->where('id', $tag->id)

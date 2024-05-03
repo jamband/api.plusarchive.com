@@ -14,10 +14,19 @@ class CreateLabelTagRulesTest extends TestCase
 {
     use RefreshDatabase;
 
+    private LabelTagFactory $tagFactory;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->tagFactory = new LabelTagFactory();
+    }
+
     /**
      * @param array<string, mixed> $data
      */
-    protected function request(array $data = []): TestResponse
+    protected function request(array $data): TestResponse
     {
         return $this->actingAs(UserFactory::new()->makeOne())
             ->postJson('/label-tags', $data)
@@ -26,7 +35,7 @@ class CreateLabelTagRulesTest extends TestCase
 
     public function testNameRequiredRule(): void
     {
-        $this->request()
+        $this->request(['name' => null])
             ->assertJsonPath('errors.name', __('validation.required', [
                 'attribute' => 'name',
             ]));
@@ -50,7 +59,7 @@ class CreateLabelTagRulesTest extends TestCase
 
     public function testNameUniqueRule(): void
     {
-        $tag = LabelTagFactory::new()
+        $tag = $this->tagFactory
             ->createOne();
 
         $this->request(['name' => $tag->name])

@@ -4,47 +4,58 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Groups\LabelTags;
 
-use App\Groups\LabelTags\LabelTag;
 use App\Groups\LabelTags\LabelTagFactory;
 use App\Groups\Users\UserFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
-use Tests\TestMiddleware;
 
 class DeleteLabelTagTest extends TestCase
 {
     use RefreshDatabase;
-    use TestMiddleware;
+
+    private UserFactory $userFactory;
+    private LabelTagFactory $tagFactory;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->userFactory = new UserFactory();
+        $this->tagFactory = new LabelTagFactory();
+    }
 
     public function testVerifiedMiddleware(): void
     {
-        $this->assertVerifiedMiddleware('DELETE /label-tags/1');
+        $this->actingAs($this->userFactory->unverified()->makeOne())
+            ->delete('/label-tags/1')
+            ->assertConflict();
     }
 
     public function testAuthMiddleware(): void
     {
-        $this->assertAuthMiddleware('DELETE /label-tags/1');
+        $this->delete('/label-tags/1')
+            ->assertUnauthorized();
     }
 
     public function testModelNotFound(): void
     {
-        $this->actingAs(UserFactory::new()->makeOne())
-            ->deleteJson('/label-tags/1')
+        $this->actingAs($this->userFactory->makeOne())
+            ->delete('/label-tags/1')
             ->assertNotFound()
             ->assertExactJson(['message' => 'Model Not Found.']);
     }
 
     public function testDeleteLabelTag(): void
     {
-        $tag = LabelTagFactory::new()
+        $tag = $this->tagFactory
             ->createOne();
 
-        $this->assertDatabaseCount(LabelTag::class, 1);
+        $this->assertDatabaseCount($tag::class, 1);
 
-        $this->actingAs(UserFactory::new()->makeOne())
-            ->deleteJson('/label-tags/'.$tag->id)
+        $this->actingAs($this->userFactory->makeOne())
+            ->delete('/label-tags/'.$tag->id)
             ->assertNoContent();
 
-        $this->assertDatabaseCount(LabelTag::class, 0);
+        $this->assertDatabaseCount($tag::class, 0);
     }
 }
