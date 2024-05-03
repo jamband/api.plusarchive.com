@@ -13,44 +13,51 @@ use Illuminate\Database\Eloquent\Factories\Sequence;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\TestCase;
-use Tests\TestMiddleware;
 
 class GetAdminTracksTest extends TestCase
 {
     use RefreshDatabase;
-    use TestMiddleware;
 
+    private UserFactory $userFactory;
+    private TrackFactory $trackFactory;
+    private Carbon $carbon;
     private Hashids $hashids;
 
     protected function setUp(): void
     {
         parent::setUp();
 
+        $this->userFactory = new UserFactory();
+        $this->trackFactory = new TrackFactory();
+        $this->carbon = new Carbon();
         $this->hashids = $this->app->make(Hashids::class);
     }
 
     public function testVerifiedMiddleware(): void
     {
-        $this->assertVerifiedMiddleware('GET /tracks/admin');
+        $this->actingAs($this->userFactory->unverified()->makeOne())
+            ->get('/tracks/admin')
+            ->assertConflict();
     }
 
     public function testAuthMiddleware(): void
     {
-        $this->assertAuthMiddleware('GET /tracks/admin');
+        $this->get('/tracks/admin')
+            ->assertUnauthorized();
     }
 
     public function testGetAdminTracks(): void
     {
         /** @var array<int, Track> $tracks */
-        $tracks = TrackFactory::new()
+        $tracks = $this->trackFactory
             ->count(2)
             ->state(new Sequence(fn (Sequence $sequence) => [
-                'created_at' => (new Carbon())->addMinutes($sequence->index + 1),
+                'created_at' => ($this->carbon::now())->addMinutes($sequence->index + 1),
             ]))
             ->create();
 
-        $this->actingAs(UserFactory::new()->makeOne())
-            ->getJson('/tracks/admin')
+        $this->actingAs($this->userFactory->makeOne())
+            ->get('/tracks/admin')
             ->assertOk()
             ->assertJsonCount(2, 'data')
             ->assertJson(function (AssertableJson $json) use ($tracks) {
@@ -75,15 +82,15 @@ class GetAdminTracksTest extends TestCase
     public function testGetAdminTracksWithSortAsc(): void
     {
         /** @var array<int, Track> $tracks */
-        $tracks = TrackFactory::new()
+        $tracks = $this->trackFactory
             ->count(2)
             ->state(new Sequence(fn (Sequence $sequence) => [
                 'title' => 'title'.($sequence->index),
             ]))
             ->create();
 
-        $this->actingAs(UserFactory::new()->makeOne())
-            ->getJson('/tracks/admin?sort=title')
+        $this->actingAs($this->userFactory->makeOne())
+            ->get('/tracks/admin?sort=title')
             ->assertOk()
             ->assertJsonCount(2, 'data')
             ->assertJson(function (AssertableJson $json) use ($tracks) {
@@ -100,15 +107,15 @@ class GetAdminTracksTest extends TestCase
     public function testGetAdminTracksWithSortDesc(): void
     {
         /** @var array<int, Track> $tracks */
-        $tracks = TrackFactory::new()
+        $tracks = $this->trackFactory
             ->count(2)
             ->state(new Sequence(fn (Sequence $sequence) => [
                 'title' => 'title'.($sequence->index),
             ]))
             ->create();
 
-        $this->actingAs(UserFactory::new()->makeOne())
-            ->getJson('/tracks/admin?sort=-title')
+        $this->actingAs($this->userFactory->makeOne())
+            ->get('/tracks/admin?sort=-title')
             ->assertOk()
             ->assertJsonCount(2, 'data')
             ->assertJson(function (AssertableJson $json) use ($tracks) {
@@ -125,7 +132,7 @@ class GetAdminTracksTest extends TestCase
     public function testGetAdminTracksWithName(): void
     {
         /** @var array<int, Track> $tracks */
-        $tracks = TrackFactory::new()
+        $tracks = $this->trackFactory
             ->count(3)
             ->state(new Sequence(
                 ['title' => 'foo'],
@@ -133,12 +140,12 @@ class GetAdminTracksTest extends TestCase
                 ['title' => 'baz'],
             ))
             ->state(new Sequence(fn (Sequence $sequence) => [
-                'created_at' => (new Carbon())->addMinutes($sequence->index),
+                'created_at' => ($this->carbon::now())->addMinutes($sequence->index),
             ]))
             ->create();
 
-        $this->actingAs(UserFactory::new()->makeOne())
-            ->getJson('/tracks/admin?title=ba')
+        $this->actingAs($this->userFactory->makeOne())
+            ->get('/tracks/admin?title=ba')
             ->assertOk()
             ->assertJsonCount(2, 'data')
             ->assertJson(function (AssertableJson $json) use ($tracks) {
@@ -154,8 +161,8 @@ class GetAdminTracksTest extends TestCase
 
     public function testQueryStringTypes(): void
     {
-        $this->actingAs(UserFactory::new()->makeOne())
-            ->getJson('/tracks/admin?provider[]=&title[]=&urge[]=&genre[]=&sort[]=')
+        $this->actingAs($this->userFactory->makeOne())
+            ->get('/tracks/admin?provider[]=&title[]=&urge[]=&genre[]=&sort[]=')
             ->assertOk();
     }
 }

@@ -10,26 +10,40 @@ use App\Groups\Users\UserFactory;
 use Illuminate\Database\Eloquent\Factories\Sequence;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
-use Tests\TestMiddleware;
 
 class StopUrgesTest extends TestCase
 {
     use RefreshDatabase;
-    use TestMiddleware;
+
+    private UserFactory $userFactory;
+    private TrackFactory $trackFactory;
+    private Track $track;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->userFactory = new UserFactory();
+        $this->trackFactory = new TrackFactory();
+        $this->track = new Track();
+    }
 
     public function testVerifiedMiddleware(): void
     {
-        $this->assertVerifiedMiddleware('PATCH /tracks/stop-urges');
+        $this->actingAs($this->userFactory->unverified()->makeOne())
+            ->patch('/tracks/stop-urges')
+            ->assertConflict();
     }
 
     public function testAuthMiddleware(): void
     {
-        $this->assertAuthMiddleware('PATCH /tracks/stop-urges');
+        $this->patch('/tracks/stop-urges')
+            ->assertUnauthorized();
     }
 
     public function testStopUrges(): void
     {
-        TrackFactory::new()
+        $this->trackFactory
             ->count(4)
             ->state(new Sequence(
                 ['urge' => false],
@@ -37,15 +51,15 @@ class StopUrgesTest extends TestCase
             ))
             ->create();
 
-        $this->assertDatabaseHas(Track::class, [
+        $this->assertDatabaseHas($this->track::class, [
             'urge' => true,
         ]);
 
-        $this->actingAs(UserFactory::new()->makeOne())
+        $this->actingAs($this->userFactory->makeOne())
             ->patch('/tracks/stop-urges')
             ->assertNoContent();
 
-        $this->assertDatabaseMissing(Track::class, [
+        $this->assertDatabaseMissing($this->track::class, [
             'urge' => true,
         ]);
     }

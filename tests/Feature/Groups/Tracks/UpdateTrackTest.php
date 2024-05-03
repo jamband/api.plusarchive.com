@@ -6,7 +6,6 @@ namespace Tests\Feature\Groups\Tracks;
 
 use App\Groups\TrackGenres\TrackGenre;
 use App\Groups\TrackGenres\TrackGenreFactory;
-use App\Groups\Tracks\Track;
 use App\Groups\Tracks\TrackFactory;
 use App\Groups\Users\UserFactory;
 use Hashids\Hashids;
@@ -17,18 +16,27 @@ use Illuminate\Testing\Fluent\AssertableJson;
 use Jamband\Ripple\Ripple;
 use Mockery\MockInterface;
 use Tests\TestCase;
-use Tests\TestMiddleware;
 
 class UpdateTrackTest extends TestCase
 {
     use RefreshDatabase;
-    use TestMiddleware;
 
+    private UserFactory $userFactory;
+    private TrackFactory $trackFactory;
+    private TrackGenreFactory $genreFactory;
+    private TrackGenre $genre;
+    private Ripple $ripple;
     private Hashids $hashids;
 
     protected function setUp(): void
     {
         parent::setUp();
+
+        $this->userFactory = new UserFactory();
+        $this->trackFactory = new TrackFactory();
+        $this->genreFactory = new TrackGenreFactory();
+        $this->genre = new TrackGenre();
+        $this->ripple = $this->app->make(Ripple::class);
 
         $client = $this->app->make(Client::class);
         assert($client instanceof Client);
@@ -40,31 +48,34 @@ class UpdateTrackTest extends TestCase
 
     public function testVerifiedMiddleware(): void
     {
-        $this->assertVerifiedMiddleware('PUT /tracks/'.str_repeat('a', 11));
+        $this->actingAs($this->userFactory->unverified()->makeOne())
+            ->put('/tracks/'.str_repeat('a', 11))
+            ->assertConflict();
     }
 
     public function testAuthMiddleware(): void
     {
-        $this->assertAuthMiddleware('PUT /tracks/'.str_repeat('a', 11));
+        $this->put('/tracks/'.str_repeat('a', 11))
+            ->assertUnauthorized();
     }
 
     public function testNotFound(): void
     {
-        $this->putJson('/tracks/1')
+        $this->put('/tracks/1')
             ->assertNotFound()
             ->assertExactJson(['message' => 'Not Found.']);
     }
 
     public function testModelNotFound(): void
     {
-        $this->partialMock(Ripple::class, function (MockInterface $mock) {
+        $this->partialMock($this->ripple::class, function (MockInterface $mock) {
             $mock->shouldReceive('id')->andReturn('updated_key1');
             $mock->shouldReceive('image')->andReturn('updated-image1');
             $mock->shouldReceive('title')->andReturn('updated_title1');
         });
 
-        $this->actingAs(UserFactory::new()->makeOne())
-            ->putJson('/tracks/'.$this->hashids->encode(1), [
+        $this->actingAs($this->userFactory->makeOne())
+            ->put('/tracks/'.$this->hashids->encode(1), [
                 'url' => 'https://soundcloud.com/updated-foo/updated-bar',
             ])
             ->assertNotFound()
@@ -73,14 +84,14 @@ class UpdateTrackTest extends TestCase
 
     public function testModelNotFoundWithInvalidHashValue(): void
     {
-        $this->partialMock(Ripple::class, function (MockInterface $mock) {
+        $this->partialMock($this->ripple::class, function (MockInterface $mock) {
             $mock->shouldReceive('id')->andReturn('updated_key1');
             $mock->shouldReceive('image')->andReturn('updated-image1');
             $mock->shouldReceive('title')->andReturn('updated_title1');
         });
 
-        $this->actingAs(UserFactory::new()->makeOne())
-            ->putJson('/tracks/'.str_repeat('a', 11), [
+        $this->actingAs($this->userFactory->makeOne())
+            ->put('/tracks/'.str_repeat('a', 11), [
                 'url' => 'https://soundcloud.com/updated-foo/updated-bar',
             ])
             ->assertNotFound()
@@ -89,19 +100,19 @@ class UpdateTrackTest extends TestCase
 
     public function testUpdateTrack(): void
     {
-        $track = TrackFactory::new()
+        $track = $this->trackFactory
             ->createOne();
 
-        $this->assertDatabaseCount(Track::class, 1);
+        $this->assertDatabaseCount($track::class, 1);
 
-        $this->partialMock(Ripple::class, function (MockInterface $mock) use ($track) {
+        $this->partialMock($this->ripple::class, function (MockInterface $mock) use ($track) {
             $mock->shouldReceive('image')->andReturn('updated-image1');
             $mock->shouldReceive('provider')->andReturn($track->provider->name);
             $mock->shouldReceive('id')->andReturn('updated_key1');
         });
 
-        $this->actingAs(UserFactory::new()->makeOne())
-            ->putJson('/tracks/'.$this->hashids->encode($track->id), [
+        $this->actingAs($this->userFactory->makeOne())
+            ->put('/tracks/'.$this->hashids->encode($track->id), [
                 'url' => 'https://soundcloud.com/updated-foo/updated-bar',
                 'title' => 'updated_track1',
                 'image' => 'https://example.com/updated-foo/updated-bar.jpg',
@@ -119,32 +130,31 @@ class UpdateTrackTest extends TestCase
                     ->has('updated_at');
             });
 
-        $this->assertDatabaseCount(Track::class, 1);
-
-        $this->assertDatabaseHas(Track::class, [
-            'id' => $track->id,
-            'url' => 'https://soundcloud.com/updated-foo/updated-bar',
-            'provider_id' => $track->provider_id,
-            'provider_key' => 'updated_key1',
-            'title' => 'updated_track1',
-            'image' => 'https://example.com/updated-foo/updated-bar.jpg',
-            'urge' => false,
-        ]);
+        $this->assertDatabaseCount($track::class, 1)
+            ->assertDatabaseHas($track::class, [
+                'id' => $track->id,
+                'url' => 'https://soundcloud.com/updated-foo/updated-bar',
+                'provider_id' => $track->provider_id,
+                'provider_key' => 'updated_key1',
+                'title' => 'updated_track1',
+                'image' => 'https://example.com/updated-foo/updated-bar.jpg',
+                'urge' => false,
+            ]);
     }
 
     public function testUpdateTrackWithUrgeIsTrue(): void
     {
-        $track = TrackFactory::new()
+        $track = $this->trackFactory
             ->createOne(['urge' => true]);
 
-        $this->partialMock(Ripple::class, function (MockInterface $mock) use ($track) {
+        $this->partialMock($this->ripple::class, function (MockInterface $mock) use ($track) {
             $mock->shouldReceive('image')->andReturn($track->image);
             $mock->shouldReceive('provider')->andReturn($track->provider->name);
             $mock->shouldReceive('id')->andReturn($track->provider_key);
         });
 
-        $this->actingAs(UserFactory::new()->makeOne())
-            ->putJson('/tracks/'.$this->hashids->encode($track->id), [
+        $this->actingAs($this->userFactory->makeOne())
+            ->put('/tracks/'.$this->hashids->encode($track->id), [
                 'title' => $track->title,
                 'url' => 'https://soundcloud.com/updated-foo/updated-bar',
             ])
@@ -155,7 +165,7 @@ class UpdateTrackTest extends TestCase
                     ->etc();
             });
 
-        $this->assertDatabaseHas(Track::class, [
+        $this->assertDatabaseHas($track::class, [
             'id' => $track->id,
             'urge' => true,
         ]);
@@ -163,18 +173,18 @@ class UpdateTrackTest extends TestCase
 
     public function testUpdateTrackWithSomeEmptyAttributeValues(): void
     {
-        $track = TrackFactory::new()
+        $track = $this->trackFactory
             ->createOne();
 
-        $this->partialMock(Ripple::class, function (MockInterface $mock) use ($track) {
+        $this->partialMock($this->ripple::class, function (MockInterface $mock) use ($track) {
             $mock->shouldReceive('image')->andReturn('updated-image1');
             $mock->shouldReceive('title')->andReturn('updated_track1');
             $mock->shouldReceive('provider')->andReturn($track->provider->name);
             $mock->shouldReceive('id')->andReturn('updated_key1');
         });
 
-        $this->actingAs(UserFactory::new()->makeOne())
-            ->putJson('/tracks/'.$this->hashids->encode($track->id), [
+        $this->actingAs($this->userFactory->makeOne())
+            ->put('/tracks/'.$this->hashids->encode($track->id), [
                 'url' => 'https://soundcloud.com/updated-foo/updated-bar',
             ])
             ->assertOk()
@@ -190,7 +200,7 @@ class UpdateTrackTest extends TestCase
                     ->has('updated_at');
             });
 
-        $this->assertDatabaseHas(Track::class, [
+        $this->assertDatabaseHas($track::class, [
             'id' => $track->id,
             'url' => 'https://soundcloud.com/updated-foo/updated-bar',
             'provider_id' => $track->provider_id,
@@ -203,12 +213,12 @@ class UpdateTrackTest extends TestCase
 
     public function testUpdateTrackWithGenres(): void
     {
-        $track = TrackFactory::new()
+        $track = $this->trackFactory
             ->createOne();
 
         $pivotTable = $track->genres()->getTable();
 
-        TrackGenreFactory::new()
+        $this->genreFactory
             ->count(4)
             ->state(new Sequence(
                 ['name' => 'genre1'],
@@ -220,21 +230,20 @@ class UpdateTrackTest extends TestCase
 
         $track->genres()->sync([1, 2]);
 
-        $this->assertDatabaseCount(TrackGenre::class, 4);
+        $this->assertDatabaseCount($this->genre::class, 4)
+            ->assertDatabaseCount($pivotTable, 2)
+            ->assertDatabaseHas($pivotTable, ['track_id' => 1, 'genre_id' => 1])
+            ->assertDatabaseHas($pivotTable, ['track_id' => 1, 'genre_id' => 2]);
 
-        $this->assertDatabaseCount($pivotTable, 2);
-        $this->assertDatabaseHas($pivotTable, ['track_id' => 1, 'genre_id' => 1]);
-        $this->assertDatabaseHas($pivotTable, ['track_id' => 1, 'genre_id' => 2]);
-
-        $this->partialMock(Ripple::class, function (MockInterface $mock) use ($track) {
+        $this->partialMock($this->ripple::class, function (MockInterface $mock) use ($track) {
             $mock->shouldReceive('image')->andReturn('updated-image1');
             $mock->shouldReceive('title')->andReturn('updated_track1');
             $mock->shouldReceive('provider')->andReturn($track->provider->name);
             $mock->shouldReceive('id')->andReturn('updated_key1');
         });
 
-        $this->actingAs(UserFactory::new()->makeOne())
-            ->putJson('/tracks/'.$this->hashids->encode($track->id), [
+        $this->actingAs($this->userFactory->makeOne())
+            ->put('/tracks/'.$this->hashids->encode($track->id), [
                 'url' => 'https://soundcloud.com/updated-foo/updated-bar',
                 'genres' => ['genre3', 'genre4'],
             ])
@@ -251,10 +260,9 @@ class UpdateTrackTest extends TestCase
                     ->has('updated_at');
             });
 
-        $this->assertDatabaseCount(TrackGenre::class, 4);
-
-        $this->assertDatabaseCount($pivotTable, 2);
-        $this->assertDatabaseHas($pivotTable, ['track_id' => 1, 'genre_id' => 3]);
-        $this->assertDatabaseHas($pivotTable, ['track_id' => 1, 'genre_id' => 4]);
+        $this->assertDatabaseCount($this->genre::class, 4)
+            ->assertDatabaseCount($pivotTable, 2)
+            ->assertDatabaseHas($pivotTable, ['track_id' => 1, 'genre_id' => 3])
+            ->assertDatabaseHas($pivotTable, ['track_id' => 1, 'genre_id' => 4]);
     }
 }

@@ -17,12 +17,16 @@ class UpdateTrackRulesTest extends TestCase
 {
     use RefreshDatabase;
 
+    private UserFactory $userFactory;
+    private TrackFactory $trackFactory;
     private Hashids $hashids;
 
     protected function setUp(): void
     {
         parent::setUp();
 
+        $this->userFactory = new UserFactory();
+        $this->trackFactory = new TrackFactory();
         $this->hashids = $this->app->make(Hashids::class);
 
         $ripple = $this->app->make(Ripple::class);
@@ -34,16 +38,16 @@ class UpdateTrackRulesTest extends TestCase
     /**
      * @param array<string, mixed> $data
      */
-    protected function request(array $data = []): TestResponse
+    protected function request(array $data): TestResponse
     {
-        return $this->actingAs(UserFactory::new()->makeOne())
-            ->putJson('/tracks/'.$this->hashids->encode(1), $data)
+        return $this->actingAs($this->userFactory->makeOne())
+            ->put('/tracks/'.$this->hashids->encode(1), $data)
             ->assertUnprocessable();
     }
 
     public function testUrlRequiredRule(): void
     {
-        $this->request()
+        $this->request(['url' => null])
             ->assertJsonPath('errors.url', __('validation.required', [
                 'attribute' => 'url',
             ]));
@@ -58,7 +62,7 @@ class UpdateTrackRulesTest extends TestCase
     }
     public function testUrlUniqueRule(): void
     {
-        TrackFactory::new()
+        $this->trackFactory
             ->count(2)
             ->state(new Sequence(
                 ['url' => 'https://soundcloud.com/foo/bar'],

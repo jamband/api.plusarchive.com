@@ -15,9 +15,15 @@ class CreateTrackRulesTest extends TestCase
 {
     use RefreshDatabase;
 
+    private UserFactory $userFactory;
+    private TrackFactory $trackFactory;
+
     protected function setUp(): void
     {
         parent::setUp();
+
+        $this->userFactory = new UserFactory();
+        $this->trackFactory = new TrackFactory();
 
         $ripple = $this->app->make(Ripple::class);
         assert($ripple instanceof Ripple);
@@ -28,16 +34,16 @@ class CreateTrackRulesTest extends TestCase
     /**
      * @param array<string, mixed> $data
      */
-    protected function request(array $data = []): TestResponse
+    protected function request(array $data): TestResponse
     {
-        return $this->actingAs(UserFactory::new()->makeOne())
-            ->postJson('/tracks', $data)
+        return $this->actingAs($this->userFactory->makeOne())
+            ->post('/tracks', $data)
             ->assertUnprocessable();
     }
 
     public function testUrlRequiredRule(): void
     {
-        $this->request()
+        $this->request(['url' => null])
             ->assertJsonPath('errors.url', __('validation.required', [
                 'attribute' => 'url',
             ]));
@@ -52,7 +58,7 @@ class CreateTrackRulesTest extends TestCase
     }
     public function testUrlUniqueRule(): void
     {
-        $track = TrackFactory::new()
+        $track = $this->trackFactory
             ->createOne();
 
         $this->request(['url' => $track->url])

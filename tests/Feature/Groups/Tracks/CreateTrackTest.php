@@ -15,18 +15,27 @@ use Illuminate\Testing\Fluent\AssertableJson;
 use Jamband\Ripple\Ripple;
 use Mockery\MockInterface;
 use Tests\TestCase;
-use Tests\TestMiddleware;
 
 class CreateTrackTest extends TestCase
 {
     use RefreshDatabase;
-    use TestMiddleware;
 
+    private UserFactory $userFactory;
+    private MusicProviderFactory $providerFactory;
+    private Track $track;
+    private TrackGenre $genre;
+    private Ripple $ripple;
     private Hashids $hashids;
 
     protected function setUp(): void
     {
         parent::setUp();
+
+        $this->userFactory = new UserFactory();
+        $this->providerFactory = new MusicProviderFactory();
+        $this->track = new Track();
+        $this->genre = new TrackGenre();
+        $this->ripple = $this->app->make(Ripple::class);
 
         $client = $this->app->make(Client::class);
         assert($client instanceof Client);
@@ -38,29 +47,33 @@ class CreateTrackTest extends TestCase
 
     public function testVerifiedMiddleware(): void
     {
-        $this->assertVerifiedMiddleware('POST /tracks');
+        $this->actingAs($this->userFactory->unverified()->makeOne())
+            ->post('/tracks')
+            ->assertConflict();
+
     }
 
     public function testAuthMiddleware(): void
     {
-        $this->assertAuthMiddleware('POST /tracks');
+        $this->post('/tracks')
+            ->assertUnauthorized();
     }
 
     public function testCreateTrack(): void
     {
-        $provider = MusicProviderFactory::new()
+        $provider = $this->providerFactory
             ->createOne();
 
-        $this->partialMock(Ripple::class, function (MockInterface $mock) use ($provider) {
+        $this->partialMock($this->ripple::class, function (MockInterface $mock) use ($provider) {
             $mock->shouldReceive('image')->andReturn('image1');
             $mock->shouldReceive('provider')->andReturn($provider->name);
             $mock->shouldReceive('id')->andReturn('key1');
         });
 
-        $this->assertDatabaseCount(Track::class, 0);
+        $this->assertDatabaseCount($this->track::class, 0);
 
-        $this->actingAs(UserFactory::new()->makeOne())
-            ->postJson('/tracks', [
+        $this->actingAs($this->userFactory->makeOne())
+            ->post('/tracks', [
                 'url' => 'https://soundcloud.com/foo/bar',
                 'title' => 'track1',
                 'image' => 'https://example.com/foo/bar.jpg',
@@ -82,33 +95,32 @@ class CreateTrackTest extends TestCase
                     ->has('updated_at');
             });
 
-        $this->assertDatabaseCount(Track::class, 1);
-
-        $this->assertDatabaseHas(Track::class, [
-            'id' => 1,
-            'url' => 'https://soundcloud.com/foo/bar',
-            'provider_id' => $provider->id,
-            'provider_key' => 'key1',
-            'urge' => false,
-            'title' => 'track1',
-            'image' => 'https://example.com/foo/bar.jpg',
-        ]);
+        $this->assertDatabaseCount($this->track::class, 1)
+            ->assertDatabaseHas($this->track::class, [
+                'id' => 1,
+                'url' => 'https://soundcloud.com/foo/bar',
+                'provider_id' => $provider->id,
+                'provider_key' => 'key1',
+                'urge' => false,
+                'title' => 'track1',
+                'image' => 'https://example.com/foo/bar.jpg',
+            ]);
     }
 
     public function testCreateTrackWithSomeEmptyAttributeValues(): void
     {
-        $provider = MusicProviderFactory::new()
+        $provider = $this->providerFactory
             ->createOne();
 
-        $this->partialMock(Ripple::class, function (MockInterface $mock) use ($provider) {
+        $this->partialMock($this->ripple::class, function (MockInterface $mock) use ($provider) {
             $mock->shouldReceive('image')->andReturn('image1');
             $mock->shouldReceive('title')->andReturn('track1');
             $mock->shouldReceive('provider')->andReturn($provider->name);
             $mock->shouldReceive('id')->andReturn('key1');
         });
 
-        $this->actingAs(UserFactory::new()->makeOne())
-            ->postJson('/tracks', [
+        $this->actingAs($this->userFactory->makeOne())
+            ->post('/tracks', [
                 'url' => 'https://soundcloud.com/foo/bar',
             ])
             ->assertCreated()
@@ -124,7 +136,7 @@ class CreateTrackTest extends TestCase
                     ->has('updated_at');
             });
 
-        $this->assertDatabaseHas(Track::class, [
+        $this->assertDatabaseHas($this->track::class, [
             'id' => 1,
             'url' => 'https://soundcloud.com/foo/bar',
             'provider_id' => $provider->id,
@@ -137,21 +149,20 @@ class CreateTrackTest extends TestCase
 
     public function testCreateTrackWithGenres(): void
     {
-        $track = new Track();
-        $pivotTable = $track->genres()->getTable();
+        $pivotTable = $this->track->genres()->getTable();
 
-        $provider = MusicProviderFactory::new()
+        $provider = $this->providerFactory
             ->createOne();
 
-        $this->partialMock(Ripple::class, function (MockInterface $mock) use ($provider) {
+        $this->partialMock($this->ripple::class, function (MockInterface $mock) use ($provider) {
             $mock->shouldReceive('image')->andReturn('image1');
             $mock->shouldReceive('title')->andReturn('track1');
             $mock->shouldReceive('provider')->andReturn($provider->name);
             $mock->shouldReceive('id')->andReturn('key1');
         });
 
-        $this->actingAs(UserFactory::new()->makeOne())
-            ->postJson('/tracks', [
+        $this->actingAs($this->userFactory->makeOne())
+            ->post('/tracks', [
                 'url' => 'https://soundcloud.com/foo/bar',
                 'genres' => ['genre1', 'genre2'],
             ])
@@ -168,12 +179,11 @@ class CreateTrackTest extends TestCase
                     ->has('updated_at');
             });
 
-        $this->assertDatabaseCount(TrackGenre::class, 2);
-        $this->assertDatabaseHas(TrackGenre::class, ['name' => 'genre1']);
-        $this->assertDatabaseHas(TrackGenre::class, ['name' => 'genre2']);
-
-        $this->assertDatabaseCount($pivotTable, 2);
-        $this->assertDatabaseHas($pivotTable, ['track_id' => 1, 'genre_id' => 1]);
-        $this->assertDatabaseHas($pivotTable, ['track_id' => 1, 'genre_id' => 2]);
+        $this->assertDatabaseCount($this->genre::class, 2)
+            ->assertDatabaseHas($this->genre::class, ['name' => 'genre1'])
+            ->assertDatabaseHas($this->genre::class, ['name' => 'genre2'])
+            ->assertDatabaseCount($pivotTable, 2)
+            ->assertDatabaseHas($pivotTable, ['track_id' => 1, 'genre_id' => 1])
+            ->assertDatabaseHas($pivotTable, ['track_id' => 1, 'genre_id' => 2]);
     }
 }

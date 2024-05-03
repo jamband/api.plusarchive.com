@@ -18,35 +18,41 @@ class GetFavoriteTracksTest extends TestCase
 {
     use RefreshDatabase;
 
+    private TrackFactory $trackFactory;
+    private TrackGenreFactory $genreFactory;
+    private Carbon $carbon;
     private Hashids $hashids;
 
     protected function setUp(): void
     {
         parent::setUp();
 
+        $this->trackFactory = new TrackFactory();
+        $this->genreFactory = new TrackGenreFactory();
+        $this->carbon = new Carbon();
         $this->hashids = $this->app->make(Hashids::class);
     }
 
     public function testGetFavoriteTracks(): void
     {
         /** @var array<int, Track> $tracks */
-        $tracks = TrackFactory::new()
+        $tracks = $this->trackFactory
             ->count(4)
             ->state(new Sequence(
                 ['urge' => false],
                 ['urge' => true],
             ))
             ->state(new Sequence(fn (Sequence $sequence) => [
-                'created_at' => (new Carbon())->addMinutes($sequence->index),
+                'created_at' => ($this->carbon::now())->addMinutes($sequence->index),
             ]))
             ->hasAttached(
-                factory: TrackGenreFactory::new()
+                factory: $this->genreFactory
                     ->count(2),
                 relationship: 'genres',
             )
             ->create();
 
-        $this->getJson('/tracks/favorites')
+        $this->get('/tracks/favorites')
             ->assertOk()
             ->assertJsonCount(2)
             ->assertJson(function (AssertableJson $json) use ($tracks) {

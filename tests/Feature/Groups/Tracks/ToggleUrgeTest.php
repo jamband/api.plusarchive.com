@@ -11,43 +11,48 @@ use Hashids\Hashids;
 use Illuminate\Database\Eloquent\Factories\Sequence;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
-use Tests\TestMiddleware;
 
 class ToggleUrgeTest extends TestCase
 {
     use RefreshDatabase;
-    use TestMiddleware;
 
+    private UserFactory $userFactory;
+    private TrackFactory $trackFactory;
     private Hashids $hashids;
 
     protected function setUp(): void
     {
         parent::setUp();
 
+        $this->userFactory = new UserFactory();
+        $this->trackFactory = new TrackFactory();
         $this->hashids = $this->app->make(Hashids::class);
     }
 
     public function testVerifiedMiddleware(): void
     {
-        $this->assertVerifiedMiddleware('PATCH /tracks/'.str_repeat('a', 11).'/toggle-urge');
+        $this->actingAs($this->userFactory->unverified()->makeOne())
+            ->patch('/tracks/'.str_repeat('a', 11).'/toggle-urge')
+            ->assertConflict();
     }
 
     public function testAuthMiddleware(): void
     {
-        $this->assertAuthMiddleware('PATCH /tracks/'.str_repeat('a', 11).'/toggle-urge');
+        $this->patch('/tracks/'.str_repeat('a', 11).'/toggle-urge')
+            ->assertUnauthorized();
     }
 
     public function testNotFound(): void
     {
-        $this->patchJson('/tracks/1/toggle-urge')
+        $this->patch('/tracks/1/toggle-urge')
             ->assertNotFound()
             ->assertExactJson(['message' => 'Not Found.']);
     }
 
     public function testModelNotFound(): void
     {
-        $this->actingAs(UserFactory::new()->makeOne())
-            ->patchJson('/tracks/'.$this->hashids->encode(1).'/toggle-urge')
+        $this->actingAs($this->userFactory->makeOne())
+            ->patch('/tracks/'.$this->hashids->encode(1).'/toggle-urge')
             ->assertNotFound()
             ->assertExactJson(['message' => 'Model Not Found.']);
     }
@@ -55,7 +60,7 @@ class ToggleUrgeTest extends TestCase
     public function testBadRequest(): void
     {
         /** @var array<int, Track> $tracks */
-        $tracks = TrackFactory::new()
+        $tracks = $this->trackFactory
             ->count(12)
             ->state(new Sequence(
                 ['urge' => false],
@@ -63,26 +68,26 @@ class ToggleUrgeTest extends TestCase
             ))
             ->create();
 
-        $this->actingAs(UserFactory::new()->makeOne())
-            ->patchJson('/tracks/'.$this->hashids->encode($tracks[0]->id).'/toggle-urge')
-            ->assertStatus(400)
+        $this->actingAs($this->userFactory->makeOne())
+            ->patch('/tracks/'.$this->hashids->encode($tracks[0]->id).'/toggle-urge')
+            ->assertBadRequest()
             ->assertExactJson(['message' => 'Can\'t urge more.']);
     }
 
     public function testToggleUrge(): void
     {
-        $track = TrackFactory::new()
+        $track = $this->trackFactory
             ->createOne();
 
-        $this->assertDatabaseHas(Track::class, [
+        $this->assertDatabaseHas($track::class, [
             'urge' => false,
         ]);
 
-        $this->actingAs(UserFactory::new()->makeOne())
-            ->patchJson('/tracks/'.$this->hashids->encode($track->id).'/toggle-urge')
+        $this->actingAs($this->userFactory->makeOne())
+            ->patch('/tracks/'.$this->hashids->encode($track->id).'/toggle-urge')
             ->assertNoContent();
 
-        $this->assertDatabaseHas(Track::class, [
+        $this->assertDatabaseHas($track::class, [
             'id' => $track->id,
             'urge' => true,
         ]);

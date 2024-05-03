@@ -17,19 +17,23 @@ class GetSearchTracksTest extends TestCase
 {
     use RefreshDatabase;
 
+    private TrackFactory $trackFactory;
+    private TrackGenreFactory $genreFactory;
     private Hashids $hashids;
 
     protected function setUp(): void
     {
         parent::setUp();
 
+        $this->trackFactory = new TrackFactory();
+        $this->genreFactory = new TrackGenreFactory();
         $this->hashids = $this->app->make(Hashids::class);
     }
 
     public function testGetSearchTracks(): void
     {
         /** @var array<int, Track> $tracks */
-        $tracks = TrackFactory::new()
+        $tracks = $this->trackFactory
             ->count(3)
             ->state(new Sequence(
                 ['title' => 'foo'],
@@ -37,13 +41,13 @@ class GetSearchTracksTest extends TestCase
                 ['title' => 'baz'],
             ))
             ->hasAttached(
-                factory: TrackGenreFactory::new()
+                factory: $this->genreFactory
                     ->count(2),
                 relationship: 'genres',
             )
             ->create();
 
-        $this->getJson('/tracks/search?q=ba')
+        $this->get('/tracks/search?q=ba')
             ->assertOk()
             ->assertJsonCount(2, 'data')
             ->assertJson(function (AssertableJson $json) use ($tracks) {
@@ -85,10 +89,10 @@ class GetSearchTracksTest extends TestCase
 
     public function testGetSearchTracksWithoutParameter(): void
     {
-        TrackFactory::new()
+        $this->trackFactory
             ->createOne();
 
-        $this->getJson('/tracks/search')
+        $this->get('/tracks/search')
             ->assertOk()
             ->assertJson(fn (AssertableJson $json) => $json
                 ->where('data', [])
@@ -99,11 +103,11 @@ class GetSearchTracksTest extends TestCase
 
     public function testGetSearchTracksWithUnmatchedSearch(): void
     {
-        TrackFactory::new()
+        $this->trackFactory
             ->state(['title' => 'foo'])
             ->createOne();
 
-        $this->getJson('/tracks/search?q=bar')
+        $this->get('/tracks/search?q=bar')
             ->assertOk()
             ->assertJson(fn (AssertableJson $json) => $json
                 ->where('data', [])
@@ -114,7 +118,7 @@ class GetSearchTracksTest extends TestCase
 
     public function testQueryStringTypes(): void
     {
-        $this->getJson('/tracks/search?q[]=')
+        $this->get('/tracks/search?q[]=')
             ->assertOk();
     }
 }

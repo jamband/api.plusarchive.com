@@ -13,9 +13,18 @@ class GetTrackProvidersTest extends TestCase
 {
     use RefreshDatabase;
 
+    private MusicProviderFactory $providerFactory;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->providerFactory = new MusicProviderFactory();
+    }
+
     public function testGetTrackProviders(): void
     {
-        MusicProviderFactory::new()
+        $this->providerFactory
             ->count(3)
             ->state(new Sequence(
                 ['name' => 'foo'],
@@ -24,7 +33,7 @@ class GetTrackProvidersTest extends TestCase
             ))
             ->create();
 
-        $this->getJson('/tracks/providers')
+        $this->get('/tracks/providers')
             ->assertOk()
             ->assertExactJson(['bar', 'baz', 'foo']);
     }

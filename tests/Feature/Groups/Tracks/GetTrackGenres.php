@@ -13,9 +13,18 @@ class GetTrackGenres extends TestCase
 {
     use RefreshDatabase;
 
+    private TrackGenreFactory $genreFactory;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->genreFactory = new TrackGenreFactory();
+    }
+
     public function testGetTrackProviders(): void
     {
-        TrackGenreFactory::new()
+        $this->genreFactory
             ->count(3)
             ->state(new Sequence(
                 ['name' => 'foo'],
@@ -24,7 +33,7 @@ class GetTrackGenres extends TestCase
             ))
             ->create();
 
-        $this->getJson('/tracks/genres')
+        $this->get('/tracks/genres')
             ->assertOk()
             ->assertExactJson(['bar', 'baz', 'foo']);
     }

@@ -19,31 +19,39 @@ class GetTracksTest extends TestCase
 {
     use RefreshDatabase;
 
+    private TrackFactory $trackFactory;
+    private TrackGenreFactory $genreFactory;
+    private MusicProviderFactory $providerFactory;
+    private Carbon $carbon;
     private Hashids $hashids;
 
     protected function setUp(): void
     {
         parent::setUp();
 
+        $this->trackFactory = new TrackFactory();
+        $this->genreFactory = new TrackGenreFactory();
+        $this->providerFactory = new MusicProviderFactory();
+        $this->carbon = new Carbon();
         $this->hashids = $this->app->make(Hashids::class);
     }
 
     public function testGetTracks(): void
     {
         /** @var array<int, Track> $tracks */
-        $tracks = TrackFactory::new()
+        $tracks = $this->trackFactory
             ->count(2)
             ->hasAttached(
-                factory: TrackGenreFactory::new()
+                factory: $this->genreFactory
                     ->count(2),
                 relationship: 'genres',
             )
             ->state(new Sequence(fn (Sequence $sequence) => [
-                'created_at' => (new Carbon())->addMinutes($sequence->index),
+                'created_at' => ($this->carbon::now())->addMinutes($sequence->index),
             ]))
             ->create();
 
-        $this->getJson('/tracks')
+        $this->get('/tracks')
             ->assertOk()
             ->assertJsonCount(2, 'data')
             ->assertJson(function (AssertableJson $json) use ($tracks) {
@@ -86,28 +94,28 @@ class GetTracksTest extends TestCase
 
     public function testGetTracksWithProvider(): void
     {
-        TrackFactory::new()
+        $this->trackFactory
             ->for(
-                MusicProviderFactory::new()
+                $this->providerFactory
                     ->state(['name' => 'foo']),
                 'provider',
             )
             ->createOne();
 
         /** @var array<int, Track> $tracks */
-        $tracks = TrackFactory::new()
+        $tracks = $this->trackFactory
             ->count(2)
             ->for(
-                MusicProviderFactory::new()
+                $this->providerFactory
                     ->state(['name' => 'bar']),
                 'provider',
             )
             ->state(new Sequence(fn (Sequence $sequence) => [
-                'created_at' => (new Carbon())->addMinutes($sequence->index),
+                'created_at' => ($this->carbon::now())->addMinutes($sequence->index),
             ]))
             ->create();
 
-        $this->getJson('/tracks?provider=bar')
+        $this->get('/tracks?provider=bar')
             ->assertOk()
             ->assertJsonCount(2, 'data')
             ->assertJson(function (AssertableJson $json) use ($tracks) {
@@ -141,15 +149,15 @@ class GetTracksTest extends TestCase
 
     public function testGetTracksWithUnmatchedProvider(): void
     {
-        TrackFactory::new()
+        $this->trackFactory
             ->for(
-                MusicProviderFactory::new()
+                $this->providerFactory
                     ->state(['name' => 'foo']),
                 'provider',
             )
             ->createOne();
 
-        $this->getJson('/tracks?provider=bar')
+        $this->get('/tracks?provider=bar')
             ->assertOk()
             ->assertJson(fn (AssertableJson $json) => $json
                 ->where('data', [])
@@ -160,30 +168,30 @@ class GetTracksTest extends TestCase
 
     public function testGetTracksWithGenre(): void
     {
-        TrackFactory::new()
+        $this->trackFactory
             ->hasAttached(
-                factory: TrackGenreFactory::new()
+                factory: $this->genreFactory
                     ->state(['name' => 'foo']),
                 relationship: 'genres',
             )
             ->createOne();
 
         /** @var array<int, Track> $tracks */
-        $tracks = TrackFactory::new()
+        $tracks = $this->trackFactory
             ->count(2)
             ->state(new Sequence(fn (Sequence $sequence) => [
-                'created_at' => (new Carbon())->addMinutes($sequence->index),
+                'created_at' => ($this->carbon::now())->addMinutes($sequence->index),
             ]))
             ->create();
 
-        TrackGenreFactory::new()
+        $this->genreFactory
             ->state(['name' => 'bar'])
             ->createOne();
 
         $tracks[0]->genres()->sync([2]);
         $tracks[1]->genres()->sync([2]);
 
-        $this->getJson('/tracks?genre=bar')
+        $this->get('/tracks?genre=bar')
             ->assertOk()
             ->assertJsonCount(2, 'data')
             ->assertJson(function (AssertableJson $json) use ($tracks) {
@@ -217,15 +225,15 @@ class GetTracksTest extends TestCase
 
     public function testGetTracksWithUnmatchedGenre(): void
     {
-        TrackFactory::new()
+        $this->trackFactory
             ->hasAttached(
-                factory: TrackGenreFactory::new()
+                factory: $this->genreFactory
                     ->state(['name' => 'foo']),
                 relationship: 'genres',
             )
             ->createOne();
 
-        $this->getJson('/tracks?genre=bar')
+        $this->get('/tracks?genre=bar')
             ->assertOk()
             ->assertJson(function (AssertableJson $json) {
                 $json->where('data', [])
@@ -237,7 +245,7 @@ class GetTracksTest extends TestCase
 
     public function testGetTracksWithProviderAndGenre(): void
     {
-        MusicProviderFactory::new()
+        $this->providerFactory
             ->count(2)
             ->state(new Sequence(fn (Sequence $sequence) => [
                 'name' => 'provider'.($sequence->index + 1),
@@ -245,7 +253,7 @@ class GetTracksTest extends TestCase
             ->create();
 
         /** @var array<int, Track> $tracks */
-        $tracks = TrackFactory::new()
+        $tracks = $this->trackFactory
             ->count(4)
             ->state(new Sequence(
                 ['provider_id' => 1],
@@ -254,11 +262,11 @@ class GetTracksTest extends TestCase
                 ['provider_id' => 2],
             ))
             ->state(new Sequence(fn (Sequence $sequence) => [
-                'created_at' => (new Carbon())->addMinutes($sequence->index),
+                'created_at' => ($this->carbon::now())->addMinutes($sequence->index),
             ]))
             ->create();
 
-        TrackGenreFactory::new()
+        $this->genreFactory
             ->count(2)
             ->state(new Sequence(fn (Sequence $sequence) => [
                 'name' => 'genre'.($sequence->index + 1),
@@ -268,7 +276,7 @@ class GetTracksTest extends TestCase
         $tracks[0]->genres()->sync([1]);
         $tracks[1]->genres()->sync([1]);
 
-        $this->getJson('/tracks?provider=provider1&genre=genre1')
+        $this->get('/tracks?provider=provider1&genre=genre1')
             ->assertOk()
             ->assertJsonCount(2, 'data')
             ->assertJson(function (AssertableJson $json) use ($tracks) {
@@ -302,7 +310,7 @@ class GetTracksTest extends TestCase
 
     public function testQueryStringTypes(): void
     {
-        $this->getJson('/tracks?provider[]=&genre[]=')
+        $this->get('/tracks?provider[]=&genre[]=')
             ->assertOk();
     }
 }

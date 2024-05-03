@@ -16,32 +16,36 @@ class GetTrackTest extends TestCase
 {
     use RefreshDatabase;
 
+    private TrackFactory $trackFactory;
+    private TrackGenreFactory $genreFactory;
     private Hashids $hashids;
 
     protected function setUp(): void
     {
         parent::setUp();
 
+        $this->trackFactory = new TrackFactory();
+        $this->genreFactory = new TrackGenreFactory();
         $this->hashids = $this->app->make(Hashids::class);
     }
 
     public function testNotFound(): void
     {
-        $this->getJson('/tracks/1')
+        $this->get('/tracks/1')
             ->assertNotFound()
             ->assertExactJson(['message' => 'Not Found.']);
     }
 
     public function testModelNotFound(): void
     {
-        $this->getJson('/tracks/'.$this->hashids->encode(1))
+        $this->get('/tracks/'.$this->hashids->encode(1))
             ->assertNotFound()
             ->assertExactJson(['message' => 'Model Not Found.']);
     }
 
     public function testModelNotFoundWithInvalidHashValue(): void
     {
-        $this->getJson('/tracks/'.str_repeat('a', 11))
+        $this->get('/tracks/'.str_repeat('a', 11))
             ->assertNotFound()
             ->assertExactJson(['message' => 'Model Not Found.']);
     }
@@ -49,15 +53,15 @@ class GetTrackTest extends TestCase
     public function testGetTrack(): void
     {
         /** @var Track $track */
-        $track = TrackFactory::new()
+        $track = $this->trackFactory
             ->hasAttached(
-                factory: TrackGenreFactory::new()
+                factory: $this->genreFactory
                     ->count(2),
                 relationship: 'genres',
             )
             ->createOne();
 
-        $this->getJson('/tracks/'.$this->hashids->encode(1))
+        $this->get('/tracks/'.$this->hashids->encode(1))
             ->assertOk()
             ->assertJson(function (AssertableJson $json) use ($track) {
                 $json->where('id', $this->hashids->encode(1))

@@ -16,14 +16,27 @@ class GetMinimalGenresTest extends TestCase
 {
     use RefreshDatabase;
 
+    private TrackFactory $trackFactory;
+    private TrackGenreFactory $genreFactory;
+    private TrackGenre $genre;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->trackFactory = new TrackFactory();
+        $this->genreFactory = new TrackGenreFactory();
+        $this->genre = new TrackGenre();
+    }
+
     public function testGetMinimalGenres(): void
     {
         /** @var array<int, Track> $tracks */
-        $tracks = TrackFactory::new()
+        $tracks = $this->trackFactory
             ->count(5)
             ->create();
 
-        TrackGenreFactory::new()
+        $this->genreFactory
             ->count(5)
             ->state(new Sequence(fn (Sequence $sequence) => [
                 'name' => 'genre'.($sequence->index + 1),
@@ -36,7 +49,7 @@ class GetMinimalGenresTest extends TestCase
         $tracks[3]->genres()->sync([3, 5]);
         $tracks[4]->genres()->sync([2, 4, 5]);
 
-        $this->getJson('/tracks/minimal-genres?limit=3')
+        $this->get('/tracks/minimal-genres?limit=3')
             ->assertOk()
             ->assertExactJson([
                 'genre1',
@@ -47,25 +60,25 @@ class GetMinimalGenresTest extends TestCase
 
     public function testGetMinimalGenresWithoutLimitParameter(): void
     {
-        TrackFactory::new()
+        $this->trackFactory
             ->count(5)
             ->hasAttached(
-                factory: TrackGenreFactory::new()
+                factory: $this->genreFactory
                     ->count(3),
                 relationship: 'genres',
             )
             ->create();
 
-        $this->assertDatabaseCount(TrackGenre::class, 15);
+        $this->assertDatabaseCount($this->genre::class, 15);
 
-        $this->getJson('/tracks/minimal-genres')
+        $this->get('/tracks/minimal-genres')
             ->assertOk()
             ->assertJsonCount(10);
     }
 
     public function testQueryStringTypes(): void
     {
-        $this->getJson('/tracks/minimal-genres?limit[]=')
+        $this->get('/tracks/minimal-genres?limit[]=')
             ->assertOk();
     }
 }
