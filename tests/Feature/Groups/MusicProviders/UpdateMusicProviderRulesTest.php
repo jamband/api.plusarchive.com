@@ -15,19 +15,30 @@ class UpdateMusicProviderRulesTest extends TestCase
 {
     use RefreshDatabase;
 
+    private UserFactory $userFactory;
+    private MusicProviderFactory $providerFactory;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->userFactory = new UserFactory();
+        $this->providerFactory = new MusicProviderFactory();
+    }
+
     /**
      * @param array<string, mixed> $data
      */
-    protected function request(array $data = []): TestResponse
+    protected function request(array $data): TestResponse
     {
-        return $this->actingAs(UserFactory::new()->makeOne())
-            ->putJson('/music-providers/1', $data)
+        return $this->actingAs($this->userFactory->makeOne())
+            ->put('/music-providers/1', $data)
             ->assertUnprocessable();
     }
 
     public function testNameRequiredRule(): void
     {
-        $this->request()
+        $this->request(['name' => null])
             ->assertJsonPath('errors.name', __('validation.required', [
                 'attribute' => 'name',
             ]));
@@ -52,7 +63,7 @@ class UpdateMusicProviderRulesTest extends TestCase
 
     public function testNameUniqueRule(): void
     {
-        MusicProviderFactory::new()
+        $this->providerFactory
             ->count(2)
             ->state(new Sequence(
                 ['name' => 'foo'],

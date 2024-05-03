@@ -4,47 +4,58 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Groups\MusicProviders;
 
-use App\Groups\MusicProviders\MusicProvider;
 use App\Groups\MusicProviders\MusicProviderFactory;
 use App\Groups\Users\UserFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
-use Tests\TestMiddleware;
 
 class DeleteMusicProviderTest extends TestCase
 {
     use RefreshDatabase;
-    use TestMiddleware;
+
+    private UserFactory $userFactory;
+    private MusicProviderFactory $providerFactory;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->userFactory = new UserFactory();
+        $this->providerFactory = new MusicProviderFactory();
+    }
 
     public function testVerifiedMiddleware(): void
     {
-        $this->assertVerifiedMiddleware('DELETE /music-providers/1');
+        $this->actingAs($this->userFactory->unverified()->makeOne())
+            ->delete('/music-providers/1')
+            ->assertConflict();
     }
 
     public function testAuthMiddleware(): void
     {
-        $this->assertAuthMiddleware('DELETE /music-providers/1');
+        $this->delete('/music-providers/1')
+            ->assertUnauthorized();
     }
 
     public function testModelNotFound(): void
     {
-        $this->actingAs(UserFactory::new()->makeOne())
-            ->deleteJson('/music-providers/1')
+        $this->actingAs($this->userFactory->makeOne())
+            ->delete('/music-providers/1')
             ->assertNotFound()
             ->assertExactJson(['message' => 'Model Not Found.']);
     }
 
     public function testDeleteMusicProvider(): void
     {
-        $provider = MusicProviderFactory::new()
+        $provider = $this->providerFactory
             ->createOne();
 
-        $this->assertDatabaseCount(MusicProvider::class, 1);
+        $this->assertDatabaseCount($provider::class, 1);
 
-        $this->actingAs(UserFactory::new()->makeOne())
-            ->deleteJson('/music-providers/'.$provider->id)
+        $this->actingAs($this->userFactory->makeOne())
+            ->delete('/music-providers/'.$provider->id)
             ->assertNoContent();
 
-        $this->assertDatabaseCount(MusicProvider::class, 0);
+        $this->assertDatabaseCount($provider::class, 0);
     }
 }

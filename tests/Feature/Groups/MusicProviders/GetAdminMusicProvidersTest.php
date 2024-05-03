@@ -11,32 +11,44 @@ use Illuminate\Database\Eloquent\Factories\Sequence;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\TestCase;
-use Tests\TestMiddleware;
 
 class GetAdminMusicProvidersTest extends TestCase
 {
     use RefreshDatabase;
-    use TestMiddleware;
+
+    private UserFactory $userFactory;
+    private MusicProviderFactory $providerFactory;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->userFactory = new UserFactory();
+        $this->providerFactory = new MusicProviderFactory();
+    }
 
     public function testVerifiedMiddleware(): void
     {
-        $this->assertVerifiedMiddleware('GET /music-providers/admin');
+        $this->actingAs($this->userFactory->unverified()->makeOne())
+            ->get('/music-providers/admin')
+            ->assertConflict();
     }
 
     public function testAuthMiddleware(): void
     {
-        $this->assertAuthMiddleware('GET /music-providers/admin');
+        $this->get('/music-providers/admin')
+            ->assertUnauthorized();
     }
 
     public function testAdminGetMusicProviders(): void
     {
         /** @var array<int, MusicProvider> $providers */
-        $providers = MusicProviderFactory::new()
+        $providers = $this->providerFactory
             ->count(2)
             ->create();
 
-        $this->actingAs(UserFactory::new()->makeOne())
-            ->getJson('/music-providers/admin')
+        $this->actingAs($this->userFactory->makeOne())
+            ->get('/music-providers/admin')
             ->assertOk()
             ->assertJsonCount(2)
             ->assertJson(function (AssertableJson $json) use ($providers) {
@@ -55,15 +67,15 @@ class GetAdminMusicProvidersTest extends TestCase
     public function testAdminGetMusicProvidersWithSortAsc(): void
     {
         /** @var array<int, MusicProvider> $providers */
-        $providers = MusicProviderFactory::new()
+        $providers = $this->providerFactory
             ->count(2)
             ->state(new Sequence(fn (Sequence $sequence) => [
                 'name' => 'name'.($sequence->index + 1),
             ]))
             ->create();
 
-        $this->actingAs(UserFactory::new()->makeOne())
-            ->getJson('/music-providers/admin?sort=name')
+        $this->actingAs($this->userFactory->makeOne())
+            ->get('/music-providers/admin?sort=name')
             ->assertOk()
             ->assertJsonCount(2)
             ->assertJson(function (AssertableJson $json) use ($providers) {
@@ -76,15 +88,15 @@ class GetAdminMusicProvidersTest extends TestCase
     public function testAdminGetMusicProvidersWithSortDesc(): void
     {
         /** @var array<int, MusicProvider> $providers */
-        $providers = MusicProviderFactory::new()
+        $providers = $this->providerFactory
             ->count(2)
             ->state(new Sequence(fn (Sequence $sequence) => [
                 'name' => 'name'.($sequence->index + 1),
             ]))
             ->create();
 
-        $this->actingAs(UserFactory::new()->makeOne())
-            ->getJson('/music-providers/admin?sort=-name')
+        $this->actingAs($this->userFactory->makeOne())
+            ->get('/music-providers/admin?sort=-name')
             ->assertOk()
             ->assertJsonCount(2)
             ->assertJson(function (AssertableJson $json) use ($providers) {
@@ -97,7 +109,7 @@ class GetAdminMusicProvidersTest extends TestCase
     public function testAdminGetMusicProvidersWithName(): void
     {
         /** @var array<int, MusicProvider> $providers */
-        $providers = MusicProviderFactory::new()
+        $providers = $this->providerFactory
             ->count(3)
             ->state(new Sequence(
                 ['name' => 'foo'],
@@ -106,8 +118,8 @@ class GetAdminMusicProvidersTest extends TestCase
             ))
             ->create();
 
-        $this->actingAs(UserFactory::new()->makeOne())
-            ->getJson('/music-providers/admin?name=ba')
+        $this->actingAs($this->userFactory->makeOne())
+            ->get('/music-providers/admin?name=ba')
             ->assertOk()
             ->assertJsonCount(2)
             ->assertJson(function (AssertableJson $json) use ($providers) {
@@ -119,8 +131,8 @@ class GetAdminMusicProvidersTest extends TestCase
 
     public function testQueryStringTypes(): void
     {
-        $this->actingAs(UserFactory::new()->makeOne())
-            ->getJson('/music-providers/admin?name[]=sort[]=')
+        $this->actingAs($this->userFactory->makeOne())
+            ->get('/music-providers/admin?name[]=sort[]=')
             ->assertOk();
     }
 }

@@ -9,38 +9,50 @@ use App\Groups\Users\UserFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\TestCase;
-use Tests\TestMiddleware;
 
 class GetMusicProviderTest extends TestCase
 {
     use RefreshDatabase;
-    use TestMiddleware;
+
+    private UserFactory $userFactory;
+    private MusicProviderFactory $providerFactory;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->userFactory = new UserFactory();
+        $this->providerFactory = new MusicProviderFactory();
+    }
 
     public function testVerifiedMiddleware(): void
     {
-        $this->assertVerifiedMiddleware('GET /music-providers/1');
+        $this->actingAs($this->userFactory->unverified()->makeOne())
+            ->get('/music-providers/1')
+            ->assertConflict();
     }
 
     public function testAuthMiddleware(): void
     {
-        $this->assertAuthMiddleware('GET /music-providers/1');
+        $this->get('/music-providers/1')
+            ->assertUnauthorized();
     }
 
     public function testModelNotFound(): void
     {
-        $this->actingAs(UserFactory::new()->makeOne())
-            ->getJson('/music-providers/1')
+        $this->actingAs($this->userFactory->makeOne())
+            ->get('/music-providers/1')
             ->assertNotFound()
             ->assertExactJson(['message' => 'Model Not Found.']);
     }
 
     public function testGetMusicProviders(): void
     {
-        $provider = MusicProviderFactory::new()
+        $provider = $this->providerFactory
             ->createOne();
 
-        $this->actingAs(UserFactory::new()->makeOne())
-            ->getJson('/music-providers/'.$provider->id)
+        $this->actingAs($this->userFactory->makeOne())
+            ->get('/music-providers/'.$provider->id)
             ->assertOk()
             ->assertJson(function (AssertableJson $json) use ($provider) {
                 $json->where('id', $provider->id)
