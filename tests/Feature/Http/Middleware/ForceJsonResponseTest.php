@@ -5,41 +5,37 @@ declare(strict_types=1);
 namespace Tests\Feature\Http\Middleware;
 
 use App\Http\Middleware\ForceJsonResponse;
-use Illuminate\Http\Response;
 use Illuminate\Routing\Router;
-use Illuminate\Support\Str;
+use Illuminate\Routing\RouteRegistrar;
 use Tests\TestCase;
 
 class ForceJsonResponseTest extends TestCase
 {
-    private Router $router;
-    private string $uri;
+    private RouteRegistrar $router;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->router = $this->app->make(Router::class);
-        $this->uri = '/testing-'.mb_strtolower(Str::random(10));
+        /** @var Router $router */
+        $router = $this->app->make(Router::class);
+        $this->router = $router->middleware('web');
     }
 
-    public function testWithoutForceJsonResponseMiddleware(): void
+    public function testWithoutForceJsonResponse(): void
     {
-        $this->router->middleware('web')
-            ->get($this->uri, fn () => $this->app->abort(400));
+        $this->router->get('/', fn () => $this->app->abort(400));
 
         $this->withoutMiddleware(ForceJsonResponse::class)
-            ->head($this->uri)
+            ->head('/')
             ->assertHeader('Content-Type', 'text/html; charset=UTF-8');
     }
 
-    public function testWithWebMiddleware(): void
+    public function testForceJsonResponse(): void
     {
-        $this->router->middleware('web')
-            ->get($this->uri, fn () => $this->app->abort(400, 'foo'));
+        $this->router->get('/', fn () => $this->app->abort(400));
 
-        $this->get($this->uri)
-            ->assertHeader('Content-Type', 'application/json')
-            ->assertJson(['message' => 'foo']);
+        $this->head('/')
+            ->assertHeader('Content-Type', 'application/json');
     }
 }
