@@ -17,6 +17,9 @@ class TapeGenerateCommandTest extends TestCase
 {
     use RefreshDatabase;
 
+    private MusicProviderFactory $providerFactory;
+    private TrackFactory $trackFactory;
+    private Carbon $carbon;
     private Filesystem $file;
     private string $tapePath;
 
@@ -24,6 +27,9 @@ class TapeGenerateCommandTest extends TestCase
     {
         parent::setUp();
 
+        $this->providerFactory = new MusicProviderFactory();
+        $this->trackFactory = new TrackFactory();
+        $this->carbon = new Carbon();
         $this->file = $this->app->make(Filesystem::class);
         $this->tapePath = $this->app->storagePath('app/tapes/test-tape.json');
     }
@@ -39,7 +45,7 @@ class TapeGenerateCommandTest extends TestCase
 
     public function testTapeGenerateCommand(): void
     {
-        MusicProviderFactory::new()
+        $this->providerFactory
             ->count(4)
             ->state(new Sequence(
                 ['name' => 'Bandcamp'],
@@ -49,53 +55,59 @@ class TapeGenerateCommandTest extends TestCase
             ))
             ->create();
 
-        TrackFactory::new()->createOne([
-            'provider_id' => 1,
-            'provider_key' => 'key1',
-            'title' => 'Foo1 Bar1',
-            'image' => 'image1',
-            'urge' => true,
-        ]);
+        $this->trackFactory
+            ->createOne([
+                'provider_id' => 1,
+                'provider_key' => 'key1',
+                'title' => 'Foo1 Bar1',
+                'image' => 'image1',
+                'urge' => true,
+            ]);
 
-        TrackFactory::new()->createOne([
-            'provider_id' => 1,
-            'provider_key' => 'key2',
-            'title' => 'Foo2 Bar2',
-            'image' => 'image2',
-            'urge' => false,
-        ]);
+        $this->trackFactory
+            ->createOne([
+                'provider_id' => 1,
+                'provider_key' => 'key2',
+                'title' => 'Foo2 Bar2',
+                'image' => 'image2',
+                'urge' => false,
+            ]);
 
-        TrackFactory::new()->createOne([
-            'provider_id' => 2,
-            'provider_key' => 'key3',
-            'title' => 'Foo3 Bar3',
-            'image' => 'image3',
-            'urge' => true,
-        ]);
+        $this->trackFactory
+            ->createOne([
+                'provider_id' => 2,
+                'provider_key' => 'key3',
+                'title' => 'Foo3 Bar3',
+                'image' => 'image3',
+                'urge' => true,
+            ]);
 
-        TrackFactory::new()->createOne([
-            'provider_id' => 2,
-            'provider_key' => 'key4',
-            'title' => 'Foo4 Bar4',
-            'image' => 'image4',
-            'urge' => false,
-        ]);
+        $this->trackFactory
+            ->createOne([
+                'provider_id' => 2,
+                'provider_key' => 'key4',
+                'title' => 'Foo4 Bar4',
+                'image' => 'image4',
+                'urge' => false,
+            ]);
 
-        TrackFactory::new()->createOne([
-            'provider_id' => 3,
-            'provider_key' => 'key5',
-            'title' => 'Foo5 Bar5',
-            'image' => 'image5',
-            'urge' => true,
-        ]);
+        $this->trackFactory
+            ->createOne([
+                'provider_id' => 3,
+                'provider_key' => 'key5',
+                'title' => 'Foo5 Bar5',
+                'image' => 'image5',
+                'urge' => true,
+            ]);
 
-        TrackFactory::new()->createOne([
-            'provider_id' => 4,
-            'provider_key' => 'key6',
-            'title' => 'Foo6 Bar6',
-            'image' => 'image6',
-            'urge' => true,
-        ]);
+        $this->trackFactory
+            ->createOne([
+                'provider_id' => 4,
+                'provider_key' => 'key6',
+                'title' => 'Foo6 Bar6',
+                'image' => 'image6',
+                'urge' => true,
+            ]);
 
         /** @var PendingCommand $command */
         $command = $this->artisan('tape:generate 777 "Test / Tape"');
@@ -110,7 +122,7 @@ class TapeGenerateCommandTest extends TestCase
         $tape = file_get_contents($this->tapePath);
 
         $tape = json_decode($tape);
-        $date = new Carbon();
+        $date = $this->carbon::now();
 
         $this->assertCount(5, get_object_vars($tape));
         $this->assertSame(777, $tape->id);
