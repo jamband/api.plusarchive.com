@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Groups\Bookmarks;
 
-use App\Groups\Bookmarks\Bookmark;
 use App\Groups\Bookmarks\BookmarkFactory;
 use App\Groups\BookmarkTags\BookmarkTag;
 use App\Groups\BookmarkTags\BookmarkTagFactory;
@@ -14,30 +13,48 @@ use Illuminate\Database\Eloquent\Factories\Sequence;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\TestCase;
-use Tests\TestMiddleware;
 
 class UpdateBookmarkTest extends TestCase
 {
     use RefreshDatabase;
-    use TestMiddleware;
+
+    private UserFactory $userFactory;
+    private CountryFactory $countryFactory;
+    private BookmarkFactory $bookmarkFactory;
+    private BookmarkTagFactory $tagFactory;
+    private BookmarkTag $tag;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->userFactory = new UserFactory();
+        $this->countryFactory = new CountryFactory();
+        $this->bookmarkFactory = new BookmarkFactory();
+        $this->tagFactory = new BookmarkTagFactory();
+        $this->tag = new BookmarkTag();
+    }
 
     public function testVerifiedMiddleware(): void
     {
-        $this->assertVerifiedMiddleware('PUT /bookmarks/1');
+        $this->actingAs($this->userFactory->unverified()->makeOne())
+            ->put('/bookmarks/1')
+            ->assertConflict();
     }
 
     public function testAuthMiddleware(): void
     {
-        $this->assertAuthMiddleware('PUT /bookmarks/1');
+        $this->put('/bookmarks/1')
+            ->assertUnauthorized();
     }
 
     public function testModelNotFound(): void
     {
-        $country = CountryFactory::new()
+        $country = $this->countryFactory
             ->createOne();
 
-        $this->actingAs(UserFactory::new()->makeOne())
-            ->putJson('/bookmarks/1', [
+        $this->actingAs($this->userFactory->makeOne())
+            ->put('/bookmarks/1', [
                 'name' => 'bookmark1',
                 'country' => $country->name,
                 'url' => 'https://url1.dev',
@@ -48,13 +65,13 @@ class UpdateBookmarkTest extends TestCase
 
     public function testUpdateBookmark(): void
     {
-        $bookmark = BookmarkFactory::new()
+        $bookmark = $this->bookmarkFactory
             ->createOne();
 
-        $this->assertDatabaseCount(Bookmark::class, 1);
+        $this->assertDatabaseCount($bookmark::class, 1);
 
-        $this->actingAs(UserFactory::new()->makeOne())
-            ->putJson('/bookmarks/'.$bookmark->id, [
+        $this->actingAs($this->userFactory->makeOne())
+            ->put('/bookmarks/'.$bookmark->id, [
                 'name' => 'updated_bookmark1',
                 'country' => $bookmark->country->name,
                 'url' => 'https://updated-url1.dev',
@@ -72,24 +89,23 @@ class UpdateBookmarkTest extends TestCase
                     ->has('updated_at');
             });
 
-        $this->assertDatabaseCount(Bookmark::class, 1);
-
-        $this->assertDatabaseHas(Bookmark::class, [
-            'id' => $bookmark->id,
-            'name' => 'updated_bookmark1',
-            'country_id' => 1,
-            'url' => 'https://updated-url1.dev',
-            'links' => "https://updated-link1.dev\nhttps://updated-link2.dev",
-        ]);
+        $this->assertDatabaseCount($bookmark::class, 1)
+            ->assertDatabaseHas($bookmark::class, [
+                'id' => $bookmark->id,
+                'name' => 'updated_bookmark1',
+                'country_id' => 1,
+                'url' => 'https://updated-url1.dev',
+                'links' => "https://updated-link1.dev\nhttps://updated-link2.dev",
+            ]);
     }
 
     public function testUpdateBookmarkWithSomeEmptyAttributeValues(): void
     {
-        $bookmark = BookmarkFactory::new()
+        $bookmark = $this->bookmarkFactory
             ->createOne();
 
-        $this->actingAs(UserFactory::new()->makeOne())
-            ->putJson('/bookmarks/'.$bookmark->id, [
+        $this->actingAs($this->userFactory->makeOne())
+            ->put('/bookmarks/'.$bookmark->id, [
                 'name' => 'updated_bookmark1',
                 'country' => $bookmark->country->name,
                 'url' => 'https://updated-url1.dev',
@@ -106,7 +122,7 @@ class UpdateBookmarkTest extends TestCase
                     ->has('updated_at');
             });
 
-        $this->assertDatabaseHas(Bookmark::class, [
+        $this->assertDatabaseHas($bookmark::class, [
             'id' => $bookmark->id,
             'name' => 'updated_bookmark1',
             'country_id' => 1,
@@ -117,12 +133,12 @@ class UpdateBookmarkTest extends TestCase
 
     public function testUpdateBookmarkWithTags(): void
     {
-        $bookmark = BookmarkFactory::new()
+        $bookmark = $this->bookmarkFactory
             ->createOne();
 
         $pivotTable = $bookmark->tags()->getTable();
 
-        BookmarkTagFactory::new()
+        $this->tagFactory
             ->count(4)
             ->state(new Sequence(
                 ['name' => 'tag1'],
@@ -134,14 +150,13 @@ class UpdateBookmarkTest extends TestCase
 
         $bookmark->tags()->sync([1, 2]);
 
-        $this->assertDatabaseCount(BookmarkTag::class, 4);
+        $this->assertDatabaseCount($this->tag::class, 4)
+            ->assertDatabaseCount($pivotTable, 2)
+            ->assertDatabaseHas($pivotTable, ['bookmark_id' => 1, 'tag_id' => 1])
+            ->assertDatabaseHas($pivotTable, ['bookmark_id' => 1, 'tag_id' => 2]);
 
-        $this->assertDatabaseCount($pivotTable, 2);
-        $this->assertDatabaseHas($pivotTable, ['bookmark_id' => 1, 'tag_id' => 1]);
-        $this->assertDatabaseHas($pivotTable, ['bookmark_id' => 1, 'tag_id' => 2]);
-
-        $this->actingAs(UserFactory::new()->makeOne())
-            ->putJson('/bookmarks/'.$bookmark->id, [
+        $this->actingAs($this->userFactory->makeOne())
+            ->put('/bookmarks/'.$bookmark->id, [
                 'name' => 'updated_bookmark1',
                 'country' => $bookmark->country->name,
                 'url' => 'https://updated-url1.dev',
@@ -159,10 +174,9 @@ class UpdateBookmarkTest extends TestCase
                     ->has('updated_at');
             });
 
-        $this->assertDatabaseCount(BookmarkTag::class, 4);
-
-        $this->assertDatabaseCount($pivotTable, 2);
-        $this->assertDatabaseHas($pivotTable, ['bookmark_id' => 1, 'tag_id' => 3]);
-        $this->assertDatabaseHas($pivotTable, ['bookmark_id' => 1, 'tag_id' => 4]);
+        $this->assertDatabaseCount($this->tag::class, 4)
+            ->assertDatabaseCount($pivotTable, 2)
+            ->assertDatabaseHas($pivotTable, ['bookmark_id' => 1, 'tag_id' => 3])
+            ->assertDatabaseHas($pivotTable, ['bookmark_id' => 1, 'tag_id' => 4]);
     }
 }

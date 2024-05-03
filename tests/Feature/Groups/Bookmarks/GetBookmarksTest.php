@@ -18,22 +18,37 @@ class GetBookmarksTest extends TestCase
 {
     use RefreshDatabase;
 
+    private BookmarkFactory $bookmarkFactory;
+    private BookmarkTagFactory $tagFactory;
+    private CountryFactory $countryFactory;
+    private Carbon $carbon;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->bookmarkFactory = new BookmarkFactory();
+        $this->tagFactory = new BookmarkTagFactory();
+        $this->countryFactory = new CountryFactory();
+        $this->carbon = new Carbon();
+    }
+
     public function testGetBookmarks(): void
     {
         /** @var array<int, Bookmark> $bookmarks */
-        $bookmarks = BookmarkFactory::new()
+        $bookmarks = $this->bookmarkFactory
             ->count(2)
             ->hasAttached(
-                factory: BookmarkTagFactory::new()
+                factory: $this->tagFactory
                     ->count(2),
                 relationship: 'tags',
             )
             ->state(new Sequence(fn (Sequence $sequence) => [
-                'created_at' => (new Carbon())->addMinutes($sequence->index),
+                'created_at' => ($this->carbon::now())->addMinutes($sequence->index),
             ]))
             ->create();
 
-        $this->getJson('/bookmarks')
+        $this->get('/bookmarks')
             ->assertOk()
             ->assertJsonCount(2, 'data')
             ->assertJson(function (AssertableJson $json) use ($bookmarks) {
@@ -70,28 +85,26 @@ class GetBookmarksTest extends TestCase
 
     public function testGetBookmarksWithCountry(): void
     {
-        BookmarkFactory::new()
+        $this->bookmarkFactory
             ->for(
-                CountryFactory::new()->state([
-                    'name' => 'foo',
-                ]),
+                $this->countryFactory
+                    ->state(['name' => 'foo']),
             )
             ->createOne();
 
         /** @var array<int, Bookmark> $bookmarks */
-        $bookmarks = BookmarkFactory::new()
+        $bookmarks = $this->bookmarkFactory
             ->count(2)
             ->for(
-                CountryFactory::new()->state([
-                    'name' => 'bar',
-                ]),
+                $this->countryFactory
+                    ->state(['name' => 'bar']),
             )
             ->state(new Sequence(fn (Sequence $sequence) => [
-                'created_at' => (new Carbon())->addMinutes($sequence->index),
+                'created_at' => ($this->carbon::now())->addMinutes($sequence->index),
             ]))
             ->create();
 
-        $this->getJson('/bookmarks?country=bar')
+        $this->get('/bookmarks?country=bar')
             ->assertOk()
             ->assertJsonCount(2, 'data')
             ->assertJson(function (AssertableJson $json) use ($bookmarks) {
@@ -117,15 +130,14 @@ class GetBookmarksTest extends TestCase
 
     public function testGetBookmarksWithUnmatchedCountry(): void
     {
-        BookmarkFactory::new()
+        $this->bookmarkFactory
             ->for(
-                CountryFactory::new()->state([
-                    'name' => 'foo',
-                ]),
+                $this->countryFactory
+                    ->state(['name' => 'foo']),
             )
             ->createOne();
 
-        $this->getJson('/bookmarks?country=bar')
+        $this->get('/bookmarks?country=bar')
             ->assertOk()
             ->assertJson(fn (AssertableJson $json) => $json
                 ->where('data', [])
@@ -136,30 +148,30 @@ class GetBookmarksTest extends TestCase
 
     public function testGetBookmarksWithTag(): void
     {
-        BookmarkFactory::new()
+        $this->bookmarkFactory
             ->hasAttached(
-                factory: BookmarkTagFactory::new()
+                factory: $this->tagFactory
                     ->state(['name' => 'foo']),
                 relationship: 'tags',
             )
             ->createOne();
 
         /** @var array<int, Bookmark> $bookmarks */
-        $bookmarks = BookmarkFactory::new()
+        $bookmarks = $this->bookmarkFactory
             ->count(2)
             ->state(new Sequence(fn (Sequence $sequence) => [
-                'created_at' => (new Carbon())->addMinutes($sequence->index),
+                'created_at' => ($this->carbon::now())->addMinutes($sequence->index),
             ]))
             ->create();
 
-        BookmarkTagFactory::new()
+        $this->tagFactory
             ->state(['name' => 'bar'])
             ->createOne();
 
         $bookmarks[0]->tags()->sync([2]);
         $bookmarks[1]->tags()->sync([2]);
 
-        $this->getJson('/bookmarks?tag=bar')
+        $this->get('/bookmarks?tag=bar')
             ->assertOk()
             ->assertJsonCount(2, 'data')
             ->assertJson(function (AssertableJson $json) use ($bookmarks) {
@@ -187,15 +199,15 @@ class GetBookmarksTest extends TestCase
 
     public function testGetBookmarksWithUnmatchedTag(): void
     {
-        BookmarkFactory::new()
+        $this->bookmarkFactory
             ->hasAttached(
-                factory: BookmarkTagFactory::new()
+                factory: $this->tagFactory
                     ->state(['name' => 'foo']),
                 relationship: 'tags',
             )
             ->createOne();
 
-        $this->getJson('/bookmarks?tag=bar')
+        $this->get('/bookmarks?tag=bar')
             ->assertOk()
             ->assertJson(fn (AssertableJson $json) => $json
                 ->where('data', [])
@@ -206,7 +218,7 @@ class GetBookmarksTest extends TestCase
 
     public function testGetBookmarksWithCountryAndTag(): void
     {
-        CountryFactory::new()
+        $this->countryFactory
             ->count(2)
             ->state(new Sequence(fn (Sequence $sequence) => [
                 'name' => 'country'.($sequence->index + 1),
@@ -214,7 +226,7 @@ class GetBookmarksTest extends TestCase
             ->create();
 
         /** @var array<int, Bookmark> $bookmarks */
-        $bookmarks = BookmarkFactory::new()
+        $bookmarks = $this->bookmarkFactory
             ->count(4)
             ->state(new Sequence(
                 ['country_id' => 1],
@@ -223,11 +235,11 @@ class GetBookmarksTest extends TestCase
                 ['country_id' => 2],
             ))
             ->state(new Sequence(fn (Sequence $sequence) => [
-                'created_at' => (new Carbon())->addMinutes($sequence->index),
+                'created_at' => ($this->carbon::now())->addMinutes($sequence->index),
             ]))
             ->create();
 
-        BookmarkTagFactory::new()
+        $this->tagFactory
             ->count(2)
             ->state(new Sequence(fn (Sequence $sequence) => [
                 'name' => 'tag'.($sequence->index + 1),
@@ -237,7 +249,7 @@ class GetBookmarksTest extends TestCase
         $bookmarks[0]->tags()->sync([1]);
         $bookmarks[1]->tags()->sync([1]);
 
-        $this->getJson('/bookmarks?country=country1&tag=tag1')
+        $this->get('/bookmarks?country=country1&tag=tag1')
             ->assertOk()
             ->assertJsonCount(2, 'data')
             ->assertJson(function (AssertableJson $json) use ($bookmarks) {
@@ -265,7 +277,7 @@ class GetBookmarksTest extends TestCase
 
     public function testQueryStringTypes(): void
     {
-        $this->getJson('/bookmarks?country[]=&tag[]=')
+        $this->get('/bookmarks?country[]=&tag[]=')
             ->assertOk();
     }
 }

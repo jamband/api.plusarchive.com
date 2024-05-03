@@ -11,32 +11,48 @@ use App\Groups\Users\UserFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\TestCase;
-use Tests\TestMiddleware;
 
 class CreateBookmarkTest extends TestCase
 {
     use RefreshDatabase;
-    use TestMiddleware;
+
+    private UserFactory $userFactory;
+    private CountryFactory $countryFactory;
+    private Bookmark $bookmark;
+    private BookmarkTag $tag;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->userFactory = new UserFactory();
+        $this->countryFactory = new CountryFactory();
+        $this->bookmark = new Bookmark();
+        $this->tag = new BookmarkTag();
+    }
 
     public function testVerifiedMiddleware(): void
     {
-        $this->assertVerifiedMiddleware('POST /bookmarks');
+        $this->actingAs($this->userFactory->unverified()->makeOne())
+            ->post('/bookmarks')
+            ->assertConflict();
     }
 
     public function testAuthMiddleware(): void
     {
-        $this->assertAuthMiddleware('POST /bookmarks');
+        $this->post('/bookmarks')
+            ->assertUnauthorized();
     }
 
     public function testCreateBookmark(): void
     {
-        $country = CountryFactory::new()
+        $country = $this->countryFactory
             ->createOne();
 
-        $this->assertDatabaseCount(Bookmark::class, 0);
+        $this->assertDatabaseCount($this->bookmark::class, 0);
 
-        $this->actingAs(UserFactory::new()->makeOne())
-            ->postJson('/bookmarks', [
+        $this->actingAs($this->userFactory->makeOne())
+            ->post('/bookmarks', [
                 'name' => 'bookmark1',
                 'country' => $country->name,
                 'url' => 'https://url1.dev',
@@ -55,24 +71,23 @@ class CreateBookmarkTest extends TestCase
                     ->has('updated_at');
             });
 
-        $this->assertDatabaseCount(Bookmark::class, 1);
-
-        $this->assertDataBaseHas(Bookmark::class, [
-            'id' => 1,
-            'name' => 'bookmark1',
-            'country_id' => $country->id,
-            'url' => 'https://url1.dev',
-            'links' => "https://link1.dev\nhttps://link2.dev",
-        ]);
+        $this->assertDatabaseCount($this->bookmark::class, 1)
+            ->assertDataBaseHas($this->bookmark::class, [
+                'id' => 1,
+                'name' => 'bookmark1',
+                'country_id' => $country->id,
+                'url' => 'https://url1.dev',
+                'links' => "https://link1.dev\nhttps://link2.dev",
+            ]);
     }
 
     public function testCreateBookmarkWithSomeEmptyAttributeValues(): void
     {
-        $country = CountryFactory::new()
+        $country = $this->countryFactory
             ->createOne();
 
-        $this->actingAs(UserFactory::new()->makeOne())
-            ->postJson('/bookmarks', [
+        $this->actingAs($this->userFactory->makeOne())
+            ->post('/bookmarks', [
                 'name' => 'bookmark1',
                 'country' => $country->name,
                 'url' => 'https://url1.dev',
@@ -89,7 +104,7 @@ class CreateBookmarkTest extends TestCase
                     ->has('updated_at');
             });
 
-        $this->assertDatabaseHas(Bookmark::class, [
+        $this->assertDatabaseHas($this->bookmark::class, [
             'id' => 1,
             'name' => 'bookmark1',
             'country_id' => $country->id,
@@ -100,14 +115,13 @@ class CreateBookmarkTest extends TestCase
 
     public function testCreateBookmarkWithTags(): void
     {
-        $bookmark = new Bookmark();
-        $pivotTable = $bookmark->tags()->getTable();
+        $pivotTable = $this->bookmark->tags()->getTable();
 
-        $country = CountryFactory::new()
+        $country = $this->countryFactory
             ->createOne();
 
-        $this->actingAs(UserFactory::new()->makeOne())
-            ->postJson('/bookmarks', [
+        $this->actingAs($this->userFactory->makeOne())
+            ->post('/bookmarks', [
                 'name' => 'bookmark1',
                 'country' => $country->name,
                 'url' => 'https://url1.dev',
@@ -125,12 +139,12 @@ class CreateBookmarkTest extends TestCase
                     ->has('updated_at');
             });
 
-        $this->assertDatabaseCount(BookmarkTag::class, 2);
-        $this->assertDatabaseHas(BookmarkTag::class, ['name' => 'tag1']);
-        $this->assertDatabaseHas(BookmarkTag::class, ['name' => 'tag2']);
+        $this->assertDatabaseCount($this->tag::class, 2)
+            ->assertDatabaseHas($this->tag::class, ['name' => 'tag1'])
+            ->assertDatabaseHas($this->tag::class, ['name' => 'tag2']);
 
-        $this->assertDatabaseCount($pivotTable, 2);
-        $this->assertDatabaseHas($pivotTable, ['bookmark_id' => 1, 'tag_id' => 1]);
-        $this->assertDatabaseHas($pivotTable, ['bookmark_id' => 1, 'tag_id' => 2]);
+        $this->assertDatabaseCount($pivotTable, 2)
+            ->assertDatabaseHas($pivotTable, ['bookmark_id' => 1, 'tag_id' => 1])
+            ->assertDatabaseHas($pivotTable, ['bookmark_id' => 1, 'tag_id' => 2]);
     }
 }

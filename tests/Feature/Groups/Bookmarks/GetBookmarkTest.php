@@ -9,37 +9,49 @@ use App\Groups\Users\UserFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\TestCase;
-use Tests\TestMiddleware;
 
 class GetBookmarkTest extends TestCase
 {
     use RefreshDatabase;
-    use TestMiddleware;
+
+    private UserFactory $userFactory;
+    private BookmarkFactory $bookmarkFactory;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->userFactory = new UserFactory();
+        $this->bookmarkFactory = new BookmarkFactory();
+    }
 
     public function testVerifiedMiddleware(): void
     {
-        $this->assertVerifiedMiddleware('GET /bookmarks/1');
+        $this->actingAs($this->userFactory->unverified()->makeOne())
+            ->get('/bookmarks/1')
+            ->assertConflict();
     }
 
     public function testAuthMiddleware(): void
     {
-        $this->assertAuthMiddleware('GET /bookmarks/1');
+        $this->get('/bookmarks/1')
+            ->assertUnauthorized();
     }
 
     public function testModelNotFound(): void
     {
-        $this->actingAs(UserFactory::new()->makeOne())
-            ->getJson('/bookmarks/1')
+        $this->actingAs($this->userFactory->makeOne())
+            ->get('/bookmarks/1')
             ->assertNotFound()
             ->assertExactJson(['message' => 'Model Not Found.']);
     }
 
     public function testGetBookmark(): void
     {
-        $bookmark = BookmarkFactory::new()
+        $bookmark = $this->bookmarkFactory
             ->createOne();
 
-        $this->actingAs(UserFactory::new()->makeOne())
+        $this->actingAs($this->userFactory->makeOne())
             ->getJson('/bookmarks/'.$bookmark->id)
             ->assertOk()
             ->assertJson(function (AssertableJson $json) use ($bookmark) {

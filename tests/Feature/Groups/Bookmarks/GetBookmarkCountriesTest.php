@@ -14,9 +14,20 @@ class GetBookmarkCountriesTest extends TestCase
 {
     use RefreshDatabase;
 
+    private CountryFactory $countryFactory;
+    private BookmarkFactory $bookmarkFactory;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->countryFactory = new CountryFactory();
+        $this->bookmarkFactory = new BookmarkFactory();
+    }
+
     public function testGetBookmarkCountries(): void
     {
-        CountryFactory::new()
+        $this->countryFactory
             ->count(3)
             ->state(new Sequence(
                 ['name' => 'foo'],
@@ -25,7 +36,7 @@ class GetBookmarkCountriesTest extends TestCase
             ))
             ->create();
 
-        BookmarkFactory::new()
+        $this->bookmarkFactory
             ->count(5)
             ->state(new Sequence(
                 ['country_id' => 1],
@@ -36,7 +47,7 @@ class GetBookmarkCountriesTest extends TestCase
             ))
             ->create();
 
-        $this->getJson('/bookmarks/countries')
+        $this->get('/bookmarks/countries')
             ->assertOk()
             ->assertExactJson(['bar', 'baz', 'foo']);
     }

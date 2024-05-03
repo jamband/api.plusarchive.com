@@ -12,35 +12,49 @@ use Illuminate\Database\Eloquent\Factories\Sequence;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\TestCase;
-use Tests\TestMiddleware;
 
 class GetAdminBookmarksTest extends TestCase
 {
     use RefreshDatabase;
-    use TestMiddleware;
+
+    private UserFactory $userFactory;
+    private BookmarkFactory $bookmarkFactory;
+    private Carbon $carbon;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->userFactory = new UserFactory();
+        $this->bookmarkFactory = new BookmarkFactory();
+        $this->carbon = new Carbon();
+    }
 
     public function testVerifiedMiddleware(): void
     {
-        $this->assertVerifiedMiddleware('GET /bookmarks/admin');
+        $this->actingAs($this->userFactory->unverified()->makeOne())
+            ->get('/bookmarks/admin')
+            ->assertConflict();
     }
 
     public function testAuthMiddleware(): void
     {
-        $this->assertAuthMiddleware('GET /bookmarks/admin');
+        $this->get('/bookmarks/admin')
+            ->assertUnauthorized();
     }
 
     public function testGetAdminBookmarks(): void
     {
         /** @var array<int, Bookmark> $bookmarks */
-        $bookmarks = BookmarkFactory::new()
+        $bookmarks = $this->bookmarkFactory
             ->count(2)
             ->state(new Sequence(fn (Sequence $sequence) => [
-                'created_at' => (new Carbon())->addMinutes($sequence->index + 1),
+                'created_at' => ($this->carbon::now())->addMinutes($sequence->index + 1),
             ]))
             ->create();
 
-        $this->actingAs(UserFactory::new()->makeOne())
-            ->getJson('/bookmarks/admin')
+        $this->actingAs($this->userFactory->makeOne())
+            ->get('/bookmarks/admin')
             ->assertOk()
             ->assertJsonCount(2, 'data')
             ->assertJson(function (AssertableJson $json) use ($bookmarks) {
@@ -64,15 +78,15 @@ class GetAdminBookmarksTest extends TestCase
     public function testGetAdminBookmarksWithSortAsc(): void
     {
         /** @var array<int, Bookmark> $bookmarks */
-        $bookmarks = BookmarkFactory::new()
+        $bookmarks = $this->bookmarkFactory
             ->count(2)
             ->state(new Sequence(fn (Sequence $sequence) => [
                 'name' => 'name'.($sequence->index),
             ]))
             ->create();
 
-        $this->actingAs(UserFactory::new()->makeOne())
-            ->getJson('/bookmarks/admin?sort=name')
+        $this->actingAs($this->userFactory->makeOne())
+            ->get('/bookmarks/admin?sort=name')
             ->assertOk()
             ->assertJsonCount(2, 'data')
             ->assertJson(function (AssertableJson $json) use ($bookmarks) {
@@ -89,15 +103,15 @@ class GetAdminBookmarksTest extends TestCase
     public function testGetAdminBookmarksWithSortDesc(): void
     {
         /** @var array<int, Bookmark> $bookmarks */
-        $bookmarks = BookmarkFactory::new()
+        $bookmarks = $this->bookmarkFactory
             ->count(2)
             ->state(new Sequence(fn (Sequence $sequence) => [
                 'name' => 'name'.($sequence->index),
             ]))
             ->create();
 
-        $this->actingAs(UserFactory::new()->makeOne())
-            ->getJson('/bookmarks/admin?sort=-name')
+        $this->actingAs($this->userFactory->makeOne())
+            ->get('/bookmarks/admin?sort=-name')
             ->assertOk()
             ->assertJsonCount(2, 'data')
             ->assertJson(function (AssertableJson $json) use ($bookmarks) {
@@ -114,7 +128,7 @@ class GetAdminBookmarksTest extends TestCase
     public function testGetAdminBookmarksWithName(): void
     {
         /** @var array<int, Bookmark> $bookmarks */
-        $bookmarks = BookmarkFactory::new()
+        $bookmarks = $this->bookmarkFactory
             ->count(3)
             ->state(new Sequence(
                 ['name' => 'foo'],
@@ -122,12 +136,12 @@ class GetAdminBookmarksTest extends TestCase
                 ['name' => 'baz'],
             ))
             ->state(new Sequence(fn (Sequence $sequence) => [
-                'created_at' => (new Carbon())->addMinutes($sequence->index),
+                'created_at' => ($this->carbon::now())->addMinutes($sequence->index),
             ]))
             ->create();
 
-        $this->actingAs(UserFactory::new()->makeOne())
-            ->getJson('/bookmarks/admin?name=ba')
+        $this->actingAs($this->userFactory->makeOne())
+            ->get('/bookmarks/admin?name=ba')
             ->assertOk()
             ->assertJsonCount(2, 'data')
             ->assertJson(function (AssertableJson $json) use ($bookmarks) {
@@ -143,8 +157,8 @@ class GetAdminBookmarksTest extends TestCase
 
     public function testQueryStringTypes(): void
     {
-        $this->actingAs(UserFactory::new()->makeOne())
-            ->getJson('/bookmarks/admin?name[]=&country[]=&tag[]=&sort[]=')
+        $this->actingAs($this->userFactory->makeOne())
+            ->get('/bookmarks/admin?name[]=&country[]=&tag[]=&sort[]=')
             ->assertOk();
     }
 }

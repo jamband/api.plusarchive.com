@@ -16,10 +16,21 @@ class GetSearchBookmarksTest extends TestCase
 {
     use RefreshDatabase;
 
+    private BookmarkFactory $bookmarkFactory;
+    private BookmarkTagFactory $tagFactory;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->bookmarkFactory = new BookmarkFactory();
+        $this->tagFactory = new BookmarkTagFactory();
+    }
+
     public function testGetSearchBookmarks(): void
     {
         /** @var array<int, Bookmark> $bookmarks */
-        $bookmarks = BookmarkFactory::new()
+        $bookmarks = $this->bookmarkFactory
             ->count(3)
             ->state(new Sequence(
                 ['name' => 'foo'],
@@ -27,13 +38,13 @@ class GetSearchBookmarksTest extends TestCase
                 ['name' => 'baz'],
             ))
             ->hasAttached(
-                factory: BookmarkTagFactory::new()
+                factory: $this->tagFactory
                     ->count(2),
                 relationship: 'tags',
             )
             ->create();
 
-        $this->getJson('/bookmarks/search?q=ba')
+        $this->get('/bookmarks/search?q=ba')
             ->assertOk()
             ->assertJsonCount(2, 'data')
             ->assertJson(function (AssertableJson $json) use ($bookmarks) {
@@ -70,10 +81,10 @@ class GetSearchBookmarksTest extends TestCase
 
     public function testGetSearchBookmarksWithoutParameter(): void
     {
-        BookmarkFactory::new()
+        $this->bookmarkFactory
             ->createOne();
 
-        $this->getJson('/bookmarks/search')
+        $this->get('/bookmarks/search')
             ->assertOk()
             ->assertJson(fn (AssertableJson $json) => $json
                 ->where('data', [])
@@ -84,11 +95,11 @@ class GetSearchBookmarksTest extends TestCase
 
     public function testGetSearchBookmarksWithUnmatchedSearch(): void
     {
-        BookmarkFactory::new()
+        $this->bookmarkFactory
             ->state(['name' => 'foo'])
             ->createOne();
 
-        $this->getJson('/bookmarks/search?q=bar')
+        $this->get('/bookmarks/search?q=bar')
             ->assertOk()
             ->assertJson(fn (AssertableJson $json) => $json
                 ->where('data', [])
@@ -99,7 +110,7 @@ class GetSearchBookmarksTest extends TestCase
 
     public function testQueryStringTypes(): void
     {
-        $this->getJson('/bookmarks/search?q[]=')
+        $this->get('/bookmarks/search?q[]=')
             ->assertOk();
     }
 }

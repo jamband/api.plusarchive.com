@@ -14,19 +14,30 @@ class CreateBookmarkRulesTest extends TestCase
 {
     use RefreshDatabase;
 
+    private UserFactory $userFactory;
+    private BookmarkFactory $bookmarkFactory;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->userFactory = new UserFactory();
+        $this->bookmarkFactory = new BookmarkFactory();
+    }
+
     /**
      * @param array<string, mixed> $data
      */
-    protected function request(array $data = []): TestResponse
+    protected function request(array $data): TestResponse
     {
-        return $this->actingAs(UserFactory::new()->makeOne())
-            ->postJson('/bookmarks', $data)
+        return $this->actingAs($this->userFactory->makeOne())
+            ->post('/bookmarks', $data)
             ->assertUnprocessable();
     }
 
     public function testNameRequiredRule(): void
     {
-        $this->request()
+        $this->request(['name' => null])
             ->assertJsonPath('errors.name', __('validation.required', [
                 'attribute' => 'name',
             ]));
@@ -51,7 +62,7 @@ class CreateBookmarkRulesTest extends TestCase
 
     public function testCountryRequiredRule(): void
     {
-        $this->request()
+        $this->request(['country' => Null])
             ->assertJsonPath('errors.country', __('validation.required', [
                 'attribute' => 'country',
             ]));
@@ -67,7 +78,7 @@ class CreateBookmarkRulesTest extends TestCase
 
     public function testUrlRequiredRule(): void
     {
-        $this->request()
+        $this->request(['url' => Null])
             ->assertJsonPath('errors.url', __('validation.required', [
                 'attribute' => 'url',
             ]));
@@ -91,7 +102,7 @@ class CreateBookmarkRulesTest extends TestCase
 
     public function testUrlUniqueRule(): void
     {
-        $bookmark = BookmarkFactory::new()
+        $bookmark = $this->bookmarkFactory
             ->createOne();
 
         $this->request(['url' => $bookmark->url])

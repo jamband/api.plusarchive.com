@@ -13,9 +13,18 @@ class GetBookmarkTagsTest extends TestCase
 {
     use RefreshDatabase;
 
+    private BookmarkTagFactory $tagFactory;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->tagFactory = new BookmarkTagFactory();
+    }
+
     public function testGetBookmarkTags(): void
     {
-        BookmarkTagFactory::new()
+        $this->tagFactory
             ->count(3)
             ->state(new Sequence(
                 ['name' => 'foo'],
@@ -24,7 +33,7 @@ class GetBookmarkTagsTest extends TestCase
             ))
             ->create();
 
-        $this->getJson('/bookmarks/tags')
+        $this->get('/bookmarks/tags')
             ->assertOk()
             ->assertExactJson(['bar', 'baz', 'foo']);
     }
