@@ -9,29 +9,41 @@ use App\Groups\Users\UserFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\TestCase;
-use Tests\TestMiddleware;
 
 class CreateStoreTagTest extends TestCase
 {
     use RefreshDatabase;
-    use TestMiddleware;
+
+    private UserFactory $userFactory;
+    private StoreTag $tag;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->userFactory = new UserFactory();
+        $this->tag = new StoreTag();
+    }
 
     public function testVerifiedMiddleware(): void
     {
-        $this->assertVerifiedMiddleware('POST /store-tags');
+        $this->actingAs($this->userFactory->unverified()->makeOne())
+            ->post('/store-tags')
+            ->assertConflict();
     }
 
     public function testAuthMiddleware(): void
     {
-        $this->assertAuthMiddleware('POST /store-tags');
+        $this->post('/store-tags')
+            ->assertUnauthorized();
     }
 
     public function testCreateStoreTag(): void
     {
-        $this->assertDatabaseCount(StoreTag::class, 0);
+        $this->assertDatabaseCount($this->tag::class, 0);
 
-        $this->actingAs(UserFactory::new()->makeOne())
-            ->postJson('/store-tags', [
+        $this->actingAs($this->userFactory->makeOne())
+            ->post('/store-tags', [
                 'name' => 'tag1',
             ])
             ->assertCreated()
@@ -43,11 +55,10 @@ class CreateStoreTagTest extends TestCase
                 ->where('id', 1)
                 ->where('name', 'tag1'));
 
-        $this->assertDatabaseCount(StoreTag::class, 1);
-
-        $this->assertDatabaseHas(StoreTag::class, [
-            'id' => 1,
-            'name' => 'tag1',
-        ]);
+        $this->assertDatabaseCount($this->tag::class, 1)
+            ->assertDatabaseHas($this->tag::class, [
+                'id' => 1,
+                'name' => 'tag1',
+            ]);
     }
 }

@@ -11,32 +11,44 @@ use Illuminate\Database\Eloquent\Factories\Sequence;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\TestCase;
-use Tests\TestMiddleware;
 
 class GetAdminStoreTagsTest extends TestCase
 {
     use RefreshDatabase;
-    use TestMiddleware;
+
+    private UserFactory $userFactory;
+    private StoreTagFactory $tagFactory;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->userFactory = new UserFactory();
+        $this->tagFactory = new StoreTagFactory();
+    }
 
     public function testVerifiedMiddleware(): void
     {
-        $this->assertVerifiedMiddleware('GET /store-tags/admin');
+        $this->actingAs($this->userFactory->unverified()->makeOne())
+            ->get('/store-tags/admin')
+            ->assertConflict();
     }
 
     public function testAuthMiddleware(): void
     {
-        $this->assertAuthMiddleware('GET /store-tags/admin');
+        $this->get('/store-tags/admin')
+            ->assertUnauthorized();
     }
 
     public function testGetAdminStoreTags(): void
     {
         /** @var array<int, StoreTag> $tags */
-        $tags = StoreTagFactory::new()
+        $tags = $this->tagFactory
             ->count(3)
             ->create();
 
-        $this->actingAs(UserFactory::new()->makeOne())
-            ->getJson('/store-tags/admin')
+        $this->actingAs($this->userFactory->makeOne())
+            ->get('/store-tags/admin')
             ->assertOk()
             ->assertJsonCount(3, 'data')
             ->assertJson(function (AssertableJson $json) use ($tags) {
@@ -64,15 +76,15 @@ class GetAdminStoreTagsTest extends TestCase
     public function testGetAdminStoreTagsWithSortAsc(): void
     {
         /** @var array<int, StoreTag> $tags */
-        $tags = StoreTagFactory::new()
+        $tags = $this->tagFactory
             ->count(2)
             ->state(new Sequence(fn (Sequence $sequence) => [
                 'name' => 'name'.($sequence->index),
             ]))
             ->create();
 
-        $this->actingAs(UserFactory::new()->makeOne())
-            ->getJson('/store-tags/admin?sort=name')
+        $this->actingAs($this->userFactory->makeOne())
+            ->get('/store-tags/admin?sort=name')
             ->assertOk()
             ->assertJsonCount(2, 'data')
             ->assertJson(function (AssertableJson $json) use ($tags) {
@@ -89,15 +101,15 @@ class GetAdminStoreTagsTest extends TestCase
     public function testGetAdminStoreTagsWithSortDesc(): void
     {
         /** @var array<int, StoreTag> $tags */
-        $tags = StoreTagFactory::new()
+        $tags = $this->tagFactory
             ->count(2)
             ->state(new Sequence(fn (Sequence $sequence) => [
                 'name' => 'name'.($sequence->index),
             ]))
             ->create();
 
-        $this->actingAs(UserFactory::new()->makeOne())
-            ->getJson('/store-tags/admin?sort=-name')
+        $this->actingAs($this->userFactory->makeOne())
+            ->get('/store-tags/admin?sort=-name')
             ->assertOk()
             ->assertJsonCount(2, 'data')
             ->assertJson(function (AssertableJson $json) use ($tags) {
@@ -114,7 +126,7 @@ class GetAdminStoreTagsTest extends TestCase
     public function testGetAdminStoreTagsWithName(): void
     {
         /** @var array<int, StoreTag> $tags */
-        $tags = StoreTagFactory::new()
+        $tags = $this->tagFactory
             ->count(3)
             ->state(new Sequence(
                 ['name' => 'foo'],
@@ -123,8 +135,8 @@ class GetAdminStoreTagsTest extends TestCase
             ))
             ->create();
 
-        $this->actingAs(UserFactory::new()->makeOne())
-            ->getJson('/store-tags/admin?name=ba')
+        $this->actingAs($this->userFactory->makeOne())
+            ->get('/store-tags/admin?name=ba')
             ->assertOk()
             ->assertJsonCount(2, 'data')
             ->assertJson(function (AssertableJson $json) use ($tags) {
@@ -140,8 +152,8 @@ class GetAdminStoreTagsTest extends TestCase
 
     public function testQueryStringTypes(): void
     {
-        $this->actingAs(UserFactory::new()->makeOne())
-            ->getJson('/store-tags/admin?name[]=&sort[]=')
+        $this->actingAs($this->userFactory->makeOne())
+            ->get('/store-tags/admin?name[]=&sort[]=')
             ->assertOk();
     }
 }

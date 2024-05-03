@@ -14,19 +14,30 @@ class CreateStoreTagRulesTest extends TestCase
 {
     use RefreshDatabase;
 
+    private UserFactory $userFactory;
+    private StoreTagFactory $tagFactory;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->userFactory = new UserFactory();
+        $this->tagFactory = new StoreTagFactory();
+    }
+
     /**
      * @param array<string, mixed> $data
      */
-    protected function request(array $data = []): TestResponse
+    protected function request(array $data): TestResponse
     {
-        return $this->actingAs(UserFactory::new()->makeOne())
-            ->postJson('/store-tags', $data)
+        return $this->actingAs($this->userFactory->makeOne())
+            ->post('/store-tags', $data)
             ->assertUnprocessable();
     }
 
     public function testNameRequiredRule(): void
     {
-        $this->request()
+        $this->request(['name' => null])
             ->assertJsonPath('errors.name', __('validation.required', [
                 'attribute' => 'name',
             ]));
@@ -50,7 +61,7 @@ class CreateStoreTagRulesTest extends TestCase
 
     public function testNameUniqueRule(): void
     {
-        $tag = StoreTagFactory::new()
+        $tag = $this->tagFactory
             ->createOne();
 
         $this->request(['name' => $tag->name])
