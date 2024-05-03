@@ -15,17 +15,19 @@ class StoreTagScopeTest extends TestCase
     use RefreshDatabase;
 
     private StoreTag $tag;
+    private StoreTagFactory $tagFactory;
 
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->tag = new StoreTag();
+        $this->tagFactory = new StoreTagFactory();
     }
 
     public function testScopeOfName(): void
     {
-        StoreTagFactory::new()
+        $this->tagFactory
             ->count(2)
             ->state(new Sequence(
                 ['name' => 'foo'],

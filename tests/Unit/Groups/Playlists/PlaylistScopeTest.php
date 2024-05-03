@@ -16,29 +16,33 @@ class PlaylistScopeTest extends TestCase
     use RefreshDatabase;
 
     private Playlist $playlist;
+    private PlaylistFactory $playlistFactory;
+    private MusicProviderFactory $providerFactory;
 
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->playlist = new Playlist();
+        $this->playlistFactory = new PlaylistFactory();
+        $this->providerFactory = new MusicProviderFactory();
     }
 
     public function testScopeOfProvider(): void
     {
-        PlaylistFactory::new()
+        $this->playlistFactory
             ->count(1)
             ->for(
-                MusicProviderFactory::new()
+                $this->providerFactory
                     ->state(['name' => 'foo']),
                 'provider'
             )
             ->create();
 
-        PlaylistFactory::new()
+        $this->playlistFactory
             ->count(2)
             ->for(
-                MusicProviderFactory::new()
+                $this->providerFactory
                     ->state(['name' => 'bar']),
                 'provider'
             )
@@ -52,7 +56,7 @@ class PlaylistScopeTest extends TestCase
 
     public function testScopeOfSearch(): void
     {
-        PlaylistFactory::new()
+        $this->playlistFactory
             ->count(3)
             ->state(new Sequence(
                 ['title' => 'foo'],

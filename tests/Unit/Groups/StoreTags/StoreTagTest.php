@@ -15,12 +15,14 @@ class StoreTagTest extends TestCase
     use RefreshDatabase;
 
     private StoreTag $tag;
+    private StoreTagFactory $tagFactory;
 
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->tag = new StoreTag();
+        $this->tagFactory = new StoreTagFactory();
     }
 
     public function testTimestamp(): void
@@ -30,7 +32,7 @@ class StoreTagTest extends TestCase
 
     public function testGetNames(): void
     {
-        StoreTagFactory::new()
+        $this->tagFactory
             ->count(3)
             ->state(new Sequence(
                 ['name' => 'foo'],

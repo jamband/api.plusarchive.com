@@ -17,28 +17,34 @@ class LabelScopeTest extends TestCase
     use RefreshDatabase;
 
     private Label $label;
+    private LabelFactory $labelFactory;
+    private LabelTagFactory $tagFactory;
+    private CountryFactory $countryFactory;
 
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->label = new Label();
+        $this->labelFactory = new LabelFactory();
+        $this->tagFactory = new LabelTagFactory();
+        $this->countryFactory = new CountryFactory();
     }
 
     public function testScopeOfCountry(): void
     {
-        LabelFactory::new()
+        $this->labelFactory
             ->count(1)
             ->for(
-                CountryFactory::new()
+                $this->countryFactory
                     ->state(['name' => 'foo'])
             )
             ->create();
 
-        LabelFactory::new()
+        $this->labelFactory
             ->count(2)
             ->for(
-                CountryFactory::new()
+                $this->countryFactory
                     ->state(['name' => 'bar'])
             )
             ->create();
@@ -52,11 +58,11 @@ class LabelScopeTest extends TestCase
     public function testScopeOfTag(): void
     {
         /** @var array<int, Label> $labels */
-        $labels = LabelFactory::new()
+        $labels = $this->labelFactory
             ->count(2)
             ->create();
 
-        LabelTagFactory::new()
+        $this->tagFactory
             ->count(3)
             ->state(new Sequence(
                 ['name' => 'foo'],
@@ -76,7 +82,7 @@ class LabelScopeTest extends TestCase
 
     public function testScopeOfSearch(): void
     {
-        LabelFactory::new()
+        $this->labelFactory
             ->count(3)
             ->state(new Sequence(
                 ['name' => 'foo'],
@@ -93,7 +99,7 @@ class LabelScopeTest extends TestCase
 
     public function testScopeInNameOrder(): void
     {
-        LabelFactory::new()
+        $this->labelFactory
             ->count(3)
             ->state(new Sequence(
                 ['name' => 'foo'],

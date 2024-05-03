@@ -15,12 +15,14 @@ class BookmarkTagTest extends TestCase
     use RefreshDatabase;
 
     private BookmarkTag $tag;
+    private BookmarkTagFactory $tagFactory;
 
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->tag = new BookmarkTag();
+        $this->tagFactory = new BookmarkTagFactory();
     }
 
     public function testTimestamp(): void
@@ -30,7 +32,7 @@ class BookmarkTagTest extends TestCase
 
     public function testGetNames(): void
     {
-        BookmarkTagFactory::new()
+        $this->tagFactory
             ->count(3)
             ->state(new Sequence(
                 ['name' => 'foo'],

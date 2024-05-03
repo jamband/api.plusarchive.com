@@ -18,12 +18,16 @@ class LabelTest extends TestCase
     use RefreshDatabase;
 
     private Label $label;
+    private LabelFactory $labelFactory;
+    private CountryFactory $countryFactory;
 
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->label = new Label();
+        $this->labelFactory = new LabelFactory();
+        $this->countryFactory = new CountryFactory();
     }
 
     public function testTimestamps(): void
@@ -52,7 +56,7 @@ class LabelTest extends TestCase
 
     public function testGetCountryNames(): void
     {
-        CountryFactory::new()
+        $this->countryFactory
             ->count(3)
             ->state(new Sequence(
                 ['name' => 'foo'],
@@ -61,7 +65,7 @@ class LabelTest extends TestCase
             ))
             ->create();
 
-        LabelFactory::new()
+        $this->labelFactory
             ->count(5)
             ->state(new Sequence(
                 ['country_id' => 1],

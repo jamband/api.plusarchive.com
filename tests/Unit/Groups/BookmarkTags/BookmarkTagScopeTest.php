@@ -15,17 +15,19 @@ class BookmarkTagScopeTest extends TestCase
     use RefreshDatabase;
 
     private BookmarkTag $tag;
+    private BookmarkTagFactory $tagFactory;
 
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->tag = new BookmarkTag();
+        $this->tagFactory = new BookmarkTagFactory();
     }
 
     public function testScopeOfName(): void
     {
-        BookmarkTagFactory::new()
+        $this->tagFactory
             ->count(2)
             ->state(new Sequence(
                 ['name' => 'foo'],

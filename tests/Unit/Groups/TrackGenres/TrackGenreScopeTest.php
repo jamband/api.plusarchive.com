@@ -15,17 +15,19 @@ class TrackGenreScopeTest extends TestCase
     use RefreshDatabase;
 
     private TrackGenre $genre;
+    private TrackGenreFactory $genreFactory;
 
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->genre = new TrackGenre();
+        $this->genreFactory = new TrackGenreFactory();
     }
 
     public function testScopeOfName(): void
     {
-        TrackGenreFactory::new()
+        $this->genreFactory
             ->count(2)
             ->state(new Sequence(
                 ['name' => 'foo'],

@@ -18,12 +18,16 @@ class StoreTest extends TestCase
     use RefreshDatabase;
 
     private Store $store;
+    private StoreFactory $storeFactory;
+    private CountryFactory $countryFactory;
 
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->store = new Store();
+        $this->storeFactory = new StoreFactory();
+        $this->countryFactory = new CountryFactory();
     }
 
     public function testTimestamps(): void
@@ -52,7 +56,7 @@ class StoreTest extends TestCase
 
     public function testGetCountryNames(): void
     {
-        CountryFactory::new()
+        $this->countryFactory
             ->count(3)
             ->state(new Sequence(
                 ['name' => 'foo'],
@@ -61,7 +65,7 @@ class StoreTest extends TestCase
             ))
             ->create();
 
-        StoreFactory::new()
+        $this->storeFactory
             ->count(5)
             ->state(new Sequence(
                 ['country_id' => 1],

@@ -18,12 +18,16 @@ class BookmarkTest extends TestCase
     use RefreshDatabase;
 
     private Bookmark $bookmark;
+    private BookmarkFactory $bookmarkFactory;
+    private CountryFactory $countryFactory;
 
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->bookmark = new Bookmark();
+        $this->bookmarkFactory = new BookmarkFactory();
+        $this->countryFactory = new CountryFactory();
     }
 
     public function testTimestamps(): void
@@ -52,7 +56,7 @@ class BookmarkTest extends TestCase
 
     public function testGetCountryNames(): void
     {
-        CountryFactory::new()
+        $this->countryFactory
             ->count(3)
             ->state(new Sequence(
                 ['name' => 'foo'],
@@ -61,7 +65,7 @@ class BookmarkTest extends TestCase
             ))
             ->create();
 
-        BookmarkFactory::new()
+        $this->bookmarkFactory
             ->count(5)
             ->state(new Sequence(
                 ['country_id' => 1],

@@ -15,12 +15,14 @@ class MusicProviderTest extends TestCase
     use RefreshDatabase;
 
     private MusicProvider $provider;
+    private MusicProviderFactory $providerFactory;
 
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->provider = new MusicProvider();
+        $this->providerFactory = new MusicProviderFactory();
     }
 
     public function testTimestamps(): void
@@ -30,7 +32,7 @@ class MusicProviderTest extends TestCase
 
     public function testGetIdByName(): void
     {
-        $provider = MusicProviderFactory::new()
+        $provider = $this->providerFactory
             ->createOne();
 
         $this->assertSame(null, $this->provider->getIdByName('foo'));
@@ -39,7 +41,7 @@ class MusicProviderTest extends TestCase
 
     public function testGetNames(): void
     {
-        MusicProviderFactory::new()
+        $this->providerFactory
             ->count(3)
             ->state(new Sequence(
                 ['name' => 'foo'],

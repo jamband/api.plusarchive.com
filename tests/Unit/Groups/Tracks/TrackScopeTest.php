@@ -17,17 +17,23 @@ class TrackScopeTest extends TestCase
     use RefreshDatabase;
 
     private Track $track;
+    private TrackFactory $trackFactory;
+    private TrackGenreFactory $genreFactory;
+    private MusicProviderFactory $providerFactory;
 
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->track = new Track();
+        $this->trackFactory = new TrackFactory();
+        $this->genreFactory = new TrackGenreFactory();
+        $this->providerFactory = new MusicProviderFactory();
     }
 
     public function testFavorites(): void
     {
-        TrackFactory::new()
+        $this->trackFactory
             ->count(4)
             ->state(new Sequence(
                 ['urge' => false],
@@ -40,19 +46,19 @@ class TrackScopeTest extends TestCase
 
     public function testOfProvider(): void
     {
-        TrackFactory::new()
+        $this->trackFactory
             ->count(1)
             ->for(
-                MusicProviderFactory::new()
+                $this->providerFactory
                     ->state(['name' => 'foo']),
                 'provider'
             )
             ->create();
 
-        TrackFactory::new()
+        $this->trackFactory
             ->count(2)
             ->for(
-                MusicProviderFactory::new()
+                $this->providerFactory
                     ->state(['name' => 'bar']),
                 'provider'
             )
@@ -66,7 +72,7 @@ class TrackScopeTest extends TestCase
 
     public function testOfUrge(): void
     {
-        TrackFactory::new()
+        $this->trackFactory
             ->count(4)
             ->state(new Sequence(
                 ['urge' => false],
@@ -94,11 +100,11 @@ class TrackScopeTest extends TestCase
     public function testOfGenre(): void
     {
         /** @var array<int, Track> $tracks */
-        $tracks = TrackFactory::new()
+        $tracks = $this->trackFactory
             ->count(2)
             ->create();
 
-        TrackGenreFactory::new()
+        $this->genreFactory
             ->count(3)
             ->state(new Sequence(
                 ['name' => 'foo'],
@@ -118,7 +124,7 @@ class TrackScopeTest extends TestCase
 
     public function testOfSearch(): void
     {
-        TrackFactory::new()
+        $this->trackFactory
             ->count(3)
             ->state(new Sequence(
                 ['title' => 'foo'],
@@ -135,7 +141,7 @@ class TrackScopeTest extends TestCase
 
     public function testInTitleOrder(): void
     {
-        TrackFactory::new()
+        $this->trackFactory
             ->count(3)
             ->state(new Sequence(
                 ['title' => 'foo'],

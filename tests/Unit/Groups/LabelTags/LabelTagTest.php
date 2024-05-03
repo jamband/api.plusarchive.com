@@ -15,12 +15,14 @@ class LabelTagTest extends TestCase
     use RefreshDatabase;
 
     private LabelTag $tag;
+    private LabelTagFactory $tagFactory;
 
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->tag = new LabelTag();
+        $this->tagFactory = new LabelTagFactory();
     }
 
     public function testTimestamp(): void
@@ -30,7 +32,7 @@ class LabelTagTest extends TestCase
 
     public function testGetNames(): void
     {
-        LabelTagFactory::new()
+        $this->tagFactory
             ->count(3)
             ->state(new Sequence(
                 ['name' => 'foo'],

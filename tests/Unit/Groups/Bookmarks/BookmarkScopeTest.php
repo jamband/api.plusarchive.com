@@ -17,28 +17,34 @@ class BookmarkScopeTest extends TestCase
     use RefreshDatabase;
 
     private Bookmark $bookmark;
+    private BookmarkFactory $bookmarkFactory;
+    private BookmarkTagFactory $tagFactory;
+    private CountryFactory $countryFactory;
 
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->bookmark = new Bookmark();
+        $this->bookmarkFactory = new BookmarkFactory();
+        $this->tagFactory = new BookmarkTagFactory();
+        $this->countryFactory = new CountryFactory();
     }
 
     public function testScopeOfCountry(): void
     {
-        BookmarkFactory::new()
+        $this->bookmarkFactory
             ->count(1)
             ->for(
-                CountryFactory::new()
+                $this->countryFactory
                     ->state(['name' => 'foo'])
             )
             ->create();
 
-        BookmarkFactory::new()
+        $this->bookmarkFactory
             ->count(2)
             ->for(
-                CountryFactory::new()
+                $this->countryFactory
                     ->state(['name' => 'bar'])
             )
             ->create();
@@ -52,11 +58,11 @@ class BookmarkScopeTest extends TestCase
     public function testScopeOfTag(): void
     {
         /** @var array<int, Bookmark> $bookmarks */
-        $bookmarks = BookmarkFactory::new()
+        $bookmarks = $this->bookmarkFactory
             ->count(2)
             ->create();
 
-        BookmarkTagFactory::new()
+        $this->tagFactory
             ->count(3)
             ->state(new Sequence(
                 ['name' => 'foo'],
@@ -76,7 +82,7 @@ class BookmarkScopeTest extends TestCase
 
     public function testScopeOfSearch(): void
     {
-        BookmarkFactory::new()
+        $this->bookmarkFactory
             ->count(3)
             ->state(new Sequence(
                 ['name' => 'foo'],
@@ -93,7 +99,7 @@ class BookmarkScopeTest extends TestCase
 
     public function testScopeInNameOrder(): void
     {
-        BookmarkFactory::new()
+        $this->bookmarkFactory
             ->count(3)
             ->state(new Sequence(
                 ['name' => 'foo'],

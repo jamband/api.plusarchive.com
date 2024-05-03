@@ -15,12 +15,14 @@ class CountryTest extends TestCase
     use RefreshDatabase;
 
     private Country $country;
+    private CountryFactory $countryFactory;
 
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->country = new Country();
+        $this->countryFactory = new CountryFactory();
     }
 
     public function testTimestamps(): void
@@ -30,7 +32,7 @@ class CountryTest extends TestCase
 
     public function testGetIdByName(): void
     {
-        $country = CountryFactory::new()
+        $country = $this->countryFactory
             ->createOne();
 
         $this->assertSame(null, $this->country->getIdByName('foo'));
@@ -39,7 +41,7 @@ class CountryTest extends TestCase
 
     public function testGetNames(): void
     {
-        CountryFactory::new()
+        $this->countryFactory
             ->count(5)
             ->state(new Sequence(
                 ['name' => 'Unknown'],

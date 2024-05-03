@@ -15,12 +15,14 @@ class TrackGenreTest extends TestCase
     use RefreshDatabase;
 
     private TrackGenre $genre;
+    private TrackGenreFactory $genreFactory;
 
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->genre = new TrackGenre();
+        $this->genreFactory = new TrackGenreFactory();
     }
 
     public function testTimestamps(): void
@@ -30,7 +32,7 @@ class TrackGenreTest extends TestCase
 
     public function testGetNames(): void
     {
-        TrackGenreFactory::new()
+        $this->genreFactory
             ->count(3)
             ->state(new Sequence(
                 ['name' => 'foo'],

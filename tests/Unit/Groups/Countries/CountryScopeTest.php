@@ -15,17 +15,19 @@ class CountryScopeTest extends TestCase
     use RefreshDatabase;
 
     private Country $country;
+    private CountryFactory $countryFactory;
 
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->country = new Country();
+        $this->countryFactory = new CountryFactory();
     }
 
     public function testScopeSearch(): void
     {
-        CountryFactory::new()
+        $this->countryFactory
             ->count(3)
             ->state(new Sequence(
                 ['name' => 'foo'],
@@ -42,7 +44,7 @@ class CountryScopeTest extends TestCase
 
     public function testScopeInNameOrder(): void
     {
-        CountryFactory::new()
+        $this->countryFactory
             ->count(3)
             ->state(new Sequence(
                 ['name' => 'foo'],

@@ -18,12 +18,16 @@ class TrackTest extends TestCase
     use RefreshDatabase;
 
     private Track $track;
+    private TrackFactory $trackFactory;
+    private TrackGenreFactory $genreFactory;
 
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->track = new Track();
+        $this->trackFactory = new TrackFactory();
+        $this->genreFactory = new TrackGenreFactory();
     }
 
     public function testTimestamps(): void
@@ -54,11 +58,11 @@ class TrackTest extends TestCase
     public function testGetMinimalGenres(): void
     {
         /** @var array<int, Track> $tracks */
-        $tracks = TrackFactory::new()
+        $tracks = $this->trackFactory
             ->count(5)
             ->create();
 
-        TrackGenreFactory::new()
+        $this->genreFactory
             ->count(5)
             ->state(new Sequence(fn (Sequence $sequence) => [
                 'name' => 'genre'.($sequence->index + 1),
@@ -80,7 +84,7 @@ class TrackTest extends TestCase
     public function testToggleUrge(): void
     {
         /** @var array<int, Track> $tracks */
-        $tracks = TrackFactory::new()
+        $tracks = $this->trackFactory
             ->count(10)
             ->state(new Sequence(
                 ['urge' => false],
@@ -109,7 +113,7 @@ class TrackTest extends TestCase
 
     public function testStopUrges(): void
     {
-        TrackFactory::new()
+        $this->trackFactory
             ->count(4)
             ->state(new Sequence(
                 ['urge' => false],

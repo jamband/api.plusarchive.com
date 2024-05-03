@@ -15,17 +15,19 @@ class LabelTagScopeTest extends TestCase
     use RefreshDatabase;
 
     private LabelTag $tag;
+    private LabelTagFactory $tagFactory;
 
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->tag = new LabelTag();
+        $this->tagFactory = new LabelTagFactory();
     }
 
     public function testScopeOfName(): void
     {
-        LabelTagFactory::new()
+        $this->tagFactory
             ->count(2)
             ->state(new Sequence(
                 ['name' => 'foo'],

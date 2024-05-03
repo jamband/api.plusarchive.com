@@ -15,17 +15,19 @@ class MusicProviderScopeTest extends TestCase
     use RefreshDatabase;
 
     private MusicProvider $provider;
+    private MusicProviderFactory $providerFactory;
 
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->provider = new MusicProvider();
+        $this->providerFactory = new MusicProviderFactory();
     }
 
     public function testScopeSearch(): void
     {
-        MusicProviderFactory::new()
+        $this->providerFactory
             ->count(3)
             ->state(new Sequence(
                 ['name' => 'foo'],
@@ -42,7 +44,7 @@ class MusicProviderScopeTest extends TestCase
 
     public function testScopeInNameOrder(): void
     {
-        MusicProviderFactory::new()
+        $this->providerFactory
             ->count(3)
             ->state(new Sequence(
                 ['name' => 'foo'],
