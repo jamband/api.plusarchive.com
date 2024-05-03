@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Tests\Feature\Groups\Labels;
 
 use App\Groups\Countries\CountryFactory;
-use App\Groups\Labels\Label;
 use App\Groups\Labels\LabelFactory;
 use App\Groups\LabelTags\LabelTag;
 use App\Groups\LabelTags\LabelTagFactory;
@@ -14,30 +13,48 @@ use Illuminate\Database\Eloquent\Factories\Sequence;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\TestCase;
-use Tests\TestMiddleware;
 
 class UpdateLabelTest extends TestCase
 {
     use RefreshDatabase;
-    use TestMiddleware;
+
+    private UserFactory $userFactory;
+    private CountryFactory $countryFactory;
+    private LabelFactory $labelFactory;
+    private LabelTagFactory $tagFactory;
+    private LabelTag $labelTag;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->userFactory = new UserFactory();
+        $this->countryFactory = new CountryFactory();
+        $this->labelFactory = new LabelFactory();
+        $this->tagFactory = new LabelTagFactory();
+        $this->tag = New LabelTag();
+    }
 
     public function testVerifiedMiddleware(): void
     {
-        $this->assertVerifiedMiddleware('PUT /labels/1');
+        $this->actingAs($this->userFactory->unverified()->makeOne())
+            ->put('/labels/1')
+            ->assertConflict();
     }
 
     public function testAuthMiddleware(): void
     {
-        $this->assertAuthMiddleware('PUT /labels/1');
+        $this->put('/labels/1')
+            ->assertUnauthorized();
     }
 
     public function testModelNotFound(): void
     {
-        $country = CountryFactory::new()
+        $country = $this->countryFactory
             ->createOne();
 
-        $this->actingAs(UserFactory::new()->makeOne())
-            ->putJson('/labels/1', [
+        $this->actingAs($this->userFactory->makeOne())
+            ->put('/labels/1', [
                 'name' => 'label1',
                 'country' => $country->name,
                 'url' => 'https://url1.dev',
@@ -48,13 +65,13 @@ class UpdateLabelTest extends TestCase
 
     public function testUpdateLabel(): void
     {
-        $label = LabelFactory::new()
+        $label = $this->labelFactory
             ->createOne();
 
-        $this->assertDatabaseCount(Label::class, 1);
+        $this->assertDatabaseCount($label::class, 1);
 
-        $this->actingAs(UserFactory::new()->makeOne())
-            ->putJson('/labels/'.$label->id, [
+        $this->actingAs($this->userFactory->makeOne())
+            ->put('/labels/'.$label->id, [
                 'name' => 'updated_label1',
                 'country' => $label->country->name,
                 'url' => 'https://updated-url1.dev',
@@ -72,24 +89,23 @@ class UpdateLabelTest extends TestCase
                     ->has('updated_at');
             });
 
-        $this->assertDatabaseCount(Label::class, 1);
-
-        $this->assertDatabaseHas(Label::class, [
-            'id' => $label->id,
-            'name' => 'updated_label1',
-            'country_id' => 1,
-            'url' => 'https://updated-url1.dev',
-            'links' => "https://updated-link1.dev\nhttps://updated-link2.dev",
-        ]);
+        $this->assertDatabaseCount($label::class, 1)
+            ->assertDatabaseHas($label::class, [
+                'id' => $label->id,
+                'name' => 'updated_label1',
+                'country_id' => 1,
+                'url' => 'https://updated-url1.dev',
+                'links' => "https://updated-link1.dev\nhttps://updated-link2.dev",
+            ]);
     }
 
     public function testUpdateLabelWithSomeEmptyAttributeValues(): void
     {
-        $label = LabelFactory::new()
+        $label = $this->labelFactory
             ->createOne();
 
-        $this->actingAs(UserFactory::new()->makeOne())
-            ->putJson('/labels/'.$label->id, [
+        $this->actingAs($this->userFactory->makeOne())
+            ->put('/labels/'.$label->id, [
                 'name' => 'updated_label1',
                 'country' => $label->country->name,
                 'url' => 'https://updated-url1.dev',
@@ -106,7 +122,7 @@ class UpdateLabelTest extends TestCase
                     ->has('updated_at');
             });
 
-        $this->assertDatabaseHas(Label::class, [
+        $this->assertDatabaseHas($label::class, [
             'id' => $label->id,
             'name' => 'updated_label1',
             'country_id' => 1,
@@ -117,12 +133,12 @@ class UpdateLabelTest extends TestCase
 
     public function testUpdateLabelWithTags(): void
     {
-        $label = LabelFactory::new()
+        $label = $this->labelFactory
             ->createOne();
 
         $pivotTable = $label->tags()->getTable();
 
-        LabelTagFactory::new()
+        $this->tagFactory
             ->count(4)
             ->state(new Sequence(
                 ['name' => 'tag1'],
@@ -134,14 +150,13 @@ class UpdateLabelTest extends TestCase
 
         $label->tags()->sync([1, 2]);
 
-        $this->assertDatabaseCount(LabelTag::class, 4);
+        $this->assertDatabaseCount($this->tag::class, 4)
+            ->assertDatabaseCount($pivotTable, 2)
+            ->assertDatabaseHas($pivotTable, ['label_id' => 1, 'tag_id' => 1])
+            ->assertDatabaseHas($pivotTable, ['label_id' => 1, 'tag_id' => 2]);
 
-        $this->assertDatabaseCount($pivotTable, 2);
-        $this->assertDatabaseHas($pivotTable, ['label_id' => 1, 'tag_id' => 1]);
-        $this->assertDatabaseHas($pivotTable, ['label_id' => 1, 'tag_id' => 2]);
-
-        $this->actingAs(UserFactory::new()->makeOne())
-            ->putJson('/labels/'.$label->id, [
+        $this->actingAs($this->userFactory->makeOne())
+            ->put('/labels/'.$label->id, [
                 'name' => 'updated_label1',
                 'country' => $label->country->name,
                 'url' => 'https://updated-url1.dev',
@@ -159,10 +174,9 @@ class UpdateLabelTest extends TestCase
                     ->has('updated_at');
             });
 
-        $this->assertDatabaseCount(LabelTag::class, 4);
-
-        $this->assertDatabaseCount($pivotTable, 2);
-        $this->assertDatabaseHas($pivotTable, ['label_id' => 1, 'tag_id' => 3]);
-        $this->assertDatabaseHas($pivotTable, ['label_id' => 1, 'tag_id' => 4]);
+        $this->assertDatabaseCount($this->tag::class, 4)
+            ->assertDatabaseCount($pivotTable, 2)
+            ->assertDatabaseHas($pivotTable, ['label_id' => 1, 'tag_id' => 3])
+            ->assertDatabaseHas($pivotTable, ['label_id' => 1, 'tag_id' => 4]);
     }
 }

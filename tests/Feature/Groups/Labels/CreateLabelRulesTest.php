@@ -14,19 +14,30 @@ class CreateLabelRulesTest extends TestCase
 {
     use RefreshDatabase;
 
+    private UserFactory $userFactory;
+    private LabelFactory $labelFactory;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->userFactory = new UserFactory();
+        $this->labelFactory = new LabelFactory();
+    }
+
     /**
      * @param array<string, mixed> $data
      */
-    protected function request(array $data = []): TestResponse
+    protected function request(array $data): TestResponse
     {
-        return $this->actingAs(UserFactory::new()->makeOne())
-            ->postJson('/labels', $data)
+        return $this->actingAs($this->userFactory->makeOne())
+            ->post('/labels', $data)
             ->assertUnprocessable();
     }
 
     public function testNameRequiredRule(): void
     {
-        $this->request()
+        $this->request(['name' => null])
             ->assertJsonPath('errors.name', __('validation.required', [
                 'attribute' => 'name',
             ]));
@@ -51,7 +62,7 @@ class CreateLabelRulesTest extends TestCase
 
     public function testCountryRequiredRule(): void
     {
-        $this->request()
+        $this->request(['country' => null])
             ->assertJsonPath('errors.country', __('validation.required', [
                 'attribute' => 'country',
             ]));
@@ -67,7 +78,7 @@ class CreateLabelRulesTest extends TestCase
 
     public function testUrlRequiredRule(): void
     {
-        $this->request()
+        $this->request(['url' => null])
             ->assertJsonPath('errors.url', __('validation.required', [
                 'attribute' => 'url',
             ]));
@@ -91,7 +102,7 @@ class CreateLabelRulesTest extends TestCase
 
     public function testUrlUniqueRule(): void
     {
-        $label = LabelFactory::new()
+        $label = $this->labelFactory
             ->createOne();
 
         $this->request(['url' => $label->url])

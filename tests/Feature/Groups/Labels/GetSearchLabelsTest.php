@@ -16,10 +16,21 @@ class GetSearchLabelsTest extends TestCase
 {
     use RefreshDatabase;
 
+    private LabelFactory $labelFactory;
+    private LabelTagFactory $tagFactory;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->labelFactory = new LabelFactory();
+        $this->tagFactory = new LabelTagFactory();
+    }
+
     public function testGetSearchLabels(): void
     {
         /** @var array<int, Label> $labels */
-        $labels = LabelFactory::new()
+        $labels = $this->labelFactory
             ->count(3)
             ->state(new Sequence(
                 ['name' => 'foo'],
@@ -27,13 +38,13 @@ class GetSearchLabelsTest extends TestCase
                 ['name' => 'baz'],
             ))
             ->hasAttached(
-                factory: LabelTagFactory::new()
+                factory: $this->tagFactory
                     ->count(2),
                 relationship: 'tags',
             )
             ->create();
 
-        $this->getJson('/labels/search?q=ba')
+        $this->get('/labels/search?q=ba')
             ->assertOk()
             ->assertJsonCount(2, 'data')
             ->assertJson(function (AssertableJson $json) use ($labels) {
@@ -70,10 +81,10 @@ class GetSearchLabelsTest extends TestCase
 
     public function testGetSearchLabelsWithoutParameter(): void
     {
-        LabelFactory::new()
+        $this->labelFactory
             ->createOne();
 
-        $this->getJson('/labels/search')
+        $this->get('/labels/search')
             ->assertOk()
             ->assertJson(fn (AssertableJson $json) => $json
                 ->where('data', [])
@@ -84,11 +95,11 @@ class GetSearchLabelsTest extends TestCase
 
     public function testGetSearchLabelsWithUnmatchedSearch(): void
     {
-        LabelFactory::new()
+        $this->labelFactory
             ->state(['name' => 'foo'])
             ->createOne();
 
-        $this->getJson('/labels/search?q=bar')
+        $this->get('/labels/search?q=bar')
             ->assertOk()
             ->assertJson(fn (AssertableJson $json) => $json
                 ->where('data', [])
@@ -99,7 +110,7 @@ class GetSearchLabelsTest extends TestCase
 
     public function testQueryStringTypes(): void
     {
-        $this->getJson('/labels/search?q[]=')
+        $this->get('/labels/search?q[]=')
             ->assertOk();
     }
 }

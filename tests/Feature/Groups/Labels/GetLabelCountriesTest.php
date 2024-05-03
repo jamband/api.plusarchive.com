@@ -14,9 +14,20 @@ class GetLabelCountriesTest extends TestCase
 {
     use RefreshDatabase;
 
+    private CountryFactory $countryFactory;
+    private LabelFactory $labelFactory;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->countryFactory = new CountryFactory();
+        $this->labelFactory = new LabelFactory();
+    }
+
     public function testGetLabelCountries(): void
     {
-        CountryFactory::new()
+        $this->countryFactory
             ->count(3)
             ->state(new Sequence(
                 ['name' => 'foo'],
@@ -25,7 +36,7 @@ class GetLabelCountriesTest extends TestCase
             ))
             ->create();
 
-        LabelFactory::new()
+        $this->labelFactory
             ->count(5)
             ->state(new Sequence(
                 ['country_id' => 1],
@@ -36,7 +47,7 @@ class GetLabelCountriesTest extends TestCase
             ))
             ->create();
 
-        $this->getJson('/labels/countries')
+        $this->get('/labels/countries')
             ->assertOk()
             ->assertExactJson(['bar', 'baz', 'foo']);
     }

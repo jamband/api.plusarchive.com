@@ -9,38 +9,51 @@ use App\Groups\Users\UserFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\TestCase;
-use Tests\TestMiddleware;
 
 class GetLabelTest extends TestCase
 {
     use RefreshDatabase;
-    use TestMiddleware;
+
+    private UserFactory $userFactory;
+    private LabelFactory $labelFactory;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->userFactory = new UserFactory();
+        $this->labelFactory = new LabelFactory();
+    }
 
     public function testVerifiedMiddleware(): void
     {
-        $this->assertVerifiedMiddleware('GET /labels/1');
+        $this->actingAs($this->userFactory->unverified()->makeOne())
+            ->get('/labels/1')
+            ->assertConflict();
+
     }
 
     public function testAuthMiddleware(): void
     {
-        $this->assertAuthMiddleware('GET /labels/1');
+        $this->get('/labels/1')
+            ->assertUnauthorized();
     }
 
     public function testModelNotFound(): void
     {
-        $this->actingAs(UserFactory::new()->makeOne())
-            ->getJson('/labels/1')
+        $this->actingAs($this->userFactory->makeOne())
+            ->get('/labels/1')
             ->assertNotFound()
             ->assertExactJson(['message' => 'Model Not Found.']);
     }
 
     public function testGetLabel(): void
     {
-        $label = LabelFactory::new()
+        $label = $this->labelFactory
             ->createOne();
 
-        $this->actingAs(UserFactory::new()->makeOne())
-            ->getJson('/labels/'.$label->id)
+        $this->actingAs($this->userFactory->makeOne())
+            ->get('/labels/'.$label->id)
             ->assertOk()
             ->assertJson(function (AssertableJson $json) use ($label) {
                 $json->where('id', $label->id)

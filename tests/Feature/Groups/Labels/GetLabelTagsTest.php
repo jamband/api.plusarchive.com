@@ -13,9 +13,18 @@ class GetLabelTagsTest extends TestCase
 {
     use RefreshDatabase;
 
+    private LabelTagFactory $tagFactory;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->tagFactory = new LabelTagFactory();
+    }
+
     public function testGetLabelTags(): void
     {
-        LabelTagFactory::new()
+        $this->tagFactory
             ->count(3)
             ->state(new Sequence(
                 ['name' => 'foo'],
@@ -24,7 +33,7 @@ class GetLabelTagsTest extends TestCase
             ))
             ->create();
 
-        $this->getJson('/labels/tags')
+        $this->get('/labels/tags')
             ->assertOk()
             ->assertExactJson(['bar', 'baz', 'foo']);
     }
