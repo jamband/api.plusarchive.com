@@ -14,9 +14,20 @@ class GetStoreCountriesTest extends TestCase
 {
     use RefreshDatabase;
 
+    private CountryFactory $countryFactory;
+    private StoreFactory $storeFactory;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->countryFactory = new CountryFactory();
+        $this->storeFactory = new StoreFactory();
+    }
+
     public function testGetStoreCountries(): void
     {
-        CountryFactory::new()
+        $this->countryFactory
             ->count(3)
             ->state(new Sequence(
                 ['name' => 'foo'],
@@ -25,7 +36,7 @@ class GetStoreCountriesTest extends TestCase
             ))
             ->create();
 
-        StoreFactory::new()
+        $this->storeFactory
             ->count(5)
             ->state(new Sequence(
                 ['country_id' => 1],
@@ -36,7 +47,7 @@ class GetStoreCountriesTest extends TestCase
             ))
             ->create();
 
-        $this->getJson('/stores/countries')
+        $this->get('/stores/countries')
             ->assertOk()
             ->assertExactJson(['bar', 'baz', 'foo']);
     }

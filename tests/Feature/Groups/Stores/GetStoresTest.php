@@ -18,22 +18,37 @@ class GetStoresTest extends TestCase
 {
     use RefreshDatabase;
 
+    private StoreFactory $storeFactory;
+    private StoreTagFactory $tagFactory;
+    private CountryFactory $countryFactory;
+    private Carbon $carbon;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->storeFactory = new StoreFactory();
+        $this->tagFactory = new StoreTagFactory();
+        $this->countryFactory = new CountryFactory();
+        $this->carbon = new Carbon();
+    }
+
     public function testGetStores(): void
     {
         /** @var array<int, Store> $stores */
-        $stores = StoreFactory::new()
+        $stores = $this->storeFactory
             ->count(2)
             ->hasAttached(
-                factory: StoreTagFactory::new()
+                factory: $this->tagFactory
                     ->count(2),
                 relationship: 'tags',
             )
             ->state(new Sequence(fn (Sequence $sequence) => [
-                'created_at' => (new Carbon())->addMinutes($sequence->index),
+                'created_at' => ($this->carbon::now())->addMinutes($sequence->index),
             ]))
             ->create();
 
-        $this->getJson('/stores')
+        $this->get('/stores')
             ->assertOk()
             ->assertJsonCount(2, 'data')
             ->assertJson(function (AssertableJson $json) use ($stores) {
@@ -70,28 +85,26 @@ class GetStoresTest extends TestCase
 
     public function testGetStoresWithCountry(): void
     {
-        StoreFactory::new()
+        $this->storeFactory
             ->for(
-                CountryFactory::new()->state([
-                    'name' => 'foo',
-                ]),
+                $this->countryFactory
+                    ->state(['name' => 'foo']),
             )
             ->createOne();
 
         /** @var array<int, Store> $stores */
-        $stores = StoreFactory::new()
+        $stores = $this->storeFactory
             ->count(2)
             ->for(
-                CountryFactory::new()->state([
-                    'name' => 'bar',
-                ]),
+                $this->countryFactory
+                    ->state(['name' => 'bar']),
             )
             ->state(new Sequence(fn (Sequence $sequence) => [
-                'created_at' => (new Carbon())->addMinutes($sequence->index),
+                'created_at' => ($this->carbon::now())->addMinutes($sequence->index),
             ]))
             ->create();
 
-        $this->getJson('/stores?country=bar')
+        $this->get('/stores?country=bar')
             ->assertOk()
             ->assertJsonCount(2, 'data')
             ->assertJson(function (AssertableJson $json) use ($stores) {
@@ -117,15 +130,14 @@ class GetStoresTest extends TestCase
 
     public function testGetStoresWithUnmatchedCountry(): void
     {
-        StoreFactory::new()
+        $this->storeFactory
             ->for(
-                CountryFactory::new()->state([
-                    'name' => 'foo',
-                ]),
+                $this->countryFactory
+                    ->state(['name' => 'foo']),
             )
             ->createOne();
 
-        $this->getJson('/stores?country=bar')
+        $this->get('/stores?country=bar')
             ->assertOk()
             ->assertJson(fn (AssertableJson $json) => $json
                 ->where('data', [])
@@ -136,30 +148,30 @@ class GetStoresTest extends TestCase
 
     public function testGetStoresWithTag(): void
     {
-        StoreFactory::new()
+        $this->storeFactory
             ->hasAttached(
-                factory: StoreTagFactory::new()
+                factory: $this->tagFactory
                     ->state(['name' => 'foo']),
                 relationship: 'tags',
             )
             ->createOne();
 
         /** @var array<int, Store> $stores */
-        $stores = StoreFactory::new()
+        $stores = $this->storeFactory
             ->count(2)
             ->state(new Sequence(fn (Sequence $sequence) => [
-                'created_at' => (new Carbon())->addMinutes($sequence->index),
+                'created_at' => ($this->carbon::now())->addMinutes($sequence->index),
             ]))
             ->create();
 
-        StoreTagFactory::new()
+        $this->tagFactory
             ->state(['name' => 'bar'])
             ->createOne();
 
         $stores[0]->tags()->sync([2]);
         $stores[1]->tags()->sync([2]);
 
-        $this->getJson('/stores?tag=bar')
+        $this->get('/stores?tag=bar')
             ->assertOk()
             ->assertJsonCount(2, 'data')
             ->assertJson(function (AssertableJson $json) use ($stores) {
@@ -187,15 +199,15 @@ class GetStoresTest extends TestCase
 
     public function testGetStoresWithUnmatchedTag(): void
     {
-        StoreFactory::new()
+        $this->storeFactory
             ->hasAttached(
-                factory: StoreTagFactory::new()
+                factory: $this->tagFactory
                     ->state(['name' => 'foo']),
                 relationship: 'tags',
             )
             ->createOne();
 
-        $this->getJson('/stores?tag=bar')
+        $this->get('/stores?tag=bar')
             ->assertOk()
             ->assertJson(fn (AssertableJson $json) => $json
                 ->where('data', [])
@@ -206,7 +218,7 @@ class GetStoresTest extends TestCase
 
     public function testGetStoresWithCountryAndTag(): void
     {
-        CountryFactory::new()
+        $this->countryFactory
             ->count(2)
             ->state(new Sequence(fn (Sequence $sequence) => [
                 'name' => 'country'.($sequence->index + 1),
@@ -214,7 +226,7 @@ class GetStoresTest extends TestCase
             ->create();
 
         /** @var array<int, Store> $stores */
-        $stores = StoreFactory::new()
+        $stores = $this->storeFactory
             ->count(4)
             ->state(new Sequence(
                 ['country_id' => 1],
@@ -223,11 +235,11 @@ class GetStoresTest extends TestCase
                 ['country_id' => 2],
             ))
             ->state(new Sequence(fn (Sequence $sequence) => [
-                'created_at' => (new Carbon())->addMinutes($sequence->index),
+                'created_at' => ($this->carbon::now())->addMinutes($sequence->index),
             ]))
             ->create();
 
-        StoreTagFactory::new()
+        $this->tagFactory
             ->count(2)
             ->state(new Sequence(fn (Sequence $sequence) => [
                 'name' => 'tag'.($sequence->index + 1),
@@ -237,7 +249,7 @@ class GetStoresTest extends TestCase
         $stores[0]->tags()->sync([1]);
         $stores[1]->tags()->sync([1]);
 
-        $this->getJson('/stores?country=country1&tag=tag1')
+        $this->get('/stores?country=country1&tag=tag1')
             ->assertOk()
             ->assertJsonCount(2, 'data')
             ->assertJson(function (AssertableJson $json) use ($stores) {
@@ -265,7 +277,7 @@ class GetStoresTest extends TestCase
 
     public function testQueryStringTypes(): void
     {
-        $this->getJson('/stores?country[]=&tag[]=')
+        $this->get('/stores?country[]=&tag[]=')
             ->assertOk();
     }
 }

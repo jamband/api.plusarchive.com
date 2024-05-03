@@ -11,32 +11,48 @@ use App\Groups\Users\UserFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\TestCase;
-use Tests\TestMiddleware;
 
 class CreateStoreTest extends TestCase
 {
     use RefreshDatabase;
-    use TestMiddleware;
+
+    private UserFactory $userFactory;
+    private CountryFactory $countryFactory;
+    private Store $store;
+    private StoreTag $tag;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->userFactory = new UserFactory();
+        $this->countryFactory = new CountryFactory();
+        $this->store = new Store();
+        $this->tag = new StoreTag();
+    }
 
     public function testVerifiedMiddleware(): void
     {
-        $this->assertVerifiedMiddleware('POST /stores');
+        $this->actingAs($this->userFactory->unverified()->makeOne())
+            ->post('/stores')
+            ->assertConflict();
     }
 
     public function testAuthMiddleware(): void
     {
-        $this->assertAuthMiddleware('POST /stores');
+        $this->post('/stores')
+            ->assertUnauthorized();
     }
 
     public function testCreateStore(): void
     {
-        $country = CountryFactory::new()
+        $country = $this->countryFactory
             ->createOne();
 
-        $this->assertDatabaseCount(Store::class, 0);
+        $this->assertDatabaseCount($this->store::class, 0);
 
-        $this->actingAs(UserFactory::new()->makeOne())
-            ->postJson('/stores', [
+        $this->actingAs($this->userFactory->makeOne())
+            ->post('/stores', [
                 'name' => 'store1',
                 'country' => $country->name,
                 'url' => 'https://url1.dev',
@@ -55,24 +71,23 @@ class CreateStoreTest extends TestCase
                     ->has('updated_at');
             });
 
-        $this->assertDatabaseCount(Store::class, 1);
-
-        $this->assertDataBaseHas(Store::class, [
-            'id' => 1,
-            'name' => 'store1',
-            'country_id' => $country->id,
-            'url' => 'https://url1.dev',
-            'links' => "https://link1.dev\nhttps://link2.dev",
-        ]);
+        $this->assertDatabaseCount($this->store::class, 1)
+            ->assertDataBaseHas($this->store::class, [
+                'id' => 1,
+                'name' => 'store1',
+                'country_id' => $country->id,
+                'url' => 'https://url1.dev',
+                'links' => "https://link1.dev\nhttps://link2.dev",
+            ]);
     }
 
     public function testCreateStoreWithSomeEmptyAttributeValues(): void
     {
-        $country = CountryFactory::new()
+        $country = $this->countryFactory
             ->createOne();
 
-        $this->actingAs(UserFactory::new()->makeOne())
-            ->postJson('/stores', [
+        $this->actingAs($this->userFactory->makeOne())
+            ->post('/stores', [
                 'name' => 'store1',
                 'country' => $country->name,
                 'url' => 'https://url1.dev',
@@ -89,7 +104,7 @@ class CreateStoreTest extends TestCase
                     ->has('updated_at');
             });
 
-        $this->assertDatabaseHas(Store::class, [
+        $this->assertDatabaseHas($this->store::class, [
             'id' => 1,
             'name' => 'store1',
             'country_id' => $country->id,
@@ -100,14 +115,13 @@ class CreateStoreTest extends TestCase
 
     public function testCreateStoreWithTags(): void
     {
-        $store = new Store();
-        $pivotTable = $store->tags()->getTable();
+        $pivotTable = $this->store->tags()->getTable();
 
-        $country = CountryFactory::new()
+        $country = $this->countryFactory
             ->createOne();
 
-        $this->actingAs(UserFactory::new()->makeOne())
-            ->postJson('/stores', [
+        $this->actingAs($this->userFactory->makeOne())
+            ->post('/stores', [
                 'name' => 'store1',
                 'country' => $country->name,
                 'url' => 'https://url1.dev',
@@ -125,12 +139,12 @@ class CreateStoreTest extends TestCase
                     ->has('updated_at');
             });
 
-        $this->assertDatabaseCount(StoreTag::class, 2);
-        $this->assertDatabaseHas(StoreTag::class, ['name' => 'tag1']);
-        $this->assertDatabaseHas(StoreTag::class, ['name' => 'tag2']);
+        $this->assertDatabaseCount($this->tag::class, 2)
+            ->assertDatabaseHas($this->tag::class, ['name' => 'tag1'])
+            ->assertDatabaseHas($this->tag::class, ['name' => 'tag2']);
 
-        $this->assertDatabaseCount($pivotTable, 2);
-        $this->assertDatabaseHas($pivotTable, ['store_id' => 1, 'tag_id' => 1]);
-        $this->assertDatabaseHas($pivotTable, ['store_id' => 1, 'tag_id' => 2]);
+        $this->assertDatabaseCount($pivotTable, 2)
+            ->assertDatabaseHas($pivotTable, ['store_id' => 1, 'tag_id' => 1])
+            ->assertDatabaseHas($pivotTable, ['store_id' => 1, 'tag_id' => 2]);
     }
 }

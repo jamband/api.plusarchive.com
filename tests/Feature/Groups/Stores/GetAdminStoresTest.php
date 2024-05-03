@@ -12,35 +12,49 @@ use Illuminate\Database\Eloquent\Factories\Sequence;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\TestCase;
-use Tests\TestMiddleware;
 
 class GetAdminStoresTest extends TestCase
 {
     use RefreshDatabase;
-    use TestMiddleware;
+
+    private UserFactory $userFactory;
+    private StoreFactory $storeFactory;
+    private Carbon $carbon;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->userFactory = new UserFactory();
+        $this->storeFactory = new StoreFactory();
+        $this->carbon = new Carbon();
+    }
 
     public function testVerifiedMiddleware(): void
     {
-        $this->assertVerifiedMiddleware('GET /stores/admin');
+        $this->actingAs($this->userFactory->unverified()->makeOne())
+            ->get('/stores/admin')
+            ->assertConflict();
     }
 
     public function testAuthMiddleware(): void
     {
-        $this->assertAuthMiddleware('GET /stores/admin');
+        $this->get('/stores/admin')
+            ->assertUnauthorized();
     }
 
     public function testGetAdminStores(): void
     {
         /** @var array<int, Store> $stores */
-        $stores = StoreFactory::new()
+        $stores = $this->storeFactory
             ->count(2)
             ->state(new Sequence(fn (Sequence $sequence) => [
-                'created_at' => (new Carbon())->addMinutes($sequence->index + 1),
+                'created_at' => ($this->carbon::now())->addMinutes($sequence->index + 1),
             ]))
             ->create();
 
-        $this->actingAs(UserFactory::new()->makeOne())
-            ->getJson('/stores/admin')
+        $this->actingAs($this->userFactory->makeOne())
+            ->get('/stores/admin')
             ->assertOk()
             ->assertJsonCount(2, 'data')
             ->assertJson(function (AssertableJson $json) use ($stores) {
@@ -64,15 +78,15 @@ class GetAdminStoresTest extends TestCase
     public function testGetAdminStoresWithSortAsc(): void
     {
         /** @var array<int, Store> $stores */
-        $stores = StoreFactory::new()
+        $stores = $this->storeFactory
             ->count(2)
             ->state(new Sequence(fn (Sequence $sequence) => [
                 'name' => 'name'.($sequence->index),
             ]))
             ->create();
 
-        $this->actingAs(UserFactory::new()->makeOne())
-            ->getJson('/stores/admin?sort=name')
+        $this->actingAs($this->userFactory->makeOne())
+            ->get('/stores/admin?sort=name')
             ->assertOk()
             ->assertJsonCount(2, 'data')
             ->assertJson(function (AssertableJson $json) use ($stores) {
@@ -89,15 +103,15 @@ class GetAdminStoresTest extends TestCase
     public function testGetAdminStoresWithSortDesc(): void
     {
         /** @var array<int, Store> $stores */
-        $stores = StoreFactory::new()
+        $stores = $this->storeFactory
             ->count(2)
             ->state(new Sequence(fn (Sequence $sequence) => [
                 'name' => 'name'.($sequence->index),
             ]))
             ->create();
 
-        $this->actingAs(UserFactory::new()->makeOne())
-            ->getJson('/stores/admin?sort=-name')
+        $this->actingAs($this->userFactory->makeOne())
+            ->get('/stores/admin?sort=-name')
             ->assertOk()
             ->assertJsonCount(2, 'data')
             ->assertJson(function (AssertableJson $json) use ($stores) {
@@ -114,7 +128,7 @@ class GetAdminStoresTest extends TestCase
     public function testGetAdminStoresWithName(): void
     {
         /** @var array<int, Store> $stores */
-        $stores = StoreFactory::new()
+        $stores = $this->storeFactory
             ->count(3)
             ->state(new Sequence(
                 ['name' => 'foo'],
@@ -122,12 +136,12 @@ class GetAdminStoresTest extends TestCase
                 ['name' => 'baz'],
             ))
             ->state(new Sequence(fn (Sequence $sequence) => [
-                'created_at' => (new Carbon())->addMinutes($sequence->index),
+                'created_at' => ($this->carbon::now())->addMinutes($sequence->index),
             ]))
             ->create();
 
-        $this->actingAs(UserFactory::new()->makeOne())
-            ->getJson('/stores/admin?name=ba')
+        $this->actingAs($this->userFactory->makeOne())
+            ->get('/stores/admin?name=ba')
             ->assertOk()
             ->assertJsonCount(2, 'data')
             ->assertJson(function (AssertableJson $json) use ($stores) {
@@ -143,8 +157,8 @@ class GetAdminStoresTest extends TestCase
 
     public function testQueryStringTypes(): void
     {
-        $this->actingAs(UserFactory::new()->makeOne())
-            ->getJson('/stores/admin?name[]=&country[]=&tag[]=&sort[]=')
+        $this->actingAs($this->userFactory->makeOne())
+            ->get('/stores/admin?name[]=&country[]=&tag[]=&sort[]=')
             ->assertOk();
     }
 }

@@ -9,37 +9,49 @@ use App\Groups\Users\UserFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\TestCase;
-use Tests\TestMiddleware;
 
 class GetStoreTest extends TestCase
 {
     use RefreshDatabase;
-    use TestMiddleware;
+
+    private UserFactory $userFactory;
+    private StoreFactory $storeFactory;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->userFactory = new UserFactory();
+        $this->storeFactory = new StoreFactory();
+    }
 
     public function testVerifiedMiddleware(): void
     {
-        $this->assertVerifiedMiddleware('GET /stores/1');
+        $this->actingAs($this->userFactory->unverified()->makeOne())
+            ->get('/stores/1')
+            ->assertConflict();
     }
 
     public function testAuthMiddleware(): void
     {
-        $this->assertAuthMiddleware('GET /stores/1');
+        $this->get('/stores/1')
+            ->assertUnauthorized();
     }
 
     public function testModelNotFound(): void
     {
-        $this->actingAs(UserFactory::new()->makeOne())
-            ->getJson('/stores/1')
+        $this->actingAs($this->userFactory->makeOne())
+            ->get('/stores/1')
             ->assertNotFound()
             ->assertExactJson(['message' => 'Model Not Found.']);
     }
 
     public function testGetStore(): void
     {
-        $store = StoreFactory::new()
+        $store = $this->storeFactory
             ->createOne();
 
-        $this->actingAs(UserFactory::new()->makeOne())
+        $this->actingAs($this->userFactory->makeOne())
             ->getJson('/stores/'.$store->id)
             ->assertOk()
             ->assertJson(function (AssertableJson $json) use ($store) {
