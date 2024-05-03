@@ -9,29 +9,41 @@ use App\Groups\Users\UserFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\TestCase;
-use Tests\TestMiddleware;
 
 class CreateBookmarkTagTest extends TestCase
 {
     use RefreshDatabase;
-    use TestMiddleware;
+
+    private UserFactory $userFactory;
+    private BookmarkTag $tag;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->userFactory = new UserFactory();
+        $this->tag = new BookmarkTag();
+    }
 
     public function testVerifiedMiddleware(): void
     {
-        $this->assertVerifiedMiddleware('POST /bookmark-tags');
+        $this->actingAs($this->userFactory->unverified()->makeOne())
+            ->post('/bookmark-tags')
+            ->assertConflict();
     }
 
     public function testAuthMiddleware(): void
     {
-        $this->assertAuthMiddleware('POST /bookmark-tags');
+        $this->post('/bookmark-tags')
+            ->assertUnauthorized();
     }
 
     public function testCreateBookmarkTag(): void
     {
-        $this->assertDatabaseCount(BookmarkTag::class, 0);
+        $this->assertDatabaseCount($this->tag::class, 0);
 
-        $this->actingAs(UserFactory::new()->makeOne())
-            ->postJson('/bookmark-tags', [
+        $this->actingAs($this->userFactory->makeOne())
+            ->post('/bookmark-tags', [
                 'name' => 'tag1',
             ])
             ->assertCreated()
@@ -43,11 +55,10 @@ class CreateBookmarkTagTest extends TestCase
                 ->where('id', 1)
                 ->where('name', 'tag1'));
 
-        $this->assertDatabaseCount(BookmarkTag::class, 1);
-
-        $this->assertDatabaseHas(BookmarkTag::class, [
-            'id' => 1,
-            'name' => 'tag1',
-        ]);
+        $this->assertDatabaseCount($this->tag::class, 1)
+            ->assertDatabaseHas(BookmarkTag::class, [
+                'id' => 1,
+                'name' => 'tag1',
+            ]);
     }
 }

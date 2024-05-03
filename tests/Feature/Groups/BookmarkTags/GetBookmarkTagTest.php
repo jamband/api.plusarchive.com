@@ -9,38 +9,50 @@ use App\Groups\Users\UserFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\TestCase;
-use Tests\TestMiddleware;
 
 class GetBookmarkTagTest extends TestCase
 {
     use RefreshDatabase;
-    use TestMiddleware;
+
+    private UserFactory $userFactory;
+    private BookmarkTagFactory $tagFactory;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->userFactory = new UserFactory();
+        $this->tagFactory = new BookmarkTagFactory();
+    }
 
     public function testVerifiedMiddleware(): void
     {
-        $this->assertVerifiedMiddleware('GET /bookmark-tags/1');
+        $this->actingAs($this->userFactory->unverified()->makeOne())
+            ->get('/bookmark-tags/1')
+            ->assertConflict();
     }
 
     public function testAuthMiddleware(): void
     {
-        $this->assertAuthMiddleware('GET /bookmark-tags/1');
+        $this->get('/bookmark-tags/1')
+            ->assertUnauthorized();
     }
 
     public function testModelNotFound(): void
     {
-        $this->actingAs(UserFactory::new()->makeOne())
-            ->getJson('/bookmark-tags/1')
+        $this->actingAs($this->userFactory->makeOne())
+            ->get('/bookmark-tags/1')
             ->assertNotFound()
             ->assertExactJson(['message' => 'Model Not Found.']);
     }
 
     public function testGetBookmarkTag(): void
     {
-        $tag = BookmarkTagFactory::new()
+        $tag = $this->tagFactory
             ->createOne();
 
-        $this->actingAs(UserFactory::new()->makeOne())
-            ->getJson('/bookmark-tags/'.$tag->id)
+        $this->actingAs($this->userFactory->makeOne())
+            ->get('/bookmark-tags/'.$tag->id)
             ->assertOk()
             ->assertJson(function (AssertableJson $json) use ($tag) {
                 $json->where('id', $tag->id)

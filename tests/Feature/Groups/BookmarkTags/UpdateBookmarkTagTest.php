@@ -1,36 +1,48 @@
 <?php
 
+
 declare(strict_types=1);
 
 namespace Tests\Feature\Groups\BookmarkTags;
 
-use App\Groups\BookmarkTags\BookmarkTag;
 use App\Groups\BookmarkTags\BookmarkTagFactory;
 use App\Groups\Users\UserFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\TestCase;
-use Tests\TestMiddleware;
 
 class UpdateBookmarkTagTest extends TestCase
 {
     use RefreshDatabase;
-    use TestMiddleware;
+
+    private UserFactory $userFactory;
+    private BookmarkTagFactory $tagFactory;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->userFactory = new UserFactory();
+        $this->tagFactory = new BookmarkTagFactory();
+    }
 
     public function testVerifiedMiddleware(): void
     {
-        $this->assertVerifiedMiddleware('PUT /bookmark-tags/1');
+        $this->actingAs($this->userFactory->unverified()->makeOne())
+            ->put('/bookmark-tags/1')
+            ->assertConflict();
     }
 
     public function testAuthMiddleware(): void
     {
-        $this->assertAuthMiddleware('PUT /bookmark-tags/1');
+        $this->put('/bookmark-tags/1')
+            ->assertUnauthorized();
     }
 
     public function testModelNotFound(): void
     {
-        $this->actingAs(UserFactory::new()->makeOne())
-            ->putJson('/bookmark-tags/1', [
+        $this->actingAs($this->userFactory->makeOne())
+            ->put('/bookmark-tags/1', [
                 'name' => 'foo',
             ])
             ->assertNotFound()
@@ -39,13 +51,13 @@ class UpdateBookmarkTagTest extends TestCase
 
     public function testUpdateBookmarkTag(): void
     {
-        $tag = BookmarkTagFactory::new()
+        $tag = $this->tagFactory
             ->createOne();
 
-        $this->assertDatabaseCount(BookmarkTag::class, 1);
+        $this->assertDatabaseCount($tag::class, 1);
 
-        $this->actingAs(UserFactory::new()->makeOne())
-            ->putJson('/bookmark-tags/'.$tag->id, [
+        $this->actingAs($this->userFactory->makeOne())
+            ->put('/bookmark-tags/'.$tag->id, [
                 'name' => 'updated_tag1',
             ])
             ->assertOk()
@@ -54,11 +66,10 @@ class UpdateBookmarkTagTest extends TestCase
                     ->where('name', 'updated_tag1');
             });
 
-        $this->assertDatabaseCount(BookmarkTag::class, 1);
-
-        $this->assertDatabaseHas(BookmarkTag::class, [
-            'id' => $tag->id,
-            'name' => 'updated_tag1',
-        ]);
+        $this->assertDatabaseCount($tag::class, 1)
+            ->assertDatabaseHas($tag::class, [
+                'id' => $tag->id,
+                'name' => 'updated_tag1',
+            ]);
     }
 }

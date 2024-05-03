@@ -15,19 +15,30 @@ class UpdateBookmarkTagRulesTest extends TestCase
 {
     use RefreshDatabase;
 
+    private UserFactory $userFactory;
+    private BookmarkTagFactory $tagFactory;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->userFactory = new UserFactory();
+        $this->tagFactory = new BookmarkTagFactory();
+    }
+
     /**
      * @param array<string, mixed> $data
      */
-    protected function request(array $data = []): TestResponse
+    protected function request(array $data): TestResponse
     {
-        return $this->actingAs(UserFactory::new()->makeOne())
-            ->putJson('/bookmark-tags/1', $data)
+        return $this->actingAs($this->userFactory->makeOne())
+            ->put('/bookmark-tags/1', $data)
             ->assertUnprocessable();
     }
 
     public function testNameRequiredRule(): void
     {
-        $this->request()
+        $this->request(['name' => null])
             ->assertJsonPath('errors.name', __('validation.required', [
                 'attribute' => 'name',
             ]));
@@ -51,7 +62,7 @@ class UpdateBookmarkTagRulesTest extends TestCase
 
     public function testNameUniqueRule(): void
     {
-        BookmarkTagFactory::new()
+        $this->tagFactory
             ->count(2)
             ->state(new Sequence(
                 ['name' => 'foo'],
