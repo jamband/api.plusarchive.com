@@ -9,29 +9,41 @@ use App\Groups\Users\UserFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\TestCase;
-use Tests\TestMiddleware;
 
 class CreateTrackGenreTest extends TestCase
 {
     use RefreshDatabase;
-    use TestMiddleware;
+
+    private UserFactory $userFactory;
+    private TrackGenre $genre;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->userFactory = new UserFactory();
+        $this->genre = new TrackGenre();
+    }
 
     public function testVerifiedMiddleware(): void
     {
-        $this->assertVerifiedMiddleware('POST /track-genres');
+        $this->actingAs($this->userFactory->unverified()->makeOne())
+            ->post('/track-genres')
+            ->assertConflict();
     }
 
     public function testAuthMiddleware(): void
     {
-        $this->assertAuthMiddleware('POST /track-genres');
+        $this->post('/track-genres')
+            ->assertUnauthorized();
     }
 
     public function testCreateGenre(): void
     {
-        $this->assertDatabaseCount(TrackGenre::class, 0);
+        $this->assertDatabaseCount($this->genre::class, 0);
 
-        $this->actingAs(UserFactory::new()->makeOne())
-            ->postJson('/track-genres', [
+        $this->actingAs($this->userFactory->makeOne())
+            ->post('/track-genres', [
                 'name' => 'genre1',
             ])
             ->assertCreated()
@@ -43,11 +55,10 @@ class CreateTrackGenreTest extends TestCase
                 ->where('id', 1)
                 ->where('name', 'genre1'));
 
-        $this->assertDatabaseCount(TrackGenre::class, 1);
-
-        $this->assertDatabaseHas(TrackGenre::class, [
-            'id' => 1,
-            'name' => 'genre1',
-        ]);
+        $this->assertDatabaseCount($this->genre::class, 1)
+            ->assertDatabaseHas($this->genre::class, [
+                'id' => 1,
+                'name' => 'genre1',
+            ]);
     }
 }

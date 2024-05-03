@@ -4,47 +4,58 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Groups\TrackGenres;
 
-use App\Groups\TrackGenres\TrackGenre;
 use App\Groups\TrackGenres\TrackGenreFactory;
 use App\Groups\Users\UserFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
-use Tests\TestMiddleware;
 
 class DeleteTrackGenreTest extends TestCase
 {
     use RefreshDatabase;
-    use TestMiddleware;
+
+    private UserFactory $userFactory;
+    private TrackGenreFactory $genreFactory;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->userFactory = new UserFactory();
+        $this->genreFactory = new TrackGenreFactory();
+    }
 
     public function testVerifiedMiddleware(): void
     {
-        $this->assertVerifiedMiddleware('DELETE /track-genres/1');
+        $this->actingAs($this->userFactory->unverified()->makeOne())
+            ->delete('/track-genres/1')
+            ->assertConflict();
     }
 
     public function testAuthMiddleware(): void
     {
-        $this->assertAuthMiddleware('DELETE /track-genres/1');
+        $this->delete('/track-genres/1')
+            ->assertUnauthorized();
     }
 
     public function testModelNotFound(): void
     {
-        $this->actingAs(UserFactory::new()->makeOne())
-            ->deleteJson('/track-genres/1')
+        $this->actingAs($this->userFactory->makeOne())
+            ->delete('/track-genres/1')
             ->assertNotFound()
             ->assertExactJson(['message' => 'Model Not Found.']);
     }
 
     public function testDeleteGenre(): void
     {
-        $genre = TrackGenreFactory::new()
+        $genre = $this->genreFactory
             ->createOne();
 
-        $this->assertDatabaseCount(TrackGenre::class, 1);
+        $this->assertDatabaseCount($genre::class, 1);
 
-        $this->actingAs(UserFactory::new()->makeOne())
-            ->deleteJson('/track-genres/'.$genre->id)
+        $this->actingAs($this->userFactory->makeOne())
+            ->delete('/track-genres/'.$genre->id)
             ->assertNoContent();
 
-        $this->assertDatabaseCount(TrackGenre::class, 0);
+        $this->assertDatabaseCount($genre::class, 0);
     }
 }

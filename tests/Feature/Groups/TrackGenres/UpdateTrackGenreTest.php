@@ -4,33 +4,44 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Groups\TrackGenres;
 
-use App\Groups\TrackGenres\TrackGenre;
 use App\Groups\TrackGenres\TrackGenreFactory;
 use App\Groups\Users\UserFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\TestCase;
-use Tests\TestMiddleware;
 
 class UpdateTrackGenreTest extends TestCase
 {
     use RefreshDatabase;
-    use TestMiddleware;
+
+    private UserFactory $userFactory;
+    private TrackGenreFactory $genreFactory;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->userFactory = new UserFactory();
+        $this->genreFactory = new TrackGenreFactory();
+    }
 
     public function testVerifiedMiddleware(): void
     {
-        $this->assertVerifiedMiddleware('PUT /track-genres/1');
+        $this->actingAs($this->userFactory->unverified()->makeOne())
+            ->put('/track-genres/1')
+            ->assertConflict();
     }
 
     public function testAuthMiddleware(): void
     {
-        $this->assertAuthMiddleware('PUT /track-genres/1');
+        $this->put('/track-genres/1')
+            ->assertUnauthorized();
     }
 
     public function testModelNotFound(): void
     {
-        $this->actingAs(UserFactory::new()->makeOne())
-            ->putJson('/track-genres/1', [
+        $this->actingAs($this->userFactory->makeOne())
+            ->put('/track-genres/1', [
                 'name' => 'updated_genre1',
             ])
             ->assertNotFound()
@@ -39,13 +50,13 @@ class UpdateTrackGenreTest extends TestCase
 
     public function testUpdateGenre(): void
     {
-        $genre = TrackGenreFactory::new()
+        $genre = $this->genreFactory
             ->createOne();
 
-        $this->assertDatabaseCount(TrackGenre::class, 1);
+        $this->assertDatabaseCount($genre::class, 1);
 
-        $this->actingAs(UserFactory::new()->makeOne())
-            ->putJson('/track-genres/'.$genre->id, [
+        $this->actingAs($this->userFactory->makeOne())
+            ->put('/track-genres/'.$genre->id, [
                 'name' => 'updated_genre1',
             ])
             ->assertOk()
@@ -54,11 +65,10 @@ class UpdateTrackGenreTest extends TestCase
                     ->where('name', 'updated_genre1');
             });
 
-        $this->assertDatabaseCount(TrackGenre::class, 1);
-
-        $this->assertDatabaseHas(TrackGenre::class, [
-            'id' => $genre->id,
-            'name' => 'updated_genre1',
-        ]);
+        $this->assertDatabaseCount($genre::class, 1)
+            ->assertDatabaseHas($genre::class, [
+                'id' => $genre->id,
+                'name' => 'updated_genre1',
+            ]);
     }
 }

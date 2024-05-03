@@ -14,19 +14,30 @@ class CreateTrackGenreRulesTest extends TestCase
 {
     use RefreshDatabase;
 
+    private UserFactory $userFactory;
+    private TrackGenreFactory $genreFactory;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->userFactory = new UserFactory();
+        $this->genreFactory = new TrackGenreFactory();
+    }
+
     /**
      * @param array<string, mixed> $data
      */
-    protected function request(array $data = []): TestResponse
+    protected function request(array $data): TestResponse
     {
-        return $this->actingAs(UserFactory::new()->makeOne())
-            ->postJson('/track-genres', $data)
+        return $this->actingAs($this->userFactory->makeOne())
+            ->post('/track-genres', $data)
             ->assertUnprocessable();
     }
 
     public function testNameRequiredRule(): void
     {
-        $this->request()
+        $this->request(['name' => null])
             ->assertJsonPath('errors.name', __('validation.required', [
                 'attribute' => 'name',
             ]));
@@ -50,7 +61,7 @@ class CreateTrackGenreRulesTest extends TestCase
 
     public function testNameUniqueRule(): void
     {
-        $genre = TrackGenreFactory::new()
+        $genre = $this->genreFactory
             ->createOne();
 
         $this->request(['name' => $genre->name])
