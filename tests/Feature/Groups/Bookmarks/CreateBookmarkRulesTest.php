@@ -62,7 +62,7 @@ class CreateBookmarkRulesTest extends TestCase
 
     public function testCountryRequiredRule(): void
     {
-        $this->request(['country' => Null])
+        $this->request(['country' => null])
             ->assertJsonPath('errors.country', __('validation.required', [
                 'attribute' => 'country',
             ]));
@@ -78,7 +78,7 @@ class CreateBookmarkRulesTest extends TestCase
 
     public function testUrlRequiredRule(): void
     {
-        $this->request(['url' => Null])
+        $this->request(['url' => null])
             ->assertJsonPath('errors.url', __('validation.required', [
                 'attribute' => 'url',
             ]));

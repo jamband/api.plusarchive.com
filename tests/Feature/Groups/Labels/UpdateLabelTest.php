@@ -22,7 +22,7 @@ class UpdateLabelTest extends TestCase
     private CountryFactory $countryFactory;
     private LabelFactory $labelFactory;
     private LabelTagFactory $tagFactory;
-    private LabelTag $labelTag;
+    private LabelTag $tag;
 
     protected function setUp(): void
     {
@@ -32,7 +32,7 @@ class UpdateLabelTest extends TestCase
         $this->countryFactory = new CountryFactory();
         $this->labelFactory = new LabelFactory();
         $this->tagFactory = new LabelTagFactory();
-        $this->tag = New LabelTag();
+        $this->tag = new LabelTag();
     }
 
     public function testVerifiedMiddleware(): void
