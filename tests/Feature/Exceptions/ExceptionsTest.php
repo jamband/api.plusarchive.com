@@ -4,61 +4,83 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Exceptions;
 
+use App\Groups\Users\UserFactory;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Router;
-use Illuminate\Routing\RouteRegistrar;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Tests\TestCase;
 
 class ExceptionsTest extends TestCase
 {
-    private RouteRegistrar $router;
+    private Router $router;
+    private string $uri;
+    private UserFactory $userFactory;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        /** @var Router $router */
-        $router = $this->app->make(Router::class);
-        $this->router = $router->middleware('web');
+        $this->router = $this->app->make(Router::class);
+        $this->uri = uniqid('/testing-');
+        $this->userFactory = new UserFactory();
     }
 
-    public function testBadRequestHttpException(): void
+    public function testBadRequest(): void
     {
-        $this->router->get('/', function () {
+        $this->router->get($this->uri, function () {
             throw new BadRequestHttpException('foo');
         });
 
-        $this->get('/')
+        $this->get($this->uri)
             ->assertBadRequest()
             ->assertExactJson(['message' => 'foo']);
     }
 
-    public function testNotFoundHttpException(): void
+    public function testUnauthorized(): void
     {
-        $this->router->get('/foo', fn () => []);
+        $this->router->middleware('auth')
+            ->get($this->uri);
 
-        $this->get('/bar')
+        $this->getJson($this->uri)
+            ->assertUnauthorized()
+            ->assertExactJson(['message' => 'Unauthenticated.']);
+    }
+
+
+    public function testNotFound(): void
+    {
+        $this->get($this->uri)
             ->assertNotFound()
             ->assertExactJson(['message' => 'Not Found.']);
     }
 
-    public function testMethodNotAllowedHttpException(): void
+    public function testMethodNotAllowed(): void
     {
-        $this->router->post('/', fn () => []);
+        $this->router->post($this->uri);
 
-        $this->get('/')
+        $this->get($this->uri)
             ->assertMethodNotAllowed()
             ->assertExactJson(['message' => 'Method Not Allowed.']);
     }
 
-    public function testValidationException(): void
+    public function testVerifiedEmail(): void
     {
-        $this->router->post('/', function (Request $request) {
+        $this->router->middleware('verified')
+            ->get($this->uri);
+
+        $this->actingAs($this->userFactory->unverified()->makeOne())
+            ->get($this->uri)
+            ->assertConflict()
+            ->assertExactJson(['message' => 'Your email address is not verified.']);
+    }
+
+    public function testValidation(): void
+    {
+        $this->router->post($this->uri, function (Request $request) {
             $request->validate(['foo' => 'required']);
         });
 
-        $this->post('/')
+        $this->post($this->uri)
             ->assertUnprocessable()
             ->assertExactJson(['errors.foo' => __('validation.required', [
                 'attribute' => 'foo',
