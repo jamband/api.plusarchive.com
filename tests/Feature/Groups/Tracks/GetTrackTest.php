@@ -34,20 +34,17 @@ class GetTrackTest extends TestCase
         $this->get('/tracks/1')
             ->assertNotFound()
             ->assertExactJson(['message' => 'Not Found.']);
-    }
 
-    public function testModelNotFound(): void
-    {
         $this->get('/tracks/'.$this->hashids->encode(1))
             ->assertNotFound()
-            ->assertExactJson(['message' => 'Model Not Found.']);
+            ->assertExactJson(['message' => 'Not Found.']);
     }
 
-    public function testModelNotFoundWithInvalidHashValue(): void
+    public function testNotFoundWithInvalidHashValue(): void
     {
         $this->get('/tracks/'.str_repeat('a', 11))
             ->assertNotFound()
-            ->assertExactJson(['message' => 'Model Not Found.']);
+            ->assertExactJson(['message' => 'Not Found.']);
     }
 
     public function testGetTrack(): void

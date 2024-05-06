@@ -48,7 +48,7 @@ class UpdateLabelTest extends TestCase
             ->assertUnauthorized();
     }
 
-    public function testModelNotFound(): void
+    public function testNotFound(): void
     {
         $country = $this->countryFactory
             ->createOne();
@@ -60,7 +60,7 @@ class UpdateLabelTest extends TestCase
                 'url' => 'https://url1.dev',
             ])
             ->assertNotFound()
-            ->assertExactJson(['message' => 'Model Not Found.']);
+            ->assertExactJson(['message' => 'Not Found.']);
     }
 
     public function testUpdateLabel(): void

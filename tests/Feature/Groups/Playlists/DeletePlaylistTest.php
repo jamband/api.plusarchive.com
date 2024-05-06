@@ -45,22 +45,19 @@ class DeletePlaylistTest extends TestCase
         $this->delete('/playlists/1')
             ->assertNotFound()
             ->assertExactJson(['message' => 'Not Found.']);
-    }
 
-    public function testModelNotFound(): void
-    {
         $this->actingAs($this->userFactory->makeOne())
             ->delete('/playlists/'.$this->hashids->encode(1))
             ->assertNotFound()
-            ->assertExactJson(['message' => 'Model Not Found.']);
+            ->assertExactJson(['message' => 'Not Found.']);
     }
 
-    public function testModelNotFoundWithInvalidHashValue(): void
+    public function testNotFoundWithInvalidHashValue(): void
     {
         $this->actingAs($this->userFactory->makeOne())
             ->delete('/playlists/'.str_repeat('a', 11))
             ->assertNotFound()
-            ->assertExactJson(['message' => 'Model Not Found.']);
+            ->assertExactJson(['message' => 'Not Found.']);
     }
 
     public function testDeletePlaylist(): void

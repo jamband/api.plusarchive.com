@@ -43,12 +43,12 @@ class DeleteStoreTest extends TestCase
             ->assertUnauthorized();
     }
 
-    public function testModelNotFound(): void
+    public function testNotFound(): void
     {
         $this->actingAs($this->userFactory->makeOne())
             ->delete('/stores/1')
             ->assertNotFound()
-            ->assertExactJson(['message' => 'Model Not Found.']);
+            ->assertExactJson(['message' => 'Not Found.']);
     }
 
     public function testDeleteStore(): void

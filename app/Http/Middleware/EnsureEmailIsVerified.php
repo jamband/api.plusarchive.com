@@ -6,9 +6,9 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\ResponseFactory;
+use Symfony\Component\HttpFoundation\Response;
 
 readonly class EnsureEmailIsVerified
 {
@@ -17,15 +17,18 @@ readonly class EnsureEmailIsVerified
     ) {
     }
 
-    public function handle(Request $request, Closure $next): JsonResponse|null
+    /**
+     * @param Closure(Request): (Response) $next
+     */
+    public function handle(Request $request, Closure $next): Response
     {
         if (
-            $request->user() instanceof MustVerifyEmail &&
-            !$request->user()->hasVerifiedEmail()
+            !$request->user() ||
+            ($request->user() instanceof MustVerifyEmail && !$request->user()->hasVerifiedEmail())
         ) {
-            return $this->response->json(
-                data: ['message' => 'Your email address is not verified.'],
-                status: 409,
+            return $this->response->make(
+                ['message' => 'Your email address is not verified.'],
+                409,
             );
         }
 

@@ -6,36 +6,35 @@ namespace Tests\Feature\Http\Middleware;
 
 use App\Http\Middleware\ForceJsonResponse;
 use Illuminate\Routing\Router;
-use Illuminate\Routing\RouteRegistrar;
 use Tests\TestCase;
 
 class ForceJsonResponseTest extends TestCase
 {
-    private RouteRegistrar $router;
+    private Router $router;
+    private string $uri;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        /** @var Router $router */
-        $router = $this->app->make(Router::class);
-        $this->router = $router->middleware('web');
+        $this->router = $this->app->make(Router::class);
+        $this->uri = uniqid('/testing-');
     }
 
     public function testWithoutForceJsonResponse(): void
     {
-        $this->router->get('/', fn () => $this->app->abort(400));
+        $this->router->get($this->uri);
 
         $this->withoutMiddleware(ForceJsonResponse::class)
-            ->head('/')
+            ->head($this->uri)
             ->assertHeader('Content-Type', 'text/html; charset=UTF-8');
     }
 
     public function testForceJsonResponse(): void
     {
-        $this->router->get('/', fn () => $this->app->abort(400));
+        $this->router->get($this->uri);
 
-        $this->head('/')
+        $this->head($this->uri)
             ->assertHeader('Content-Type', 'application/json');
     }
 }

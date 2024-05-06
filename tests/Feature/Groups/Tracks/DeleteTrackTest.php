@@ -52,22 +52,19 @@ class DeleteTrackTest extends TestCase
         $this->delete('/tracks/1')
             ->assertNotFound()
             ->assertExactJson(['message' => 'Not Found.']);
-    }
 
-    public function testModelNotFound(): void
-    {
         $this->actingAs($this->userFactory->makeOne())
             ->delete('/tracks/'.$this->hashids->encode(1))
             ->assertNotFound()
-            ->assertExactJson(['message' => 'Model Not Found.']);
+            ->assertExactJson(['message' => 'Not Found.']);
     }
 
-    public function testModelNotFoundWithInvalidHashValue(): void
+    public function testNotFoundWithInvalidHashValue(): void
     {
         $this->actingAs($this->userFactory->makeOne())
             ->delete('/tracks/'.str_repeat('a', 11))
             ->assertNotFound()
-            ->assertExactJson(['message' => 'Model Not Found.']);
+            ->assertExactJson(['message' => 'Not Found.']);
     }
 
     public function testDeleteTrack(): void

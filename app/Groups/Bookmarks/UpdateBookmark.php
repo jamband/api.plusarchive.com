@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Groups\Bookmarks;
 
-use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Routing\ResponseFactory;
 
@@ -18,17 +18,15 @@ class UpdateBookmark extends Controller
         $this->middleware('auth');
     }
 
-    public function __invoke(
-        UpdateBookmarkRequest $request,
-        int $id,
-    ): JsonResponse {
+    public function __invoke(UpdateBookmarkRequest $request, int $id): Response
+    {
         $bookmark = $this->bookmark->findOrFail($id);
         assert($bookmark instanceof Bookmark);
 
         $request->save($bookmark);
 
-        return $this->response->json(
-            data: new BookmarkAdminResource($bookmark),
+        return $this->response->make(
+            new BookmarkAdminResource($bookmark),
         );
     }
 }

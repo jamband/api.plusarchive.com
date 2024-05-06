@@ -7,9 +7,10 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Auth\AuthManager;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Routing\ResponseFactory;
 
-readonly class RedirectIfAuthenticated
+readonly class EnsureNotAuthenticated
 {
     public function __construct(
         private AuthManager $auth,
@@ -17,15 +18,15 @@ readonly class RedirectIfAuthenticated
     ) {
     }
 
-    public function handle(Request $request, Closure $next, mixed ...$guards): mixed
+    public function handle(Request $request, Closure $next, string ...$guards): Response
     {
         $guards = empty($guards) ? [null] : $guards;
 
         foreach ($guards as $guard) {
             if ($this->auth->guard($guard)->check()) {
-                return $this->response->json(
-                    data: ['message' => 'Bad Request.'],
-                    status: 400,
+                return $this->response->make(
+                    ['message' => 'Bad Request.'],
+                    400,
                 );
             }
         }

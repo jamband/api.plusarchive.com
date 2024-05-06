@@ -5,7 +5,7 @@ declare(strict_types=1);
 use Illuminate\Support\Str;
 
 return [
-    'default' => 'apc',
+    'default' => env('CACHE_STORE', 'apc'),
     'stores' => [
         'apc' => [
             'driver' => 'apc',

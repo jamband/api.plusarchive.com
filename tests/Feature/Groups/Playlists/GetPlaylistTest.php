@@ -30,20 +30,17 @@ class GetPlaylistTest extends TestCase
         $this->get('/playlists/1')
             ->assertNotFound()
             ->assertExactJson(['message' => 'Not Found.']);
-    }
 
-    public function testModelNotFound(): void
-    {
         $this->get('/playlists/'.$this->hashids->encode(1))
             ->assertNotFound()
-            ->assertExactJson(['message' => 'Model Not Found.']);
+            ->assertExactJson(['message' => 'Not Found.']);
     }
 
-    public function testModelNotFoundWithInvalidHashValue(): void
+    public function testNotFoundWithInvalidHashValue(): void
     {
         $this->get('/playlists/'.str_repeat('a', 11))
             ->assertNotFound()
-            ->assertExactJson(['message' => 'Model Not Found.']);
+            ->assertExactJson(['message' => 'Not Found.']);
     }
 
     public function testGetPlaylist(): void

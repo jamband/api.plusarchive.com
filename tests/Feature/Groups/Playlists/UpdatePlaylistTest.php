@@ -50,10 +50,7 @@ class UpdatePlaylistTest extends TestCase
         $this->put('/playlists/1')
             ->assertNotFound()
             ->assertExactJson(['message' => 'Not Found.']);
-    }
 
-    public function testModelNotFound(): void
-    {
         $this->partialMock($this->ripple::class, function (MockInterface $mock) {
             $mock->shouldReceive('id')->andReturn('updated_key1');
             $mock->shouldReceive('image')->andReturn('updated-image1');
@@ -65,10 +62,10 @@ class UpdatePlaylistTest extends TestCase
                 'title' => 'updated_title1',
             ])
             ->assertNotFound()
-            ->assertExactJson(['message' => 'Model Not Found.']);
+            ->assertExactJson(['message' => 'Not Found.']);
     }
 
-    public function testModelNotFoundWithInvalidHashValue(): void
+    public function testNotFoundWithInvalidHashValue(): void
     {
         $this->partialMock($this->ripple::class, function (MockInterface $mock) {
             $mock->shouldReceive('id')->andReturn('updated_key1');
@@ -81,7 +78,7 @@ class UpdatePlaylistTest extends TestCase
                 'title' => 'updated_title1',
             ])
             ->assertNotFound()
-            ->assertExactJson(['message' => 'Model Not Found.']);
+            ->assertExactJson(['message' => 'Not Found.']);
     }
 
     public function testUpdatePlaylist(): void

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Groups\Auth;
 
-use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Routing\ResponseFactory;
 
@@ -16,14 +16,11 @@ class Login extends Controller
         $this->middleware('guest');
     }
 
-    public function __invoke(
-        LoginRequest $request,
-    ): JsonResponse {
+    public function __invoke(LoginRequest $request): Response
+    {
         $request->authenticate();
         $request->session()->regenerate();
 
-        return $this->response->json(
-            status: 204,
-        );
+        return $this->response->noContent();
     }
 }

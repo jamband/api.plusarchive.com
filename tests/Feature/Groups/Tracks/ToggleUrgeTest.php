@@ -47,14 +47,11 @@ class ToggleUrgeTest extends TestCase
         $this->patch('/tracks/1/toggle-urge')
             ->assertNotFound()
             ->assertExactJson(['message' => 'Not Found.']);
-    }
 
-    public function testModelNotFound(): void
-    {
         $this->actingAs($this->userFactory->makeOne())
             ->patch('/tracks/'.$this->hashids->encode(1).'/toggle-urge')
             ->assertNotFound()
-            ->assertExactJson(['message' => 'Model Not Found.']);
+            ->assertExactJson(['message' => 'Not Found.']);
     }
 
     public function testBadRequest(): void

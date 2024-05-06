@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Groups\Bookmarks;
 
-use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Routing\ResponseFactory;
 
@@ -18,14 +18,12 @@ class DeleteBookmark extends Controller
         $this->middleware('auth');
     }
 
-    public function __invoke(int $id): JsonResponse
+    public function __invoke(int $id): Response
     {
         $this->bookmark::query()
             ->findOrFail($id)
             ->delete();
 
-        return $this->response->json(
-            status: 204,
-        );
+        return $this->response->noContent();
     }
 }

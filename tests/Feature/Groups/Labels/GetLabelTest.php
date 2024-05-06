@@ -39,12 +39,12 @@ class GetLabelTest extends TestCase
             ->assertUnauthorized();
     }
 
-    public function testModelNotFound(): void
+    public function testNotFound(): void
     {
         $this->actingAs($this->userFactory->makeOne())
             ->get('/labels/1')
             ->assertNotFound()
-            ->assertExactJson(['message' => 'Model Not Found.']);
+            ->assertExactJson(['message' => 'Not Found.']);
     }
 
     public function testGetLabel(): void

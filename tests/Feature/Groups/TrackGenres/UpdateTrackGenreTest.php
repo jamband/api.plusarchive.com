@@ -38,14 +38,14 @@ class UpdateTrackGenreTest extends TestCase
             ->assertUnauthorized();
     }
 
-    public function testModelNotFound(): void
+    public function testNotFound(): void
     {
         $this->actingAs($this->userFactory->makeOne())
             ->put('/track-genres/1', [
                 'name' => 'updated_genre1',
             ])
             ->assertNotFound()
-            ->assertExactJson(['message' => 'Model Not Found.']);
+            ->assertExactJson(['message' => 'Not Found.']);
     }
 
     public function testUpdateGenre(): void

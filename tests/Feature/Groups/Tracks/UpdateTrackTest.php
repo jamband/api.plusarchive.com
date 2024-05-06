@@ -64,10 +64,7 @@ class UpdateTrackTest extends TestCase
         $this->put('/tracks/1')
             ->assertNotFound()
             ->assertExactJson(['message' => 'Not Found.']);
-    }
 
-    public function testModelNotFound(): void
-    {
         $this->partialMock($this->ripple::class, function (MockInterface $mock) {
             $mock->shouldReceive('id')->andReturn('updated_key1');
             $mock->shouldReceive('image')->andReturn('updated-image1');
@@ -79,10 +76,10 @@ class UpdateTrackTest extends TestCase
                 'url' => 'https://soundcloud.com/updated-foo/updated-bar',
             ])
             ->assertNotFound()
-            ->assertExactJson(['message' => 'Model Not Found.']);
+            ->assertExactJson(['message' => 'Not Found.']);
     }
 
-    public function testModelNotFoundWithInvalidHashValue(): void
+    public function testNotFoundWithInvalidHashValue(): void
     {
         $this->partialMock($this->ripple::class, function (MockInterface $mock) {
             $mock->shouldReceive('id')->andReturn('updated_key1');
@@ -95,7 +92,7 @@ class UpdateTrackTest extends TestCase
                 'url' => 'https://soundcloud.com/updated-foo/updated-bar',
             ])
             ->assertNotFound()
-            ->assertExactJson(['message' => 'Model Not Found.']);
+            ->assertExactJson(['message' => 'Not Found.']);
     }
 
     public function testUpdateTrack(): void

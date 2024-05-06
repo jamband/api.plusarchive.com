@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Groups\Auth;
 
-use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Routing\ResponseFactory;
 
@@ -16,10 +16,10 @@ class GetUser extends Controller
         $this->middleware('auth');
     }
 
-    public function __invoke(): JsonResponse
+    public function __invoke(): Response
     {
-        return $this->response->json(
-            data: ['role' => 'admin'],
-        );
+        return $this->response->make([
+            'role' => 'admin',
+        ]);
     }
 }

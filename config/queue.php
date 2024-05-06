@@ -16,6 +16,10 @@ return [
             'after_commit' => false,
         ],
     ],
+    'batching' => [
+        'database' => env('DB_CONNECTION', 'mysql'),
+        'table' => 'job_batches',
+    ],
     'failed' => [
         'driver' => env('QUEUE_FAILED_DRIVER', 'database-uuids'),
         'database' => env('DB_CONNECTION', 'mysql'),
