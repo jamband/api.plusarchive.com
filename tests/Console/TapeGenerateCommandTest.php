@@ -29,7 +29,7 @@ class TapeGenerateCommandTest extends TestCase
 
         $this->providerFactory = new MusicProviderFactory();
         $this->trackFactory = new TrackFactory();
-        $this->carbon = new Carbon();
+        $this->carbon = $this->app->make(Carbon::class);
         $this->file = $this->app->make(Filesystem::class);
         $this->tapePath = $this->app->storagePath('app/tapes/test-tape.json');
     }
@@ -122,13 +122,12 @@ class TapeGenerateCommandTest extends TestCase
         $tape = file_get_contents($this->tapePath);
 
         $tape = json_decode($tape);
-        $date = $this->carbon::now();
 
         $this->assertCount(5, get_object_vars($tape));
         $this->assertSame(777, $tape->id);
         $this->assertSame('Test / Tape', $tape->title);
-        $this->assertSame('/'.$date->format('Y').'/'.$date->format('m').'/test-tape', $tape->path);
-        $this->assertSame($date->format('M d, Y'), $tape->date);
+        $this->assertSame('/'.$this->carbon->format('Y').'/'.$this->carbon->format('m').'/test-tape', $tape->path);
+        $this->assertSame($this->carbon->format('M d, Y'), $tape->date);
         $this->assertCount(4, $tape->items);
 
         $item1 = $tape->items[0];

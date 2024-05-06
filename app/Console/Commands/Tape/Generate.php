@@ -50,12 +50,10 @@ class Generate extends Command
             $items[$i]['slug'] = Str::slug($item['title']);
         }
 
-        $now = $carbon::now();
-
         $data['id'] = (int)$id;
         $data['title'] = $title;
-        $data['path'] = '/'.$now->format('Y').'/'.$now->format('m').'/'.Str::slug($title);
-        $data['date'] = $now->format('M d, Y');
+        $data['path'] = '/'.$carbon->format('Y').'/'.$carbon->format('m').'/'.Str::slug($title);
+        $data['date'] = $carbon->format('M d, Y');
         $data['items'] = $items;
 
         $data = json_encode(

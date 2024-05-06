@@ -60,7 +60,7 @@ class GetCsrfCookieTest extends TestCase
 
     private function expires(): string
     {
-        return $this->carbon::now()
+        return $this->carbon
             ->addMinutes($this->app['config']['session.lifetime'])
             ->format('D, d M Y H:i:s \G\M\T');
     }

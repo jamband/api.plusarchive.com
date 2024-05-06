@@ -18,13 +18,16 @@ class PlaylistFactory extends Factory
 
     public function definition(): array
     {
+        $providerFactory = new MusicProviderFactory();
+        $carbon = new Carbon();
+
         return [
             'url' => $this->faker->url(),
-            'provider_id' => MusicProviderFactory::new(),
+            'provider_id' => $providerFactory,
             'provider_key' => Str::random(10),
             'title' => $this->faker->title(),
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now(),
+            'created_at' => $carbon,
+            'updated_at' => $carbon,
         ];
     }
 }

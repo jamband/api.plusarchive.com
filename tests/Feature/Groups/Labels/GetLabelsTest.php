@@ -44,7 +44,7 @@ class GetLabelsTest extends TestCase
                 relationship: 'tags',
             )
             ->state(new Sequence(fn (Sequence $sequence) => [
-                'created_at' => ($this->carbon::now())->addMinutes($sequence->index),
+                'created_at' => ($this->carbon)->addMinutes($sequence->index),
             ]))
             ->create();
 
@@ -100,7 +100,7 @@ class GetLabelsTest extends TestCase
                     ->state(['name' => 'bar']),
             )
             ->state(new Sequence(fn (Sequence $sequence) => [
-                'created_at' => ($this->carbon::now())->addMinutes($sequence->index),
+                'created_at' => ($this->carbon)->addMinutes($sequence->index),
             ]))
             ->create();
 
@@ -160,7 +160,7 @@ class GetLabelsTest extends TestCase
         $labels = $this->labelFactory
             ->count(2)
             ->state(new Sequence(fn (Sequence $sequence) => [
-                'created_at' => ($this->carbon::now())->addMinutes($sequence->index),
+                'created_at' => ($this->carbon)->addMinutes($sequence->index),
             ]))
             ->create();
 
@@ -235,7 +235,7 @@ class GetLabelsTest extends TestCase
                 ['country_id' => 2],
             ))
             ->state(new Sequence(fn (Sequence $sequence) => [
-                'created_at' => ($this->carbon::now())->addMinutes($sequence->index),
+                'created_at' => ($this->carbon)->addMinutes($sequence->index),
             ]))
             ->create();
 

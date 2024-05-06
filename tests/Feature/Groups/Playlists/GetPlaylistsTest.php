@@ -36,7 +36,7 @@ class GetPlaylistsTest extends TestCase
         $playlists = $this->playlistFactory
             ->count(2)
             ->state(new Sequence(fn (Sequence $sequence) => [
-                'created_at' => ($this->carbon::now())->addMinutes($sequence->index),
+                'created_at' => ($this->carbon)->addMinutes($sequence->index),
             ]))
             ->create();
 

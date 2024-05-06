@@ -16,9 +16,11 @@ class StoreFactory extends Factory
 
     public function definition(): array
     {
+        $countryFactory = new CountryFactory();
+
         return [
             'name' => $this->faker->unique()->numerify('store####'),
-            'country_id' => CountryFactory::new(),
+            'country_id' => $countryFactory,
             'url' => $this->faker->url(),
             'links' => $this->faker->url()."\n".$this->faker->url(),
         ];

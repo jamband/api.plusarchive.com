@@ -47,7 +47,7 @@ class GetTracksTest extends TestCase
                 relationship: 'genres',
             )
             ->state(new Sequence(fn (Sequence $sequence) => [
-                'created_at' => ($this->carbon::now())->addMinutes($sequence->index),
+                'created_at' => ($this->carbon)->addMinutes($sequence->index),
             ]))
             ->create();
 
@@ -111,7 +111,7 @@ class GetTracksTest extends TestCase
                 'provider',
             )
             ->state(new Sequence(fn (Sequence $sequence) => [
-                'created_at' => ($this->carbon::now())->addMinutes($sequence->index),
+                'created_at' => ($this->carbon)->addMinutes($sequence->index),
             ]))
             ->create();
 
@@ -180,7 +180,7 @@ class GetTracksTest extends TestCase
         $tracks = $this->trackFactory
             ->count(2)
             ->state(new Sequence(fn (Sequence $sequence) => [
-                'created_at' => ($this->carbon::now())->addMinutes($sequence->index),
+                'created_at' => ($this->carbon)->addMinutes($sequence->index),
             ]))
             ->create();
 
@@ -262,7 +262,7 @@ class GetTracksTest extends TestCase
                 ['provider_id' => 2],
             ))
             ->state(new Sequence(fn (Sequence $sequence) => [
-                'created_at' => ($this->carbon::now())->addMinutes($sequence->index),
+                'created_at' => ($this->carbon)->addMinutes($sequence->index),
             ]))
             ->create();
 

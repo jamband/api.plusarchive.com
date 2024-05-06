@@ -52,7 +52,7 @@ class GetAdminTracksTest extends TestCase
         $tracks = $this->trackFactory
             ->count(2)
             ->state(new Sequence(fn (Sequence $sequence) => [
-                'created_at' => ($this->carbon::now())->addMinutes($sequence->index + 1),
+                'created_at' => ($this->carbon)->addMinutes($sequence->index + 1),
             ]))
             ->create();
 
@@ -140,7 +140,7 @@ class GetAdminTracksTest extends TestCase
                 ['title' => 'baz'],
             ))
             ->state(new Sequence(fn (Sequence $sequence) => [
-                'created_at' => ($this->carbon::now())->addMinutes($sequence->index),
+                'created_at' => ($this->carbon)->addMinutes($sequence->index),
             ]))
             ->create();
 

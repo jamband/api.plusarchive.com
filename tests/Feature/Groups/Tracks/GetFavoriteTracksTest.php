@@ -43,7 +43,7 @@ class GetFavoriteTracksTest extends TestCase
                 ['urge' => true],
             ))
             ->state(new Sequence(fn (Sequence $sequence) => [
-                'created_at' => ($this->carbon::now())->addMinutes($sequence->index),
+                'created_at' => ($this->carbon)->addMinutes($sequence->index),
             ]))
             ->hasAttached(
                 factory: $this->genreFactory

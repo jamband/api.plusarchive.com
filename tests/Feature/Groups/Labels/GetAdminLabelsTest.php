@@ -49,7 +49,7 @@ class GetAdminLabelsTest extends TestCase
         $labels = $this->labelFactory
             ->count(2)
             ->state(new Sequence(fn (Sequence $sequence) => [
-                'created_at' => ($this->carbon::now())->addMinutes($sequence->index + 1),
+                'created_at' => ($this->carbon)->addMinutes($sequence->index + 1),
             ]))
             ->create();
 
@@ -136,7 +136,7 @@ class GetAdminLabelsTest extends TestCase
                 ['name' => 'baz'],
             ))
             ->state(new Sequence(fn (Sequence $sequence) => [
-                'created_at' => ($this->carbon::now())->addMinutes($sequence->index),
+                'created_at' => ($this->carbon)->addMinutes($sequence->index),
             ]))
             ->create();
 

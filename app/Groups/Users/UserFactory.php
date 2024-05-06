@@ -26,13 +26,12 @@ class UserFactory extends Factory
     {
         /** @var HashManager $hash */
         $hash = Container::getInstance()->make(HashManager::class);
-        /** @var Carbon $carbon */
-        $carbon = Container::getInstance()->make(Carbon::class);
+        $carbon = new Carbon();
 
         return [
             'name' => $this->faker->name(),
             'email' => $this->faker->unique()->safeEmail(),
-            'email_verified_at' => $carbon::now(),
+            'email_verified_at' => $carbon,
             'password' => static::$password ??= $hash->make(self::PASSWORD),
             'remember_token' => Str::random(10),
         ];
