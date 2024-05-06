@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Illuminate\Foundation\Application;
+use Illuminate\Container\Container;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Routing\ResponseFactory;
 use Illuminate\Validation\ValidationException;
@@ -13,7 +13,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 return function (Exceptions $exceptions) {
     $exceptions->render(function (Throwable $e) {
         /** @var ResponseFactory $response */
-        $response = Application::getInstance()->make(ResponseFactory::class);
+        $response = Container::getInstance()->make(ResponseFactory::class);
 
         if ($e instanceof NotFoundHttpException) {
             return $response->make(
