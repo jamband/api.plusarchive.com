@@ -25,17 +25,6 @@ class ExceptionsTest extends TestCase
         $this->userFactory = new UserFactory();
     }
 
-    public function testBadRequest(): void
-    {
-        $this->router->get($this->uri, function () {
-            throw new BadRequestHttpException('foo');
-        });
-
-        $this->get($this->uri)
-            ->assertBadRequest()
-            ->assertExactJson(['message' => 'foo']);
-    }
-
     public function testUnauthorized(): void
     {
         $this->router->middleware('auth')
@@ -61,6 +50,17 @@ class ExceptionsTest extends TestCase
         $this->get($this->uri)
             ->assertMethodNotAllowed()
             ->assertExactJson(['message' => 'Method Not Allowed.']);
+    }
+
+    public function testHttpException(): void
+    {
+        $this->router->get($this->uri, function () {
+            $this->app->abort(400, 'foo');
+        });
+
+        $this->get($this->uri)
+            ->assertBadRequest()
+            ->assertExactJson(['message' => 'foo']);
     }
 
     public function testVerifiedEmail(): void

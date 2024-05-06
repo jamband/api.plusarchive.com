@@ -6,7 +6,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Routing\ResponseFactory;
 use Illuminate\Validation\ValidationException;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -14,13 +14,6 @@ return function (Exceptions $exceptions) {
     $exceptions->render(function (Throwable $e) {
         /** @var ResponseFactory $response */
         $response = Application::getInstance()->make(ResponseFactory::class);
-
-        if ($e instanceof BadRequestHttpException) {
-            return $response->make(
-                ['message' => $e->getMessage()],
-                $e->getStatusCode(),
-            );
-        }
 
         if ($e instanceof NotFoundHttpException) {
             return $response->make(
@@ -32,6 +25,13 @@ return function (Exceptions $exceptions) {
         if ($e instanceof MethodNotAllowedHttpException) {
             return $response->make(
                 ['message' => 'Method Not Allowed.'],
+                $e->getStatusCode(),
+            );
+        }
+
+        if ($e instanceof HttpException) {
+            return $response->make(
+                ['message' => $e->getMessage()],
                 $e->getStatusCode(),
             );
         }

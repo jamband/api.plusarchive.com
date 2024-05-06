@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace App\Groups\Tracks;
 
 use Hashids\Hashids;
+use Illuminate\Foundation\Application;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Routing\ResponseFactory;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class ToggleUrge extends Controller
 {
@@ -16,6 +16,7 @@ class ToggleUrge extends Controller
         private readonly Hashids $hashids,
         private readonly Track $track,
         private readonly ResponseFactory $response,
+        private readonly Application $app,
     ) {
         $this->middleware('verified');
         $this->middleware('auth');
@@ -31,6 +32,6 @@ class ToggleUrge extends Controller
             return $this->response->noContent();
         }
 
-        throw new BadRequestHttpException('Can\'t urge more.');
+        $this->app->abort(400, 'Can\'t urge more.');
     }
 }
