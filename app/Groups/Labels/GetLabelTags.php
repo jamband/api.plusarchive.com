@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Groups\Labels;
 
 use App\Groups\LabelTags\LabelTag;
-use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Routing\ResponseFactory;
 
@@ -17,10 +17,10 @@ class GetLabelTags extends Controller
     ) {
     }
 
-    public function __invoke(): JsonResponse
+    public function __invoke(): Response
     {
-        return $this->response->json(
-            data: $this->tag->getNames(),
+        return $this->response->make(
+            $this->tag->getNames(),
         );
     }
 }

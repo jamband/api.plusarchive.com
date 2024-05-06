@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Groups\Countries;
 
-use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Routing\ResponseFactory;
 
@@ -18,10 +18,8 @@ class UpdateCountry extends Controller
         $this->middleware('auth');
     }
 
-    public function __invoke(
-        UpdateCountryRequest $request,
-        int $id,
-    ): JsonResponse {
+    public function __invoke(UpdateCountryRequest $request, int $id): Response
+    {
         $country = $this->country::query()
             ->findOrFail($id);
 
@@ -29,8 +27,8 @@ class UpdateCountry extends Controller
 
         $request->save($country);
 
-        return $this->response->json(
-            data: new CountryAdminResource($country),
+        return $this->response->make(
+            new CountryAdminResource($country),
         );
     }
 }

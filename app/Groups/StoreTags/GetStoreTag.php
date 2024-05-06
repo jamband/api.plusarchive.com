@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Groups\StoreTags;
 
-use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Routing\ResponseFactory;
 
@@ -18,10 +18,10 @@ class GetStoreTag extends Controller
         $this->middleware('auth');
     }
 
-    public function __invoke(int $id): JsonResponse
+    public function __invoke(int $id): Response
     {
-        return $this->response->json(
-            data: $this->tag::query()
+        return $this->response->make(
+            $this->tag::query()
                 ->findOrFail($id),
         );
     }

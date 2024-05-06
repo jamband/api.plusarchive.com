@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Groups\Labels;
 
-use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Routing\ResponseFactory;
 use Illuminate\Routing\UrlGenerator;
@@ -20,14 +20,13 @@ class CreateLabel extends Controller
         $this->middleware('auth');
     }
 
-    public function __invoke(
-        CreateLabelRequest $request,
-    ): JsonResponse {
+    public function __invoke(CreateLabelRequest $request): Response
+    {
         $request->save($this->label);
 
-        return $this->response->json(
-            data: new LabelAdminResource($this->label),
-            status: 201,
+        return $this->response->make(
+            new LabelAdminResource($this->label),
+            201,
         )
             ->header('Location', $this->url->to(
                 '/labels/'.$this->label->id

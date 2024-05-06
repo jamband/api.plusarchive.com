@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Groups\BookmarkTags;
 
-use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Routing\ResponseFactory;
 
@@ -18,10 +18,8 @@ class UpdateBookmarkTag extends Controller
         $this->middleware('auth');
     }
 
-    public function __invoke(
-        UpdateBookmarkTagRequest $request,
-        int $id,
-    ): JsonResponse {
+    public function __invoke(UpdateBookmarkTagRequest $request, int $id): Response
+    {
         $tag = $this->tag::query()
             ->findOrFail($id);
 
@@ -29,8 +27,8 @@ class UpdateBookmarkTag extends Controller
 
         $request->save($tag);
 
-        return $this->response->json(
-            data: new BookmarkTagAdminResource($tag),
+        return $this->response->make(
+            new BookmarkTagAdminResource($tag),
         );
     }
 }

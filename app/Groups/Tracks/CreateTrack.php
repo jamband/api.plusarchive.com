@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Groups\Tracks;
 
 use Hashids\Hashids;
-use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Routing\ResponseFactory;
 use Illuminate\Routing\UrlGenerator;
@@ -22,14 +22,13 @@ class CreateTrack extends Controller
         $this->middleware('auth');
     }
 
-    public function __invoke(
-        CreateTrackRequest $request,
-    ): JsonResponse {
+    public function __invoke(CreateTrackRequest $request): Response
+    {
         $request->save($this->track);
 
-        return $this->response->json(
-            data: new TrackAdminResource($this->track),
-            status: 201,
+        return $this->response->make(
+            new TrackAdminResource($this->track),
+            201,
         )
             ->header('Location', $this->url->to(
                 '/tracks/'.$this->hashids->encode($this->track->id)

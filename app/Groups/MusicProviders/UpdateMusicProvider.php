@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Groups\MusicProviders;
 
-use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Routing\ResponseFactory;
 
@@ -18,10 +18,8 @@ class UpdateMusicProvider extends Controller
         $this->middleware('auth');
     }
 
-    public function __invoke(
-        UpdateMusicProviderRequest $request,
-        int $id,
-    ): JsonResponse {
+    public function __invoke(UpdateMusicProviderRequest $request, int $id): Response
+    {
         $provider = $this->provider::query()
             ->findOrFail($id);
 
@@ -29,8 +27,8 @@ class UpdateMusicProvider extends Controller
 
         $request->save($provider);
 
-        return $this->response->json(
-            data: new MusicProviderAdminResource($provider),
+        return $this->response->make(
+            new MusicProviderAdminResource($provider),
         );
     }
 }

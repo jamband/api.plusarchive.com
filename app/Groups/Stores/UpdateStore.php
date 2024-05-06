@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Groups\Stores;
 
-use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Routing\ResponseFactory;
 
@@ -18,17 +18,15 @@ class UpdateStore extends Controller
         $this->middleware('auth');
     }
 
-    public function __invoke(
-        UpdateStoreRequest $request,
-        int $id,
-    ): JsonResponse {
+    public function __invoke(UpdateStoreRequest $request, int $id): Response
+    {
         $store = $this->store->findOrFail($id);
         assert($store instanceof Store);
 
         $request->save($store);
 
-        return $this->response->json(
-            data: new StoreAdminResource($store),
+        return $this->response->make(
+            new StoreAdminResource($store),
         );
     }
 }

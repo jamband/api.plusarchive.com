@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Groups\TrackGenres;
 
-use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Routing\ResponseFactory;
 
@@ -18,10 +18,8 @@ class UpdateTrackGenre extends Controller
         $this->middleware('auth');
     }
 
-    public function __invoke(
-        UpdateTrackGenreRequest $request,
-        int $id,
-    ): JsonResponse {
+    public function __invoke(UpdateTrackGenreRequest $request, int $id): Response
+    {
         $genre = $this->genre::query()
             ->findOrFail($id);
 
@@ -29,8 +27,8 @@ class UpdateTrackGenre extends Controller
 
         $request->save($genre);
 
-        return $this->response->json(
-            data: new TrackGenreAdminResource($genre),
+        return $this->response->make(
+            new TrackGenreAdminResource($genre),
         );
     }
 }

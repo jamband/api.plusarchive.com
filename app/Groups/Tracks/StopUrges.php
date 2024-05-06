@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Groups\Tracks;
 
-use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Routing\ResponseFactory;
 
@@ -18,12 +18,10 @@ class StopUrges extends Controller
         $this->middleware('auth');
     }
 
-    public function __invoke(): JsonResponse
+    public function __invoke(): Response
     {
         $this->track->stopUrges();
 
-        return $this->response->json(
-            status: 204,
-        );
+        return $this->response->noContent();
     }
 }

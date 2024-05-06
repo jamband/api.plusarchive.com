@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Groups\Stores;
 
-use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Routing\ResponseFactory;
 
@@ -18,10 +18,10 @@ class GetStore extends Controller
         $this->middleware('auth');
     }
 
-    public function __invoke(int $id): JsonResponse
+    public function __invoke(int $id): Response
     {
-        return $this->response->json(
-            data: new StoreAdminResource(
+        return $this->response->make(
+            new StoreAdminResource(
                 $this->store::query()
                     ->with('country')
                     ->with('tags')

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Groups\TrackGenres;
 
-use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Routing\ResponseFactory;
 use Illuminate\Routing\UrlGenerator;
@@ -20,14 +20,13 @@ class CreateTrackGenre extends Controller
         $this->middleware('auth');
     }
 
-    public function __invoke(
-        CreateTrackGenreRequest $request,
-    ): JsonResponse {
+    public function __invoke(CreateTrackGenreRequest $request): Response
+    {
         $request->save($this->genre);
 
-        return $this->response->json(
-            data: new TrackGenreAdminResource($this->genre),
-            status: 201,
+        return $this->response->make(
+            new TrackGenreAdminResource($this->genre),
+            201,
         )
             ->header('Location', $this->url->to(
                 '/genres/'.$this->genre->id

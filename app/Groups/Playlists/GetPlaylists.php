@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Groups\Playlists;
 
-use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Routing\ResponseFactory;
 
@@ -16,10 +16,10 @@ class GetPlaylists extends Controller
     ) {
     }
 
-    public function __invoke(): JsonResponse
+    public function __invoke(): Response
     {
-        return $this->response->json(
-            data: PlaylistResource::collection(
+        return $this->response->make(
+            PlaylistResource::collection(
                 $this->playlist::query()
                     ->with('provider')
                     ->latest()

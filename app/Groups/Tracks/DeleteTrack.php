@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Groups\Tracks;
 
 use Hashids\Hashids;
-use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Routing\ResponseFactory;
 
@@ -20,7 +20,7 @@ class DeleteTrack extends Controller
         $this->middleware('auth');
     }
 
-    public function __invoke(string $hash): JsonResponse
+    public function __invoke(string $hash): Response
     {
         $id = $this->hashids->decode($hash);
         $id = empty($id) ? 0 : $id[0];
@@ -30,8 +30,6 @@ class DeleteTrack extends Controller
             ->findOrFail($id)
             ->delete();
 
-        return $this->response->json(
-            status: 204,
-        );
+        return $this->response->noContent();
     }
 }

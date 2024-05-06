@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Groups\Labels;
 
-use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Routing\ResponseFactory;
 
@@ -16,10 +16,10 @@ class GetLabelCountries extends Controller
     ) {
     }
 
-    public function __invoke(): JsonResponse
+    public function __invoke(): Response
     {
-        return $this->response->json(
-            data: $this->label->getCountryNames(),
+        return $this->response->make(
+            $this->label->getCountryNames(),
         );
     }
 }
