@@ -19,8 +19,8 @@ class Flush extends Command
         /** @var Application $app */
         $app = $this->laravel;
 
-        if ('file' === $app['config']['session']['driver']) {
-            foreach ($filesystem->files($app['config']['session']['files']) as $file) {
+        if ('file' === $app['config']['session.driver']) {
+            foreach ($filesystem->files($app['config']['session.files']) as $file) {
                 if ('.gitignore' !== $file->getFilename()) {
                     $filesystem->delete($file->getPathname());
                 }
