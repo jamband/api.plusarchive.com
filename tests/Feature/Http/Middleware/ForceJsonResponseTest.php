@@ -21,6 +21,13 @@ class ForceJsonResponseTest extends TestCase
         $this->uri = uniqid('/testing-');
     }
 
+    protected function tearDown(): void
+    {
+        $this->artisan('view:clear');
+
+        parent::tearDown();
+    }
+
     public function testWithoutForceJsonResponse(): void
     {
         $this->router->get($this->uri);
