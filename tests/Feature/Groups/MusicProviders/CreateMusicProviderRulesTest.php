@@ -7,6 +7,7 @@ namespace Tests\Feature\Groups\MusicProviders;
 use App\Groups\MusicProviders\MusicProviderFactory;
 use App\Groups\Users\UserFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\Response;
 use Illuminate\Testing\TestResponse;
 use Tests\TestCase;
 
@@ -27,6 +28,7 @@ class CreateMusicProviderRulesTest extends TestCase
 
     /**
      * @param array<string, mixed> $data
+     * @return TestResponse<Response>
      */
     protected function request(array $data): TestResponse
     {

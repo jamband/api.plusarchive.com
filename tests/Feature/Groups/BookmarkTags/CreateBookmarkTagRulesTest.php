@@ -7,6 +7,7 @@ namespace Tests\Feature\Groups\BookmarkTags;
 use App\Groups\BookmarkTags\BookmarkTagFactory;
 use App\Groups\Users\UserFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\Response;
 use Illuminate\Testing\TestResponse;
 use Tests\TestCase;
 
@@ -27,6 +28,7 @@ class CreateBookmarkTagRulesTest extends TestCase
 
     /**
      * @param array<string, mixed> $data
+     * @return TestResponse<Response>
      */
     protected function request(array $data): TestResponse
     {

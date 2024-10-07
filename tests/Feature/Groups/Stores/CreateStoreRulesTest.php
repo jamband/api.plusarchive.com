@@ -7,6 +7,7 @@ namespace Tests\Feature\Groups\Stores;
 use App\Groups\Stores\StoreFactory;
 use App\Groups\Users\UserFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\Response;
 use Illuminate\Testing\TestResponse;
 use Tests\TestCase;
 
@@ -27,6 +28,7 @@ class CreateStoreRulesTest extends TestCase
 
     /**
      * @param array<string, mixed> $data
+     * @return TestResponse<Response>
      */
     protected function request(array $data): TestResponse
     {

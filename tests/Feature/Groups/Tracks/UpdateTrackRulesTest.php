@@ -9,6 +9,7 @@ use App\Groups\Users\UserFactory;
 use Hashids\Hashids;
 use Illuminate\Database\Eloquent\Factories\Sequence;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\Response;
 use Illuminate\Testing\TestResponse;
 use Jamband\Ripple\Ripple;
 use Tests\TestCase;
@@ -37,6 +38,7 @@ class UpdateTrackRulesTest extends TestCase
 
     /**
      * @param array<string, mixed> $data
+     * @return TestResponse<Response>
      */
     protected function request(array $data): TestResponse
     {
