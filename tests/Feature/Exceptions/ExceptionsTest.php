@@ -29,7 +29,7 @@ class ExceptionsTest extends TestCase
         $this->router->middleware('auth')
             ->get($this->uri);
 
-        $this->getJson($this->uri)
+        $this->get($this->uri)
             ->assertUnauthorized()
             ->assertExactJson(['message' => 'Unauthenticated.']);
     }

@@ -41,7 +41,7 @@ class GetStoreTagTest extends TestCase
     public function testNotFound(): void
     {
         $this->actingAs($this->userFactory->makeOne())
-            ->getJson('/store-tags/1')
+            ->get('/store-tags/1')
             ->assertNotFound()
             ->assertExactJson(['message' => 'Not Found.']);
     }

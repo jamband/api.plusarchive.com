@@ -52,7 +52,7 @@ class GetBookmarkTest extends TestCase
             ->createOne();
 
         $this->actingAs($this->userFactory->makeOne())
-            ->getJson('/bookmarks/'.$bookmark->id)
+            ->get('/bookmarks/'.$bookmark->id)
             ->assertOk()
             ->assertJson(function (AssertableJson $json) use ($bookmark) {
                 $json->where('id', $bookmark->id)

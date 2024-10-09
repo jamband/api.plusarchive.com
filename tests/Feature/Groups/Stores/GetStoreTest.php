@@ -52,7 +52,7 @@ class GetStoreTest extends TestCase
             ->createOne();
 
         $this->actingAs($this->userFactory->makeOne())
-            ->getJson('/stores/'.$store->id)
+            ->get('/stores/'.$store->id)
             ->assertOk()
             ->assertJson(function (AssertableJson $json) use ($store) {
                 $json->where('id', $store->id)
