@@ -53,7 +53,7 @@ class DeleteBookmarkTagTest extends TestCase
         $this->assertDatabaseCount($tag::class, 1);
 
         $this->actingAs($this->userFactory->makeOne())
-            ->deleteJson('/bookmark-tags/'.$tag->id)
+            ->delete('/bookmark-tags/'.$tag->id)
             ->assertNoContent();
 
         $this->assertDatabaseCount($tag::class, 0);
