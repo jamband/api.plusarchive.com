@@ -7,7 +7,6 @@ namespace Tests\Feature\Exceptions;
 use App\Groups\Users\UserFactory;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Router;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Tests\TestCase;
 
 class ExceptionsTest extends TestCase
