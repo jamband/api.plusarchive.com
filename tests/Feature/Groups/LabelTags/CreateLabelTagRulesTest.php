@@ -31,7 +31,7 @@ class CreateLabelTagRulesTest extends TestCase
     protected function request(array $data): TestResponse
     {
         return $this->actingAs(UserFactory::new()->makeOne())
-            ->postJson('/label-tags', $data)
+            ->post('/label-tags', $data)
             ->assertUnprocessable();
     }
 
