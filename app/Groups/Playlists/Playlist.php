@@ -30,7 +30,7 @@ class Playlist extends Model
     use SortableScope;
 
     /**
-     * @return BelongsTo<MusicProvider, self>
+     * @return BelongsTo<MusicProvider, $this>
      */
     public function provider(): BelongsTo
     {

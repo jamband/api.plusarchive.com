@@ -41,7 +41,7 @@ class Track extends Model
     private const URGE_LIMIT = 6;
 
     /**
-     * @return BelongsTo<MusicProvider, self>
+     * @return BelongsTo<MusicProvider, $this>
      */
     public function provider(): BelongsTo
     {
@@ -52,7 +52,7 @@ class Track extends Model
     }
 
     /**
-     * @return BelongsToMany<TrackGenre>
+     * @return BelongsToMany<TrackGenre, $this>
      */
     public function genres(): BelongsToMany
     {

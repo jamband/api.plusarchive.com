@@ -33,7 +33,7 @@ class Store extends Model
     use SortableScope;
 
     /**
-     * @return BelongsTo<Country, self>
+     * @return BelongsTo<Country, $this>
      */
     public function country(): BelongsTo
     {
@@ -41,7 +41,7 @@ class Store extends Model
     }
 
     /**
-     * @return BelongsToMany<StoreTag>
+     * @return BelongsToMany<StoreTag, $this>
      */
     public function tags(): BelongsToMany
     {
