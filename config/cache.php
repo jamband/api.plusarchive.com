@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 use Illuminate\Support\Str;
 
+$appName = env('APP_NAME', 'plusarchive');
+assert(is_string($appName));
+
 return [
     'default' => env('CACHE_STORE', 'apc'),
     'stores' => [
@@ -15,5 +18,5 @@ return [
             'serialize' => false,
         ],
     ],
-    'prefix' => Str::slug(env('APP_NAME', 'plusarchive'), '_').'_cache_',
+    'prefix' => env('CACHE_PREFIX', Str::slug($appName, '_').'_cache_'),
 ];

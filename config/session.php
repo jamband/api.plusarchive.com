@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 use Illuminate\Support\Str;
 
+$appName = env('APP_NAME', 'plusarchive');
+assert(is_string($appName));
+
 return [
     'driver' => env('SESSION_DRIVER', 'file'),
     'lifetime' => env('SESSION_LIFETIME', 120),
@@ -13,7 +16,7 @@ return [
     'connection' => env('SESSION_CONNECTION'),
     'store' => env('SESSION_STORE'),
     'lottery' => [2, 100],
-    'cookie' => env('SESSION_COOKIE', Str::slug(env('APP_NAME', 'plusarchive'), '_').'_session'),
+    'cookie' => env('SESSION_COOKIE', Str::slug($appName, '_').'_session'),
     'path' => env('SESSION_PATH', '/'),
     'domain' => env('SESSION_DOMAIN'),
     'secure' => (bool)env('SESSION_SECURE_COOKIE', true),

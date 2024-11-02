@@ -6,6 +6,9 @@ use App\Providers\DatabaseQueryLogServiceProvider;
 use Monolog\Handler\NullHandler;
 use Monolog\Handler\StreamHandler;
 
+$logStack = env('LOG_STACK', 'single');
+assert(is_string($logStack));
+
 return [
     'default' => env('LOG_CHANNEL', 'stack'),
     'deprecations' => [
@@ -15,7 +18,7 @@ return [
     'channels' => [
         'stack' => [
             'driver' => 'stack',
-            'channels' => explode(',', env('LOG_STACK', 'single')),
+            'channels' => explode(',', $logStack),
             'ignore_exceptions' => false,
         ],
         'single' => [
