@@ -4,7 +4,7 @@
     "ext-pdo": "*",
     "guzzlehttp/guzzle": "^7.9",
     "hashids/hashids": "^5.0",
-    "jamband/ripple": "^0.16.1",
+    "jamband/ripple": "^0.17.0",
     "laravel/framework": "^11.30"
   },
   "require-dev": {

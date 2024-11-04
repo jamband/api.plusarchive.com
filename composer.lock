@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "af133d79794076d198bbcab9ed6fe81d",
+    "content-hash": "24612a7c922b8551f49544aee7fd3c44",
     "packages": [
         {
             "name": "brick/math",
@@ -1125,25 +1125,25 @@
         },
         {
             "name": "jamband/ripple",
-            "version": "v0.16.1",
+            "version": "v0.17.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/jamband/ripple.git",
-                "reference": "8232c2446578d955869ce4c3de8b4f44dce4dd24"
+                "reference": "2993a94a1dc2df909db5b2b240d176398531aded"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jamband/ripple/zipball/8232c2446578d955869ce4c3de8b4f44dce4dd24",
-                "reference": "8232c2446578d955869ce4c3de8b4f44dce4dd24",
+                "url": "https://api.github.com/repos/jamband/ripple/zipball/2993a94a1dc2df909db5b2b240d176398531aded",
+                "reference": "2993a94a1dc2df909db5b2b240d176398531aded",
                 "shasum": ""
             },
             "require": {
-                "php": "^8.0"
+                "php": "^8.1"
             },
             "require-dev": {
-                "friendsofphp/php-cs-fixer": "^3.37",
-                "phpstan/phpstan": "^1.10",
-                "phpunit/phpunit": "^9.6"
+                "friendsofphp/php-cs-fixer": "^3.64",
+                "phpstan/phpstan": "^1.12",
+                "phpunit/phpunit": "^10.5"
             },
             "type": "library",
             "autoload": {
@@ -1175,9 +1175,9 @@
             ],
             "support": {
                 "issues": "https://github.com/jamband/ripple/issues",
-                "source": "https://github.com/jamband/ripple/tree/v0.16.1"
+                "source": "https://github.com/jamband/ripple/tree/v0.17.0"
             },
-            "time": "2023-11-27T10:56:58+00:00"
+            "time": "2024-11-04T01:40:19+00:00"
         },
         {
             "name": "laravel/framework",
@@ -1987,20 +1987,20 @@
         },
         {
             "name": "nesbot/carbon",
-            "version": "3.8.0",
+            "version": "3.8.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/briannesbitt/Carbon.git",
-                "reference": "bbd3eef89af8ba66a3aa7952b5439168fbcc529f"
+                "reference": "10ac0aa86b8062219ce21e8189123d611ca3ecd9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/bbd3eef89af8ba66a3aa7952b5439168fbcc529f",
-                "reference": "bbd3eef89af8ba66a3aa7952b5439168fbcc529f",
+                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/10ac0aa86b8062219ce21e8189123d611ca3ecd9",
+                "reference": "10ac0aa86b8062219ce21e8189123d611ca3ecd9",
                 "shasum": ""
             },
             "require": {
-                "carbonphp/carbon-doctrine-types": "*",
+                "carbonphp/carbon-doctrine-types": "<100.0",
                 "ext-json": "*",
                 "php": "^8.1",
                 "psr/clock": "^1.0",
@@ -2089,7 +2089,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-08-19T06:22:39+00:00"
+            "time": "2024-11-03T16:02:24+00:00"
         },
         {
             "name": "nette/schema",
@@ -6375,16 +6375,16 @@
         },
         {
             "name": "larastan/larastan",
-            "version": "v2.9.9",
+            "version": "v2.9.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/larastan/larastan.git",
-                "reference": "148faa138f0d8acb7d85f4a55693d3e13b6048d2"
+                "reference": "9e7233d88f4f10796fadb8a2d85c5f2b55277c76"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/larastan/larastan/zipball/148faa138f0d8acb7d85f4a55693d3e13b6048d2",
-                "reference": "148faa138f0d8acb7d85f4a55693d3e13b6048d2",
+                "url": "https://api.github.com/repos/larastan/larastan/zipball/9e7233d88f4f10796fadb8a2d85c5f2b55277c76",
+                "reference": "9e7233d88f4f10796fadb8a2d85c5f2b55277c76",
                 "shasum": ""
             },
             "require": {
@@ -6454,7 +6454,7 @@
             ],
             "support": {
                 "issues": "https://github.com/larastan/larastan/issues",
-                "source": "https://github.com/larastan/larastan/tree/v2.9.9"
+                "source": "https://github.com/larastan/larastan/tree/v2.9.10"
             },
             "funding": [
                 {
@@ -6474,7 +6474,7 @@
                     "type": "patreon"
                 }
             ],
-            "time": "2024-10-15T19:41:22+00:00"
+            "time": "2024-10-19T23:04:40+00:00"
         },
         {
             "name": "mockery/mockery",
