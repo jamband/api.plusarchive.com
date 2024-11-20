@@ -22,10 +22,12 @@ readonly class EnsureEmailIsVerified
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (
-            !$request->user() ||
-            ($request->user() instanceof MustVerifyEmail && !$request->user()->hasVerifiedEmail())
-        ) {
+        $isMustVerifyEmail = $request->user() instanceof MustVerifyEmail;
+
+        /** @var MustVerifyEmail $user */
+        $user = $request->user();
+
+        if (!$request->user() || ($isMustVerifyEmail && !$user->hasVerifiedEmail())) {
             return $this->response->make(
                 ['message' => 'Your email address is not verified.'],
                 409,

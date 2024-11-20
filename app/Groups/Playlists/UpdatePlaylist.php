@@ -24,12 +24,8 @@ class UpdatePlaylist extends Controller
     {
         $id = $this->hashids->decode($hash);
         $id = empty($id) ? 0 : $id[0];
-        assert(is_int($id));
 
-        $playlist = $this->playlist::query()
-            ->findOrFail($id);
-
-        assert($playlist instanceof Playlist);
+        $playlist = $this->playlist->findOrFail($id);
         $request->save($playlist);
 
         return $this->response->make(

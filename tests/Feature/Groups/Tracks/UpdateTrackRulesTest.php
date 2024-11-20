@@ -30,8 +30,8 @@ class UpdateTrackRulesTest extends TestCase
         $this->trackFactory = new TrackFactory();
         $this->hashids = $this->app->make(Hashids::class);
 
+        /** @var Ripple $ripple */
         $ripple = $this->app->make(Ripple::class);
-        assert($ripple instanceof Ripple);
         $ripple->options(['response' => '']);
         $this->instance(Ripple::class, $ripple);
     }

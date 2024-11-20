@@ -21,8 +21,6 @@ class UpdateBookmark extends Controller
     public function __invoke(UpdateBookmarkRequest $request, int $id): Response
     {
         $bookmark = $this->bookmark->findOrFail($id);
-        assert($bookmark instanceof Bookmark);
-
         $request->save($bookmark);
 
         return $this->response->make(

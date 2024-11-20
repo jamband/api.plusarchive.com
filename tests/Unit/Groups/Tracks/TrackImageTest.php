@@ -16,8 +16,8 @@ class TrackImageTest extends TestCase
     {
         parent::setUp();
 
+        /** @var Client $client */
         $client = $this->app->make(Client::class);
-        assert($client instanceof Client);
         $client->fake();
         $this->instance(Client::class, $client);
 

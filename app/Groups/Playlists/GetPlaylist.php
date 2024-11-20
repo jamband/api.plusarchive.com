@@ -12,6 +12,7 @@ use Illuminate\Routing\ResponseFactory;
 class GetPlaylist extends Controller
 {
     public function __construct(
+        private readonly Playlist $playlist,
         private readonly Hashids $hashids,
         private readonly ResponseFactory $response,
     ) {
@@ -21,12 +22,10 @@ class GetPlaylist extends Controller
     {
         $id = $this->hashids->decode($hash);
         $id = empty($id) ? 0 : $id[0];
-        assert(is_int($id));
 
         return $this->response->make(
             new PlaylistResource(
-                Playlist::query()
-                    ->findOrFail($id)
+                $this->playlist->findOrFail($id)
             ),
         );
     }

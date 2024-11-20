@@ -38,8 +38,8 @@ class UpdateTrackTest extends TestCase
         $this->genre = new TrackGenre();
         $this->ripple = $this->app->make(Ripple::class);
 
+        /** @var Client $client */
         $client = $this->app->make(Client::class);
-        assert($client instanceof Client);
         $client->fake();
         $this->instance(Client::class, $client);
 

@@ -20,11 +20,7 @@ class UpdateTrackGenre extends Controller
 
     public function __invoke(UpdateTrackGenreRequest $request, int $id): Response
     {
-        $genre = $this->genre::query()
-            ->findOrFail($id);
-
-        assert($genre instanceof TrackGenre);
-
+        $genre = $this->genre->findOrFail($id);
         $request->save($genre);
 
         return $this->response->make(

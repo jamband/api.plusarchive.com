@@ -21,8 +21,6 @@ class UpdateStore extends Controller
     public function __invoke(UpdateStoreRequest $request, int $id): Response
     {
         $store = $this->store->findOrFail($id);
-        assert($store instanceof Store);
-
         $request->save($store);
 
         return $this->response->make(

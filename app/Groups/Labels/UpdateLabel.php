@@ -21,8 +21,6 @@ class UpdateLabel extends Controller
     public function __invoke(UpdateLabelRequest $request, int $id): Response
     {
         $label = $this->label->findOrFail($id);
-        assert($label instanceof Label);
-
         $request->save($label);
 
         return $this->response->make(

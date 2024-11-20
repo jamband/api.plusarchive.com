@@ -24,12 +24,8 @@ class UpdateTrack extends Controller
     {
         $id = $this->hashids->decode($hash);
         $id = empty($id) ? 0 : $id[0];
-        assert(is_int($id));
 
-        $track = $this->track::query()
-            ->findOrFail($id);
-
-        assert($track instanceof Track);
+        $track = $this->track->findOrFail($id);
         $request->save($track);
 
         return $this->response->make(

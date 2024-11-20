@@ -24,10 +24,8 @@ class DeletePlaylist extends Controller
     {
         $id = $this->hashids->decode($hash);
         $id = empty($id) ? 0 : $id[0];
-        assert(is_int($id));
 
-        $this->playlist::query()
-            ->findOrFail($id)
+        $this->playlist->findOrFail($id)
             ->delete();
 
         return $this->response->noContent();

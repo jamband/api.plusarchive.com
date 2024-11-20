@@ -26,8 +26,8 @@ class CreateTrackRulesTest extends TestCase
         $this->userFactory = new UserFactory();
         $this->trackFactory = new TrackFactory();
 
+        /** @var Ripple $ripple */
         $ripple = $this->app->make(Ripple::class);
-        assert($ripple instanceof Ripple);
         $ripple->options(['response' => '']);
         $this->instance(Ripple::class, $ripple);
     }

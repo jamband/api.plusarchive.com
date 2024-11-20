@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Groups\Tracks;
 
 use Illuminate\Http\Client\Factory as Client;
-use Illuminate\Http\Client\Response;
 
 class TrackImage
 {
@@ -34,10 +33,7 @@ class TrackImage
 
         assert(is_string($image));
 
-        $response = $this->client->get($image);
-        assert($response instanceof Response);
-
-        return $response->ok()
+        return $this->client->get($image)->ok()
             ? $image
             : $this->url;
     }

@@ -24,10 +24,8 @@ class DeleteTrack extends Controller
     {
         $id = $this->hashids->decode($hash);
         $id = empty($id) ? 0 : $id[0];
-        assert(is_int($id));
 
-        $this->track::query()
-            ->findOrFail($id)
+        $this->track->findOrFail($id)
             ->delete();
 
         return $this->response->noContent();

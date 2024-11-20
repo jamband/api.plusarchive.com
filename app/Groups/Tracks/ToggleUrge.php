@@ -26,7 +26,6 @@ class ToggleUrge extends Controller
     {
         $id = $this->hashids->decode($hash);
         $id = empty($id) ? 0 : $id[0];
-        assert(is_int($id));
 
         if ($this->track->toggleUrge($this->track->findOrFail($id))) {
             return $this->response->noContent();

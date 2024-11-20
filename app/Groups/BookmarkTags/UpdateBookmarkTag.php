@@ -20,11 +20,7 @@ class UpdateBookmarkTag extends Controller
 
     public function __invoke(UpdateBookmarkTagRequest $request, int $id): Response
     {
-        $tag = $this->tag::query()
-            ->findOrFail($id);
-
-        assert($tag instanceof BookmarkTag);
-
+        $tag = $this->tag->findOrFail($id);
         $request->save($tag);
 
         return $this->response->make(

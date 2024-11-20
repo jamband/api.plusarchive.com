@@ -20,11 +20,7 @@ class UpdateLabelTag extends Controller
 
     public function __invoke(UpdateLabelTagRequest $request, int $id): Response
     {
-        $tag = $this->tag::query()
-            ->findOrFail($id);
-
-        assert($tag instanceof LabelTag);
-
+        $tag = $this->tag->findOrFail($id);
         $request->save($tag);
 
         return $this->response->make(

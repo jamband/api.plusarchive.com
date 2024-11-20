@@ -20,11 +20,7 @@ class UpdateCountry extends Controller
 
     public function __invoke(UpdateCountryRequest $request, int $id): Response
     {
-        $country = $this->country::query()
-            ->findOrFail($id);
-
-        assert($country instanceof Country);
-
+        $country = $this->country->findOrFail($id);
         $request->save($country);
 
         return $this->response->make(

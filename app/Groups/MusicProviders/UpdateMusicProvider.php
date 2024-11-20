@@ -20,11 +20,7 @@ class UpdateMusicProvider extends Controller
 
     public function __invoke(UpdateMusicProviderRequest $request, int $id): Response
     {
-        $provider = $this->provider::query()
-            ->findOrFail($id);
-
-        assert($provider instanceof MusicProvider);
-
+        $provider = $this->provider->findOrFail($id);
         $request->save($provider);
 
         return $this->response->make(

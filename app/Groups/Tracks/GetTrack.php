@@ -22,12 +22,10 @@ class GetTrack extends Controller
     {
         $id = $this->hashids->decode($hash);
         $id = empty($id) ? 0 : $id[0];
-        assert(is_int($id));
 
         return $this->response->make(
             new TrackResource(
-                $this->track::query()
-                    ->with('genres')
+                $this->track->with('genres')
                     ->findOrFail($id)
             ),
         );

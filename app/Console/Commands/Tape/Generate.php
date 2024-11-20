@@ -23,10 +23,7 @@ class Generate extends Command
         $app = $this->laravel;
 
         $id = $this->argument('id');
-        assert(is_string($id));
-
         $title = $this->argument('title');
-        assert(is_string($title));
 
         $tracks = $track->favorites()
             ->with('provider')

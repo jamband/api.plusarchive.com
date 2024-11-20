@@ -20,11 +20,7 @@ class UpdateStoreTag extends Controller
 
     public function __invoke(UpdateStoreTagRequest $request, int $id): Response
     {
-        $tag = $this->tag::query()
-            ->findOrFail($id);
-
-        assert($tag instanceof StoreTag);
-
+        $tag = $this->tag->findOrFail($id);
         $request->save($tag);
 
         return $this->response->make(
