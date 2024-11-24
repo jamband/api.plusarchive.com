@@ -38,7 +38,7 @@ class Track extends Model
         'urge' => 'boolean',
     ];
 
-    private const URGE_LIMIT = 6;
+    private const int URGE_LIMIT = 6;
 
     /**
      * @return BelongsTo<MusicProvider, $this>

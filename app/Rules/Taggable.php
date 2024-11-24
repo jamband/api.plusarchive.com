@@ -8,5 +8,5 @@ use Illuminate\Contracts\Validation\ValidationRule;
 
 interface Taggable extends ValidationRule
 {
-    public const PATTERN = '/\A[\w\s-]{2,30}\z/';
+    public const string PATTERN = '/\A[\w\s-]{2,30}\z/';
 }

@@ -15,7 +15,7 @@ use Illuminate\Support\Str;
  */
 class UserFactory extends Factory
 {
-    public const PASSWORD = 'password';
+    public const string PASSWORD = 'password';
 
     protected $model = User::class;
 
