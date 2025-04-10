@@ -24,7 +24,7 @@ class UpdateBookmark extends Controller
         $request->save($bookmark);
 
         return $this->response->make(
-            new BookmarkAdminResource($bookmark),
+            $bookmark->toResource(BookmarkAdminResource::class),
         );
     }
 }

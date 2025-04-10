@@ -24,7 +24,7 @@ class UpdateMusicProvider extends Controller
         $request->save($provider);
 
         return $this->response->make(
-            new MusicProviderAdminResource($provider),
+            $provider->toResource(MusicProviderAdminResource::class),
         );
     }
 }

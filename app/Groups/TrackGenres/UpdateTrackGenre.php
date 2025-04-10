@@ -24,7 +24,7 @@ class UpdateTrackGenre extends Controller
         $request->save($genre);
 
         return $this->response->make(
-            new TrackGenreAdminResource($genre),
+            $genre->toResource(TrackGenreAdminResource::class),
         );
     }
 }

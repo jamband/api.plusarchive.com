@@ -21,4 +21,9 @@ class CountryAdminResource extends JsonResource
             'name' => $this->name,
         ];
     }
+
+    protected static function newCollection($resource): CountryAdminResourceCollection
+    {
+        return new CountryAdminResourceCollection($resource);
+    }
 }

@@ -21,4 +21,9 @@ class MusicProviderAdminResource extends JsonResource
             'name' => $this->name,
         ];
     }
+
+    protected static function newCollection($resource): MusicProviderAdminResourceCollection
+    {
+        return new MusicProviderAdminResourceCollection($resource);
+    }
 }

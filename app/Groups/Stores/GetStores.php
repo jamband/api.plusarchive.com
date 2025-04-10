@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Groups\Stores;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Routing\Controller;
 
 class GetStores extends Controller
@@ -15,7 +16,7 @@ class GetStores extends Controller
     ) {
     }
 
-    public function __invoke(): StoreResourceCollection
+    public function __invoke(): ResourceCollection
     {
         /** @var Store $query */
         $query = $this->store::query()
@@ -32,8 +33,8 @@ class GetStores extends Controller
             $query->ofTag($tag);
         }
 
-        return new StoreResourceCollection(
-            $query->latest()->paginate(14)
-        );
+        return $query->latest()
+            ->paginate(14)
+            ->toResourceCollection(StoreResource::class);
     }
 }

@@ -25,7 +25,7 @@ class CreateCountry extends Controller
         $request->save($this->country);
 
         return $this->response->make(
-            new CountryAdminResource($this->country),
+            $this->country->toResource(CountryAdminResource::class),
             201,
         )
             ->header('Location', $this->url->to(

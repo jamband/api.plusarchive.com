@@ -24,7 +24,7 @@ class UpdateLabelTag extends Controller
         $request->save($tag);
 
         return $this->response->make(
-            new LabelTagAdminResource($tag),
+            $tag->toResource(LabelTagAdminResource::class),
         );
     }
 }

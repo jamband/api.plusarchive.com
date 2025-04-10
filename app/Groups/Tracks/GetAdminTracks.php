@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Groups\Tracks;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Routing\Controller;
 
 class GetAdminTracks extends Controller
@@ -17,7 +18,7 @@ class GetAdminTracks extends Controller
         $this->middleware('auth');
     }
 
-    public function __invoke(): TrackAdminResourceCollection
+    public function __invoke(): ResourceCollection
     {
         /** @var Track $query */
         $query = $this->track::query()
@@ -61,8 +62,7 @@ class GetAdminTracks extends Controller
             $query->latest();
         }
 
-        return new TrackAdminResourceCollection(
-            $query->paginate(24)
-        );
+        return $query->paginate(24)
+            ->toResourceCollection(TrackAdminResource::class);
     }
 }

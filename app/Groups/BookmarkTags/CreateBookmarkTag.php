@@ -25,7 +25,7 @@ class CreateBookmarkTag extends Controller
         $request->save($this->tag);
 
         return $this->response->make(
-            new BookmarkTagAdminResource($this->tag),
+            $this->tag->toResource(BookmarkTagAdminResource::class),
             201,
         )
             ->header('Location', $this->url->to(

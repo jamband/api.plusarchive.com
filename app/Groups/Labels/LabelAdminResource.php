@@ -32,4 +32,9 @@ class LabelAdminResource extends JsonResource
             'updated_at' => $this->updated_at->format('Y-m-d H:i'),
         ];
     }
+
+    protected static function newCollection($resource): LabelAdminResourceCollection
+    {
+        return new LabelAdminResourceCollection($resource);
+    }
 }

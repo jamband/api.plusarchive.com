@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Groups\Stores;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Routing\Controller;
 
 class GetAdminStores extends Controller
@@ -17,7 +18,7 @@ class GetAdminStores extends Controller
         $this->middleware('auth');
     }
 
-    public function __invoke(): StoreAdminResourceCollection
+    public function __invoke(): ResourceCollection
     {
         /** @var Store $query */
         $query = $this->store::query()
@@ -56,8 +57,7 @@ class GetAdminStores extends Controller
             $query->latest();
         }
 
-        return new StoreAdminResourceCollection(
-            $query->paginate(24)
-        );
+        return $query->paginate(24)
+            ->toResourceCollection(StoreAdminResource::class);
     }
 }

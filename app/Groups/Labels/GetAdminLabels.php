@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Groups\Labels;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Routing\Controller;
 
 class GetAdminLabels extends Controller
@@ -17,7 +18,7 @@ class GetAdminLabels extends Controller
         $this->middleware('auth');
     }
 
-    public function __invoke(): LabelAdminResourceCollection
+    public function __invoke(): ResourceCollection
     {
         /** @var Label $query */
         $query = $this->label::query()
@@ -56,8 +57,7 @@ class GetAdminLabels extends Controller
             $query->latest();
         }
 
-        return new LabelAdminResourceCollection(
-            $query->paginate(24)
-        );
+        return $query->paginate(24)
+            ->toResourceCollection(LabelAdminResource::class);
     }
 }

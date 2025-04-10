@@ -24,10 +24,9 @@ class GetTrack extends Controller
         $id = empty($id) ? 0 : $id[0];
 
         return $this->response->make(
-            new TrackResource(
-                $this->track->with('genres')
-                    ->findOrFail($id)
-            ),
+            $this->track->with('genres')
+                ->findOrFail($id)
+                ->toResource(TrackResource::class),
         );
     }
 }

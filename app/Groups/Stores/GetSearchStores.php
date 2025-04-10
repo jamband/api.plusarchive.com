@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Groups\Stores;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Routing\Controller;
 
 class GetSearchStores extends Controller
@@ -15,7 +16,7 @@ class GetSearchStores extends Controller
     ) {
     }
 
-    public function __invoke(): StoreResourceCollection
+    public function __invoke(): ResourceCollection
     {
         /** @var Store $query */
         $query = $this->store::query()
@@ -25,10 +26,9 @@ class GetSearchStores extends Controller
         $search = $this->request->query('q');
         $search = is_string($search) ? $search : '';
 
-        return new StoreResourceCollection(
-            $query->ofSearch($search)
-                ->inNameOrder()
-                ->paginate(14)
-        );
+        return $query->ofSearch($search)
+            ->inNameOrder()
+            ->paginate(14)
+            ->toResourceCollection(StoreResource::class);
     }
 }

@@ -21,4 +21,9 @@ class TrackGenreAdminResource extends JsonResource
             'name' => $this->name,
         ];
     }
+
+    protected static function newCollection($resource): TrackGenreAdminResourceCollection
+    {
+        return new TrackGenreAdminResourceCollection($resource);
+    }
 }

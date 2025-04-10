@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Groups\StoreTags;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Routing\Controller;
 
 class GetAdminStoreTags extends Controller
@@ -17,7 +18,7 @@ class GetAdminStoreTags extends Controller
         $this->middleware('auth');
     }
 
-    public function __invoke(): StoreTagAdminResourceCollection
+    public function __invoke(): ResourceCollection
     {
         /** @var StoreTag $query */
         $query = $this->tag::query();
@@ -43,8 +44,7 @@ class GetAdminStoreTags extends Controller
             $query->latest('id');
         }
 
-        return new StoreTagAdminResourceCollection(
-            $query->paginate(24)
-        );
+        return $query->paginate(24)
+            ->toResourceCollection(StoreTagAdminResource::class);
     }
 }

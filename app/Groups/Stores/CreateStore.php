@@ -25,7 +25,7 @@ class CreateStore extends Controller
         $request->save($this->store);
 
         return $this->response->make(
-            new StoreAdminResource($this->store),
+            $this->store->toResource(StoreAdminResource::class),
             201,
         )
             ->header('Location', $this->url->to(

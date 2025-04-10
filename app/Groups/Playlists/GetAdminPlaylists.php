@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Groups\Playlists;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Routing\Controller;
 
 class GetAdminPlaylists extends Controller
@@ -17,7 +18,7 @@ class GetAdminPlaylists extends Controller
         $this->middleware('auth');
     }
 
-    public function __invoke(): PlaylistAdminResourceCollection
+    public function __invoke(): ResourceCollection
     {
         /** @var Playlist $query */
         $query = $this->playlist::query()
@@ -51,8 +52,7 @@ class GetAdminPlaylists extends Controller
             $query->latest();
         }
 
-        return new PlaylistAdminResourceCollection(
-            $query->paginate(24)
-        );
+        return $query->paginate(24)
+            ->toResourceCollection(PlaylistAdminResource::class);
     }
 }

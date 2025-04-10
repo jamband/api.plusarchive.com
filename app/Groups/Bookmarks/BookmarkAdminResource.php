@@ -32,4 +32,9 @@ class BookmarkAdminResource extends JsonResource
             'updated_at' => $this->updated_at->format('Y-m-d H:i'),
         ];
     }
+
+    protected static function newCollection($resource): BookmarkAdminResourceCollection
+    {
+        return new BookmarkAdminResourceCollection($resource);
+    }
 }

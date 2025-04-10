@@ -21,4 +21,9 @@ class LabelTagAdminResource extends JsonResource
             'name' => $this->name,
         ];
     }
+
+    protected static function newCollection($resource): LabelTagAdminResourceCollection
+    {
+        return new LabelTagAdminResourceCollection($resource);
+    }
 }

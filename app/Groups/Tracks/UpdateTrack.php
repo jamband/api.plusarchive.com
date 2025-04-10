@@ -29,7 +29,7 @@ class UpdateTrack extends Controller
         $request->save($track);
 
         return $this->response->make(
-            new TrackAdminResource($track),
+            $track->toResource(TrackAdminResource::class),
         );
     }
 }

@@ -24,11 +24,10 @@ class GetFavoriteTracks extends Controller
             ->with('genres');
 
         return $this->response->make(
-            TrackResource::collection(
-                $query->favorites()
-                    ->latest()
-                    ->get()
-            ),
+            $query->favorites()
+                ->latest()
+                ->get()
+                ->toResourceCollection(TrackResource::class),
         );
     }
 }

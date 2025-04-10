@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Groups\Bookmarks;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Routing\Controller;
 
 class GetAdminBookmarks extends Controller
@@ -17,7 +18,7 @@ class GetAdminBookmarks extends Controller
         $this->middleware('auth');
     }
 
-    public function __invoke(): BookmarkAdminResourceCollection
+    public function __invoke(): ResourceCollection
     {
         /** @var Bookmark $query */
         $query = $this->bookmark::query()
@@ -56,8 +57,7 @@ class GetAdminBookmarks extends Controller
             $query->latest();
         }
 
-        return new BookmarkAdminResourceCollection(
-            $query->paginate(24)
-        );
+        return $query->paginate(24)
+            ->toResourceCollection(BookmarkAdminResource::class);
     }
 }

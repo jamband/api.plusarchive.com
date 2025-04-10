@@ -24,9 +24,8 @@ class GetPlaylist extends Controller
         $id = empty($id) ? 0 : $id[0];
 
         return $this->response->make(
-            new PlaylistResource(
-                $this->playlist->findOrFail($id)
-            ),
+            $this->playlist->findOrFail($id)
+                ->toResource(PlaylistResource::class),
         );
     }
 }

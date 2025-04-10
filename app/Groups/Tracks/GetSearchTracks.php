@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Groups\Tracks;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Routing\Controller;
 
 class GetSearchTracks extends Controller
@@ -15,7 +16,7 @@ class GetSearchTracks extends Controller
     ) {
     }
 
-    public function __invoke(): TrackResourceCollection
+    public function __invoke(): ResourceCollection
     {
         /** @var Track $query */
         $query = $this->track::query()
@@ -25,10 +26,9 @@ class GetSearchTracks extends Controller
         $search = $this->request->query('q');
         $search = is_string($search) ? $search : '';
 
-        return new TrackResourceCollection(
-            $query->ofSearch($search)
-                ->inTitleOrder()
-                ->paginate(24)
-        );
+        return $query->ofSearch($search)
+            ->inTitleOrder()
+            ->paginate(24)
+            ->toResourceCollection(TrackResource::class);
     }
 }

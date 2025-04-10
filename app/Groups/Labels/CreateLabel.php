@@ -25,7 +25,7 @@ class CreateLabel extends Controller
         $request->save($this->label);
 
         return $this->response->make(
-            new LabelAdminResource($this->label),
+            $this->label->toResource(LabelAdminResource::class),
             201,
         )
             ->header('Location', $this->url->to(

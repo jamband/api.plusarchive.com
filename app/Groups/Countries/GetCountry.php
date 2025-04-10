@@ -21,10 +21,9 @@ class GetCountry extends Controller
     public function __invoke(int $id): Response
     {
         return $this->response->make(
-            new CountryAdminResource(
-                $this->country::query()
-                    ->findOrFail($id)
-            ),
+            $this->country::query()
+                ->findOrFail($id)
+                ->toResource(CountryAdminResource::class),
         );
     }
 }

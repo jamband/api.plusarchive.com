@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Groups\MusicProviders;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Routing\Controller;
 
 class GetAdminMusicProviders extends Controller
@@ -17,7 +18,7 @@ class GetAdminMusicProviders extends Controller
         $this->middleware('auth');
     }
 
-    public function __invoke(): MusicProviderAdminResourceCollection
+    public function __invoke(): ResourceCollection
     {
         /** @var MusicProvider $query */
         $query = $this->provider::query();
@@ -38,8 +39,7 @@ class GetAdminMusicProviders extends Controller
             $query->latest('id');
         }
 
-        return new MusicProviderAdminResourceCollection(
-            $query->get()
-        );
+        return $query->get()
+            ->toResourceCollection(MusicProviderAdminResource::class);
     }
 }

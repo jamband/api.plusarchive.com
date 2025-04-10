@@ -25,7 +25,7 @@ class CreateStoreTag extends Controller
         $request->save($this->tag);
 
         return $this->response->make(
-            new StoreTagAdminResource($this->tag),
+            $this->tag->toResource(StoreTagAdminResource::class),
             201,
         )
             ->header('Location', $this->url->to(

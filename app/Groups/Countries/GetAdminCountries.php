@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Groups\Countries;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Routing\Controller;
 
 class GetAdminCountries extends Controller
@@ -17,7 +18,7 @@ class GetAdminCountries extends Controller
         $this->middleware('auth');
     }
 
-    public function __invoke(): CountryAdminResourceCollection
+    public function __invoke(): ResourceCollection
     {
         /** @var Country $query */
         $query = $this->country::query();
@@ -43,8 +44,7 @@ class GetAdminCountries extends Controller
             $query->latest('id');
         }
 
-        return new CountryAdminResourceCollection(
-            $query->get()
-        );
+        return $query->get()
+            ->toResourceCollection(CountryAdminResource::class);
     }
 }

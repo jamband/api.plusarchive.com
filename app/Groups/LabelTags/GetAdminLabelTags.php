@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Groups\LabelTags;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Routing\Controller;
 
 class GetAdminLabelTags extends Controller
@@ -17,7 +18,7 @@ class GetAdminLabelTags extends Controller
         $this->middleware('auth');
     }
 
-    public function __invoke(): LabelTagAdminResourceCollection
+    public function __invoke(): ResourceCollection
     {
         /** @var LabelTag $query */
         $query = $this->tag::query();
@@ -43,8 +44,7 @@ class GetAdminLabelTags extends Controller
             $query->latest('id');
         }
 
-        return new LabelTagAdminResourceCollection(
-            $query->paginate(24)
-        );
+        return $query->paginate(24)
+            ->toResourceCollection(LabelTagAdminResource::class);
     }
 }

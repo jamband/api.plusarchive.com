@@ -29,4 +29,9 @@ class StoreResource extends JsonResource
             'tags' => $tags,
         ];
     }
+
+    protected static function newCollection($resource): StoreResourceCollection
+    {
+        return new StoreResourceCollection($resource);
+    }
 }

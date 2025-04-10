@@ -24,7 +24,7 @@ class UpdateStore extends Controller
         $request->save($store);
 
         return $this->response->make(
-            new StoreAdminResource($store),
+            $store->toResource(StoreAdminResource::class),
         );
     }
 }

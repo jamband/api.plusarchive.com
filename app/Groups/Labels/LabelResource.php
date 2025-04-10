@@ -29,4 +29,9 @@ class LabelResource extends JsonResource
             'tags' => $tags,
         ];
     }
+
+    protected static function newCollection($resource): LabelResourceCollection
+    {
+        return new LabelResourceCollection($resource);
+    }
 }

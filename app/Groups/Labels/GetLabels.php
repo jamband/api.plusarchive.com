@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Groups\Labels;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Routing\Controller;
 
 class GetLabels extends Controller
@@ -15,7 +16,7 @@ class GetLabels extends Controller
     ) {
     }
 
-    public function __invoke(): LabelResourceCollection
+    public function __invoke(): ResourceCollection
     {
         /** @var Label $query */
         $query = $this->label::query()
@@ -32,8 +33,8 @@ class GetLabels extends Controller
             $query->ofTag($tag);
         }
 
-        return new LabelResourceCollection(
-            $query->latest()->paginate(14)
-        );
+        return $query->latest()
+            ->paginate(14)
+            ->toResourceCollection(LabelResource::class);
     }
 }

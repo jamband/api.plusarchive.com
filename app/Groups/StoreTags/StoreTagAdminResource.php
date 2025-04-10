@@ -21,4 +21,9 @@ class StoreTagAdminResource extends JsonResource
             'name' => $this->name,
         ];
     }
+
+    protected static function newCollection($resource): StoreTagAdminResourceCollection
+    {
+        return new StoreTagAdminResourceCollection($resource);
+    }
 }

@@ -24,7 +24,7 @@ class UpdateCountry extends Controller
         $request->save($country);
 
         return $this->response->make(
-            new CountryAdminResource($country),
+            $country->toResource(CountryAdminResource::class),
         );
     }
 }

@@ -21,10 +21,9 @@ class GetMusicProvider extends Controller
     public function __invoke(int $id): Response
     {
         return $this->response->make(
-            new MusicProviderAdminResource(
-                $this->provider::query()
-                    ->findOrFail($id)
-            ),
+            $this->provider::query()
+                ->findOrFail($id)
+                ->toResource(MusicProviderAdminResource::class),
         );
     }
 }

@@ -25,7 +25,7 @@ class CreateTrackGenre extends Controller
         $request->save($this->genre);
 
         return $this->response->make(
-            new TrackGenreAdminResource($this->genre),
+            $this->genre->toResource(TrackGenreAdminResource::class),
             201,
         )
             ->header('Location', $this->url->to(

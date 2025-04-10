@@ -19,12 +19,11 @@ class GetPlaylists extends Controller
     public function __invoke(): Response
     {
         return $this->response->make(
-            PlaylistResource::collection(
-                $this->playlist::query()
-                    ->with('provider')
-                    ->latest()
-                    ->get()
-            ),
+            $this->playlist::query()
+                ->with('provider')
+                ->latest()
+                ->get()
+                ->toResourceCollection(PlaylistResource::class),
         );
     }
 }

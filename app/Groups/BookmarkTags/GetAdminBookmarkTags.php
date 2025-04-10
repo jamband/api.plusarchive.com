@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Groups\BookmarkTags;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Routing\Controller;
 
 class GetAdminBookmarkTags extends Controller
@@ -17,7 +18,7 @@ class GetAdminBookmarkTags extends Controller
         $this->middleware('auth');
     }
 
-    public function __invoke(): BookmarkTagAdminResourceCollection
+    public function __invoke(): ResourceCollection
     {
         /** @var BookmarkTag $query */
         $query = $this->tag::query();
@@ -43,8 +44,7 @@ class GetAdminBookmarkTags extends Controller
             $query->latest('id');
         }
 
-        return new BookmarkTagAdminResourceCollection(
-            $query->paginate(24),
-        );
+        return $query->paginate(24)
+            ->toResourceCollection(BookmarkTagAdminResource::class);
     }
 }

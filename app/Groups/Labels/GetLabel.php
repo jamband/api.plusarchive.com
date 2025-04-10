@@ -21,12 +21,11 @@ class GetLabel extends Controller
     public function __invoke(int $id): Response
     {
         return $this->response->make(
-            new LabelAdminResource(
-                $this->label::query()
-                    ->with('country')
-                    ->with('tags')
-                    ->findOrFail($id)
-            ),
+            $this->label::query()
+                ->with('country')
+                ->with('tags')
+                ->findOrFail($id)
+                ->toResource(LabelAdminResource::class),
         );
     }
 }

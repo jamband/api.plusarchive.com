@@ -43,4 +43,9 @@ class TrackResource extends JsonResource
             'created_at' => $this->created_at->format('Y.m.d'),
         ];
     }
+
+    protected static function newCollection($resource): TrackResourceCollection
+    {
+        return new TrackResourceCollection($resource);
+    }
 }

@@ -29,4 +29,9 @@ class BookmarkResource extends JsonResource
             'tags' => $tags,
         ];
     }
+
+    protected static function newCollection($resource): BookmarkResourceCollection
+    {
+        return new BookmarkResourceCollection($resource);
+    }
 }

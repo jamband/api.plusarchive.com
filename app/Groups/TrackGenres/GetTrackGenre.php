@@ -21,10 +21,9 @@ class GetTrackGenre extends Controller
     public function __invoke(int $id): Response
     {
         return $this->response->make(
-            new TrackGenreAdminResource(
-                $this->genre::query()
-                    ->findOrFail($id)
-            ),
+            $this->genre::query()
+                ->findOrFail($id)
+                ->toResource(TrackGenreAdminResource::class),
         );
     }
 }

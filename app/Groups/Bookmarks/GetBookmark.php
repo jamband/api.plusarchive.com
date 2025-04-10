@@ -21,12 +21,11 @@ class GetBookmark extends Controller
     public function __invoke(int $id): Response
     {
         return $this->response->make(
-            new BookmarkAdminResource(
-                $this->bookmark::query()
-                    ->with('country')
-                    ->with('tags')
-                    ->findOrFail($id)
-            ),
+            $this->bookmark::query()
+                ->with('country')
+                ->with('tags')
+                ->findOrFail($id)
+                ->toResource(BookmarkAdminResource::class),
         );
     }
 }

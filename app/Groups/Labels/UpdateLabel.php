@@ -24,7 +24,7 @@ class UpdateLabel extends Controller
         $request->save($label);
 
         return $this->response->make(
-            new LabelAdminResource($label),
+            $label->toResource(LabelAdminResource::class),
         );
     }
 }

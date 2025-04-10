@@ -25,7 +25,7 @@ class CreatePlaylist extends Controller
         $request->save($this->playlist);
 
         return $this->response->make(
-            new PlaylistAdminResource($this->playlist),
+            $this->playlist->toResource(PlaylistAdminResource::class),
             201,
         )
             ->header('Location', $this->url->to(

@@ -21,12 +21,11 @@ class GetStore extends Controller
     public function __invoke(int $id): Response
     {
         return $this->response->make(
-            new StoreAdminResource(
-                $this->store::query()
-                    ->with('country')
-                    ->with('tags')
-                    ->findOrFail($id)
-            ),
+            $this->store::query()
+                ->with('country')
+                ->with('tags')
+                ->findOrFail($id)
+                ->toResource(StoreAdminResource::class),
         );
     }
 }

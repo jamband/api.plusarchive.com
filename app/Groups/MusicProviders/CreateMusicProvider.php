@@ -25,7 +25,7 @@ class CreateMusicProvider extends Controller
         $request->save($this->provider);
 
         return $this->response->make(
-            new MusicProviderAdminResource($this->provider),
+            $this->provider->toResource(MusicProviderAdminResource::class),
             201,
         )
             ->header('Location', $this->url->to(

@@ -24,7 +24,7 @@ class UpdateBookmarkTag extends Controller
         $request->save($tag);
 
         return $this->response->make(
-            new BookmarkTagAdminResource($tag),
+            $tag->toResource(BookmarkTagAdminResource::class),
         );
     }
 }

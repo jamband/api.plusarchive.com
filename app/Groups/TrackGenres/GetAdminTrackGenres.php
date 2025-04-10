@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Groups\TrackGenres;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Routing\Controller;
 
 class GetAdminTrackGenres extends Controller
@@ -17,7 +18,7 @@ class GetAdminTrackGenres extends Controller
         $this->middleware('auth');
     }
 
-    public function __invoke(): TrackGenreAdminResourceCollection
+    public function __invoke(): ResourceCollection
     {
         /** @var TrackGenre $query */
         $query = $this->genre::query();
@@ -43,8 +44,7 @@ class GetAdminTrackGenres extends Controller
             $query->latest('id');
         }
 
-        return new TrackGenreAdminResourceCollection(
-            $query->paginate(24)
-        );
+        return $query->paginate(24)
+            ->toResourceCollection(TrackGenreAdminResource::class);
     }
 }

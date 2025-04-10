@@ -21,4 +21,9 @@ class BookmarkTagAdminResource extends JsonResource
             'name' => $this->name,
         ];
     }
+
+    protected static function newCollection($resource): BookmarkTagAdminResourceCollection
+    {
+        return new BookmarkTagAdminResourceCollection($resource);
+    }
 }

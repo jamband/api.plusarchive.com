@@ -25,7 +25,7 @@ class CreateBookmark extends Controller
         $request->save($this->bookmark);
 
         return $this->response->make(
-            new BookmarkAdminResource($this->bookmark),
+            $this->bookmark->toResource(BookmarkAdminResource::class),
             201,
         )
             ->header('Location', $this->url->to(

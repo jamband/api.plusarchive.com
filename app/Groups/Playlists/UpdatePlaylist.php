@@ -29,7 +29,7 @@ class UpdatePlaylist extends Controller
         $request->save($playlist);
 
         return $this->response->make(
-            new PlaylistAdminResource($playlist),
+            $playlist->toResource(PlaylistAdminResource::class),
         );
     }
 }

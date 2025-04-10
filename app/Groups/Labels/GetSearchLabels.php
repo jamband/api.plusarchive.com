@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Groups\Labels;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Routing\Controller;
 
 class GetSearchLabels extends Controller
@@ -15,7 +16,7 @@ class GetSearchLabels extends Controller
     ) {
     }
 
-    public function __invoke(): LabelResourceCollection
+    public function __invoke(): ResourceCollection
     {
         /** @var Label $query */
         $query = $this->label::query()
@@ -25,10 +26,9 @@ class GetSearchLabels extends Controller
         $search = $this->request->query('q');
         $search = is_string($search) ? $search : '';
 
-        return new LabelResourceCollection(
-            $query->ofSearch($search)
-                ->inNameOrder()
-                ->paginate(14)
-        );
+        return $query->ofSearch($search)
+            ->inNameOrder()
+            ->paginate(14)
+            ->toResourceCollection(LabelResource::class);
     }
 }

@@ -27,7 +27,7 @@ class CreateTrack extends Controller
         $request->save($this->track);
 
         return $this->response->make(
-            new TrackAdminResource($this->track),
+            $this->track->toResource(TrackAdminResource::class),
             201,
         )
             ->header('Location', $this->url->to(

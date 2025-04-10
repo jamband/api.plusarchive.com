@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Groups\Bookmarks;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Routing\Controller;
 
 class GetBookmarks extends Controller
@@ -15,7 +16,7 @@ class GetBookmarks extends Controller
     ) {
     }
 
-    public function __invoke(): BookmarkResourceCollection
+    public function __invoke(): ResourceCollection
     {
         /** @var Bookmark $query */
         $query = $this->bookmark::query()
@@ -32,8 +33,8 @@ class GetBookmarks extends Controller
             $query->ofTag($tag);
         }
 
-        return new BookmarkResourceCollection(
-            $query->latest()->paginate(14)
-        );
+        return $query->latest()
+            ->paginate(14)
+            ->toResourceCollection(BookmarkResource::class);
     }
 }

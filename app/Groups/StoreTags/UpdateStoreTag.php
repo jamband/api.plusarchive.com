@@ -24,7 +24,7 @@ class UpdateStoreTag extends Controller
         $request->save($tag);
 
         return $this->response->make(
-            new StoreTagAdminResource($tag),
+            $tag->toResource(StoreTagAdminResource::class),
         );
     }
 }
