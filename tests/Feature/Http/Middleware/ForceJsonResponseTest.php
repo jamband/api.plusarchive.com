@@ -34,7 +34,7 @@ class ForceJsonResponseTest extends TestCase
 
         $this->withoutMiddleware(ForceJsonResponse::class)
             ->head($this->uri)
-            ->assertHeader('Content-Type', 'text/html; charset=UTF-8');
+            ->assertHeader('Content-Type', 'text/html; charset=utf-8');
     }
 
     public function testForceJsonResponse(): void
