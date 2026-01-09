@@ -6,7 +6,6 @@ namespace Tests\Feature\Groups\Tracks;
 
 use App\Groups\TrackGenres\TrackGenre;
 use App\Groups\TrackGenres\TrackGenreFactory;
-use App\Groups\Tracks\Track;
 use App\Groups\Tracks\TrackFactory;
 use App\Groups\Users\UserFactory;
 use Hashids\Hashids;
