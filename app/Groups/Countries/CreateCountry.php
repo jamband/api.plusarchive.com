@@ -5,19 +5,19 @@ declare(strict_types=1);
 namespace App\Groups\Countries;
 
 use Illuminate\Http\Response;
-use Illuminate\Routing\Controller;
+use Illuminate\Routing\Attributes\Controllers\Middleware;
 use Illuminate\Routing\ResponseFactory;
 use Illuminate\Routing\UrlGenerator;
 
-class CreateCountry extends Controller
+#[Middleware('verified')]
+#[Middleware('auth')]
+readonly class CreateCountry
 {
     public function __construct(
-        private readonly Country $country,
-        private readonly ResponseFactory $response,
-        private readonly UrlGenerator $url,
+        private Country $country,
+        private ResponseFactory $response,
+        private UrlGenerator $url,
     ) {
-        $this->middleware('verified');
-        $this->middleware('auth');
     }
 
     public function __invoke(CreateCountryRequest $request): Response

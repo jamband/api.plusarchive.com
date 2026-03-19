@@ -6,16 +6,16 @@ namespace App\Groups\Countries;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
-use Illuminate\Routing\Controller;
+use Illuminate\Routing\Attributes\Controllers\Middleware;
 
-class GetAdminCountries extends Controller
+#[Middleware('verified')]
+#[Middleware('auth')]
+readonly class GetAdminCountries
 {
     public function __construct(
-        private readonly Country $country,
-        private readonly Request $request,
+        private Country $country,
+        private Request $request,
     ) {
-        $this->middleware('verified');
-        $this->middleware('auth');
     }
 
     public function __invoke(): ResourceCollection
