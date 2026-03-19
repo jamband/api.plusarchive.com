@@ -6,6 +6,7 @@ namespace App\Groups\Users;
 
 use Carbon\Carbon;
 use Illuminate\Container\Container;
+use Illuminate\Database\Eloquent\Factories\Attributes\UseModel;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Hashing\HashManager;
 use Illuminate\Support\Str;
@@ -13,14 +14,12 @@ use Illuminate\Support\Str;
 /**
  * @extends Factory<User>
  */
+#[UseModel(User::class)]
 class UserFactory extends Factory
 {
     public const string PASSWORD = 'password';
 
-    protected $model = User::class;
-
     protected static string|null $password;
-
 
     public function definition(): array
     {
