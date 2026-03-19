@@ -6,16 +6,16 @@ namespace App\Groups\MusicProviders;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
-use Illuminate\Routing\Controller;
+use Illuminate\Routing\Attributes\Controllers\Middleware;
 
-class GetAdminMusicProviders extends Controller
+#[Middleware('verified')]
+#[Middleware('auth')]
+readonly class GetAdminMusicProviders
 {
     public function __construct(
-        private readonly MusicProvider $provider,
-        private readonly Request $request,
+        private MusicProvider $provider,
+        private Request $request,
     ) {
-        $this->middleware('verified');
-        $this->middleware('auth');
     }
 
     public function __invoke(): ResourceCollection

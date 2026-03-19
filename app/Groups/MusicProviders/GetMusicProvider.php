@@ -5,17 +5,17 @@ declare(strict_types=1);
 namespace App\Groups\MusicProviders;
 
 use Illuminate\Http\Response;
-use Illuminate\Routing\Controller;
+use Illuminate\Routing\Attributes\Controllers\Middleware;
 use Illuminate\Routing\ResponseFactory;
 
-class GetMusicProvider extends Controller
+#[Middleware('verified')]
+#[Middleware('auth')]
+readonly class GetMusicProvider
 {
     public function __construct(
-        private readonly ResponseFactory $response,
-        private readonly MusicProvider $provider,
+        private ResponseFactory $response,
+        private MusicProvider $provider,
     ) {
-        $this->middleware('verified');
-        $this->middleware('auth');
     }
 
     public function __invoke(int $id): Response

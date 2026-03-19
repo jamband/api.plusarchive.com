@@ -5,19 +5,19 @@ declare(strict_types=1);
 namespace App\Groups\MusicProviders;
 
 use Illuminate\Http\Response;
-use Illuminate\Routing\Controller;
+use Illuminate\Routing\Attributes\Controllers\Middleware;
 use Illuminate\Routing\ResponseFactory;
 use Illuminate\Routing\UrlGenerator;
 
-class CreateMusicProvider extends Controller
+#[Middleware('verified')]
+#[Middleware('auth')]
+readonly class CreateMusicProvider
 {
     public function __construct(
-        private readonly MusicProvider $provider,
-        private readonly ResponseFactory $response,
-        private readonly UrlGenerator $url,
+        private MusicProvider $provider,
+        private ResponseFactory $response,
+        private UrlGenerator $url,
     ) {
-        $this->middleware('verified');
-        $this->middleware('auth');
     }
 
     public function __invoke(CreateMusicProviderRequest $request): Response
