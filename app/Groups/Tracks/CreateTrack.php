@@ -6,20 +6,20 @@ namespace App\Groups\Tracks;
 
 use Hashids\Hashids;
 use Illuminate\Http\Response;
-use Illuminate\Routing\Controller;
+use Illuminate\Routing\Attributes\Controllers\Middleware;
 use Illuminate\Routing\ResponseFactory;
 use Illuminate\Routing\UrlGenerator;
 
-class CreateTrack extends Controller
+#[Middleware('verified')]
+#[Middleware('auth')]
+readonly class CreateTrack
 {
     public function __construct(
-        private readonly Track $track,
-        private readonly ResponseFactory $response,
-        private readonly UrlGenerator $url,
-        private readonly Hashids $hashids,
+        private Track $track,
+        private ResponseFactory $response,
+        private UrlGenerator $url,
+        private Hashids $hashids,
     ) {
-        $this->middleware('verified');
-        $this->middleware('auth');
     }
 
     public function __invoke(CreateTrackRequest $request): Response

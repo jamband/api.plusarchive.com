@@ -6,16 +6,16 @@ namespace App\Groups\Tracks;
 
 use App\Groups\MusicProviders\MusicProviderFactory;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Factories\Attributes\UseModel;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
 /**
  * @extends Factory<Track>
  */
+#[UseModel(Track::class)]
 class TrackFactory extends Factory
 {
-    protected $model = Track::class;
-
     public function definition(): array
     {
         $providerFactory = new MusicProviderFactory();

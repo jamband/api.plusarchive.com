@@ -6,15 +6,14 @@ namespace App\Groups\Tracks;
 
 use Hashids\Hashids;
 use Illuminate\Http\Response;
-use Illuminate\Routing\Controller;
 use Illuminate\Routing\ResponseFactory;
 
-class GetTrack extends Controller
+readonly class GetTrack
 {
     public function __construct(
-        private readonly Track $track,
-        private readonly Hashids $hashids,
-        private readonly ResponseFactory $response,
+        private Track $track,
+        private Hashids $hashids,
+        private ResponseFactory $response,
     ) {
     }
 

@@ -6,16 +6,16 @@ namespace App\Groups\Tracks;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
-use Illuminate\Routing\Controller;
+use Illuminate\Routing\Attributes\Controllers\Middleware;
 
-class GetAdminTracks extends Controller
+#[Middleware('verified')]
+#[Middleware('auth')]
+readonly class GetAdminTracks
 {
     public function __construct(
-        private readonly Track $track,
-        private readonly Request $request,
+        private Track $track,
+        private Request $request,
     ) {
-        $this->middleware('verified');
-        $this->middleware('auth');
     }
 
     public function __invoke(): ResourceCollection

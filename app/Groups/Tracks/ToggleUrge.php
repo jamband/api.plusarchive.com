@@ -7,19 +7,19 @@ namespace App\Groups\Tracks;
 use Hashids\Hashids;
 use Illuminate\Foundation\Application;
 use Illuminate\Http\Response;
-use Illuminate\Routing\Controller;
+use Illuminate\Routing\Attributes\Controllers\Middleware;
 use Illuminate\Routing\ResponseFactory;
 
-class ToggleUrge extends Controller
+#[Middleware('verified')]
+#[Middleware('auth')]
+readonly class ToggleUrge
 {
     public function __construct(
-        private readonly Hashids $hashids,
-        private readonly Track $track,
-        private readonly ResponseFactory $response,
-        private readonly Application $app,
+        private Hashids $hashids,
+        private Track $track,
+        private ResponseFactory $response,
+        private Application $app,
     ) {
-        $this->middleware('verified');
-        $this->middleware('auth');
     }
 
     public function __invoke(string $hash): Response

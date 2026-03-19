@@ -5,14 +5,13 @@ declare(strict_types=1);
 namespace App\Groups\Tracks;
 
 use Illuminate\Http\Response;
-use Illuminate\Routing\Controller;
 use Illuminate\Routing\ResponseFactory;
 
-class GetFavoriteTracks extends Controller
+readonly class GetFavoriteTracks
 {
     public function __construct(
-        private readonly Track $track,
-        private readonly ResponseFactory $response,
+        private Track $track,
+        private ResponseFactory $response,
     ) {
     }
 

@@ -5,17 +5,17 @@ declare(strict_types=1);
 namespace App\Groups\Tracks;
 
 use Illuminate\Http\Response;
-use Illuminate\Routing\Controller;
+use Illuminate\Routing\Attributes\Controllers\Middleware;
 use Illuminate\Routing\ResponseFactory;
 
-class StopUrges extends Controller
+#[Middleware('verified')]
+#[Middleware('auth')]
+readonly class StopUrges
 {
     public function __construct(
-        private readonly ResponseFactory $response,
-        private readonly Track $track,
+        private ResponseFactory $response,
+        private Track $track,
     ) {
-        $this->middleware('verified');
-        $this->middleware('auth');
     }
 
     public function __invoke(): Response

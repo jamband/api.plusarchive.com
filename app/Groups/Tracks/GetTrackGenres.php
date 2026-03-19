@@ -6,14 +6,13 @@ namespace App\Groups\Tracks;
 
 use App\Groups\TrackGenres\TrackGenre;
 use Illuminate\Http\Response;
-use Illuminate\Routing\Controller;
 use Illuminate\Routing\ResponseFactory;
 
-class GetTrackGenres extends Controller
+readonly class GetTrackGenres
 {
     public function __construct(
-        private readonly ResponseFactory $response,
-        private readonly TrackGenre $genre,
+        private ResponseFactory $response,
+        private TrackGenre $genre,
     ) {
     }
 

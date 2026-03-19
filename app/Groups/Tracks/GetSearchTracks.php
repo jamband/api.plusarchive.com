@@ -6,13 +6,12 @@ namespace App\Groups\Tracks;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
-use Illuminate\Routing\Controller;
 
-class GetSearchTracks extends Controller
+readonly class GetSearchTracks
 {
     public function __construct(
-        private readonly Track $track,
-        private readonly Request $request,
+        private Track $track,
+        private Request $request,
     ) {
     }
 

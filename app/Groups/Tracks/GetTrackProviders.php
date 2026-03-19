@@ -6,14 +6,13 @@ namespace App\Groups\Tracks;
 
 use App\Groups\MusicProviders\MusicProvider;
 use Illuminate\Http\Response;
-use Illuminate\Routing\Controller;
 use Illuminate\Routing\ResponseFactory;
 
-class GetTrackProviders extends Controller
+readonly class GetTrackProviders
 {
     public function __construct(
-        private readonly ResponseFactory $response,
-        private readonly MusicProvider $provider,
+        private ResponseFactory $response,
+        private MusicProvider $provider,
     ) {
     }
 

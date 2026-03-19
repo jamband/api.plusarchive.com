@@ -6,15 +6,14 @@ namespace App\Groups\Tracks;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Routing\Controller;
 use Illuminate\Routing\ResponseFactory;
 
-class GetMinimalGenres extends Controller
+readonly class GetMinimalGenres
 {
     public function __construct(
-        private readonly Track $track,
-        private readonly Request $request,
-        private readonly ResponseFactory $response,
+        private Track $track,
+        private Request $request,
+        private ResponseFactory $response,
     ) {
     }
 
