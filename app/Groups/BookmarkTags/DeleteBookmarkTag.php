@@ -5,17 +5,17 @@ declare(strict_types=1);
 namespace App\Groups\BookmarkTags;
 
 use Illuminate\Http\Response;
-use Illuminate\Routing\Controller;
+use Illuminate\Routing\Attributes\Controllers\Middleware;
 use Illuminate\Routing\ResponseFactory;
 
-class DeleteBookmarkTag extends Controller
+#[Middleware('verified')]
+#[Middleware('auth')]
+readonly class DeleteBookmarkTag
 {
     public function __construct(
-        private readonly BookmarkTag $tag,
-        private readonly ResponseFactory $response,
+        private BookmarkTag $tag,
+        private ResponseFactory $response,
     ) {
-        $this->middleware('verified');
-        $this->middleware('auth');
     }
 
     public function __invoke(int $id): Response

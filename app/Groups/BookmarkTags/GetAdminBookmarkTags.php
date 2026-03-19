@@ -6,16 +6,16 @@ namespace App\Groups\BookmarkTags;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
-use Illuminate\Routing\Controller;
+use Illuminate\Routing\Attributes\Controllers\Middleware;
 
-class GetAdminBookmarkTags extends Controller
+#[Middleware('verified')]
+#[Middleware('auth')]
+readonly class GetAdminBookmarkTags
 {
     public function __construct(
-        private readonly BookmarkTag $tag,
-        private readonly Request $request,
+        private BookmarkTag $tag,
+        private Request $request,
     ) {
-        $this->middleware('verified');
-        $this->middleware('auth');
     }
 
     public function __invoke(): ResourceCollection
