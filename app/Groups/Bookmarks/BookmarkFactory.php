@@ -5,15 +5,15 @@ declare(strict_types=1);
 namespace App\Groups\Bookmarks;
 
 use App\Groups\Countries\CountryFactory;
+use Illuminate\Database\Eloquent\Factories\Attributes\UseModel;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
  * @extends Factory<Bookmark>
  */
+#[UseModel(Bookmark::class)]
 class BookmarkFactory extends Factory
 {
-    protected $model = Bookmark::class;
-
     public function definition(): array
     {
         $countryFactory = new CountryFactory();

@@ -5,19 +5,19 @@ declare(strict_types=1);
 namespace App\Groups\Bookmarks;
 
 use Illuminate\Http\Response;
-use Illuminate\Routing\Controller;
+use Illuminate\Routing\Attributes\Controllers\Middleware;
 use Illuminate\Routing\ResponseFactory;
 use Illuminate\Routing\UrlGenerator;
 
-class CreateBookmark extends Controller
+#[Middleware('verified')]
+#[Middleware('auth')]
+readonly class CreateBookmark
 {
     public function __construct(
-        private readonly Bookmark $bookmark,
-        private readonly ResponseFactory $response,
-        private readonly UrlGenerator $url,
+        private Bookmark $bookmark,
+        private ResponseFactory $response,
+        private UrlGenerator $url,
     ) {
-        $this->middleware('verified');
-        $this->middleware('auth');
     }
 
     public function __invoke(CreateBookmarkRequest $request): Response

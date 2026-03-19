@@ -6,14 +6,13 @@ namespace App\Groups\Bookmarks;
 
 use App\Groups\BookmarkTags\BookmarkTag;
 use Illuminate\Http\Response;
-use Illuminate\Routing\Controller;
 use Illuminate\Routing\ResponseFactory;
 
-class GetBookmarkTags extends Controller
+readonly class GetBookmarkTags
 {
     public function __construct(
-        private readonly ResponseFactory $response,
-        private readonly BookmarkTag $tag,
+        private ResponseFactory $response,
+        private BookmarkTag $tag,
     ) {
     }
 

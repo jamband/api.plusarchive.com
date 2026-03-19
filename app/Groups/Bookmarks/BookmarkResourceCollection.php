@@ -5,8 +5,9 @@ declare(strict_types=1);
 namespace App\Groups\Bookmarks;
 
 use App\Http\Resources\Json\ResourceCollection;
+use Illuminate\Http\Resources\Attributes\Collects;
 
+#[Collects(BookmarkResource::class)]
 class BookmarkResourceCollection extends ResourceCollection
 {
-    public $collects = BookmarkResource::class;
 }

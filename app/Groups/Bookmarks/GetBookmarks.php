@@ -6,13 +6,12 @@ namespace App\Groups\Bookmarks;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
-use Illuminate\Routing\Controller;
 
-class GetBookmarks extends Controller
+readonly class GetBookmarks
 {
     public function __construct(
-        private readonly Bookmark $bookmark,
-        private readonly Request $request,
+        private Bookmark $bookmark,
+        private Request $request,
     ) {
     }
 

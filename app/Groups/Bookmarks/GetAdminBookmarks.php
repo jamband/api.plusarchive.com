@@ -6,16 +6,16 @@ namespace App\Groups\Bookmarks;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
-use Illuminate\Routing\Controller;
+use Illuminate\Routing\Attributes\Controllers\Middleware;
 
-class GetAdminBookmarks extends Controller
+#[Middleware('verified')]
+#[Middleware('auth')]
+readonly class GetAdminBookmarks
 {
     public function __construct(
-        private readonly Bookmark $bookmark,
-        private readonly Request $request,
+        private Bookmark $bookmark,
+        private Request $request,
     ) {
-        $this->middleware('verified');
-        $this->middleware('auth');
     }
 
     public function __invoke(): ResourceCollection
