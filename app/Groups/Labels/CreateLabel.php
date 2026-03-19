@@ -5,19 +5,19 @@ declare(strict_types=1);
 namespace App\Groups\Labels;
 
 use Illuminate\Http\Response;
-use Illuminate\Routing\Controller;
+use Illuminate\Routing\Attributes\Controllers\Middleware;
 use Illuminate\Routing\ResponseFactory;
 use Illuminate\Routing\UrlGenerator;
 
-class CreateLabel extends Controller
+#[Middleware('verified')]
+#[Middleware('auth')]
+readonly class CreateLabel
 {
     public function __construct(
-        private readonly Label $label,
-        private readonly ResponseFactory $response,
-        private readonly UrlGenerator $url,
+        private Label $label,
+        private ResponseFactory $response,
+        private UrlGenerator $url,
     ) {
-        $this->middleware('verified');
-        $this->middleware('auth');
     }
 
     public function __invoke(CreateLabelRequest $request): Response

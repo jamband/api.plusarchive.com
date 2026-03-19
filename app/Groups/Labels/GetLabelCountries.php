@@ -5,14 +5,13 @@ declare(strict_types=1);
 namespace App\Groups\Labels;
 
 use Illuminate\Http\Response;
-use Illuminate\Routing\Controller;
 use Illuminate\Routing\ResponseFactory;
 
-class GetLabelCountries extends Controller
+readonly class GetLabelCountries
 {
     public function __construct(
-        private readonly Label $label,
-        private readonly ResponseFactory $response,
+        private Label $label,
+        private ResponseFactory $response,
     ) {
     }
 

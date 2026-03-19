@@ -6,13 +6,12 @@ namespace App\Groups\Labels;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
-use Illuminate\Routing\Controller;
 
-class GetSearchLabels extends Controller
+readonly class GetSearchLabels
 {
     public function __construct(
-        private readonly Request $request,
-        private readonly Label $label,
+        private Request $request,
+        private Label $label,
     ) {
     }
 

@@ -6,14 +6,13 @@ namespace App\Groups\Labels;
 
 use App\Groups\LabelTags\LabelTag;
 use Illuminate\Http\Response;
-use Illuminate\Routing\Controller;
 use Illuminate\Routing\ResponseFactory;
 
-class GetLabelTags extends Controller
+readonly class GetLabelTags
 {
     public function __construct(
-        private readonly ResponseFactory $response,
-        private readonly LabelTag $tag,
+        private ResponseFactory $response,
+        private LabelTag $tag,
     ) {
     }
 
