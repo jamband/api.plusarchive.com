@@ -5,19 +5,19 @@ declare(strict_types=1);
 namespace App\Groups\TrackGenres;
 
 use Illuminate\Http\Response;
-use Illuminate\Routing\Controller;
+use Illuminate\Routing\Attributes\Controllers\Middleware;
 use Illuminate\Routing\ResponseFactory;
 use Illuminate\Routing\UrlGenerator;
 
-class CreateTrackGenre extends Controller
+#[Middleware('verified')]
+#[Middleware('auth')]
+readonly class CreateTrackGenre
 {
     public function __construct(
-        private readonly TrackGenre $genre,
-        private readonly ResponseFactory $response,
-        private readonly UrlGenerator $url,
+        private TrackGenre $genre,
+        private ResponseFactory $response,
+        private UrlGenerator $url,
     ) {
-        $this->middleware('verified');
-        $this->middleware('auth');
     }
 
     public function __invoke(CreateTrackGenreRequest $request): Response

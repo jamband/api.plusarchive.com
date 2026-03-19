@@ -6,16 +6,16 @@ namespace App\Groups\TrackGenres;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
-use Illuminate\Routing\Controller;
+use Illuminate\Routing\Attributes\Controllers\Middleware;
 
-class GetAdminTrackGenres extends Controller
+#[Middleware('verified')]
+#[Middleware('auth')]
+readonly class GetAdminTrackGenres
 {
     public function __construct(
-        private readonly TrackGenre $genre,
-        private readonly Request $request,
+        private TrackGenre $genre,
+        private Request $request,
     ) {
-        $this->middleware('verified');
-        $this->middleware('auth');
     }
 
     public function __invoke(): ResourceCollection

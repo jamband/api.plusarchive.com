@@ -5,17 +5,17 @@ declare(strict_types=1);
 namespace App\Groups\TrackGenres;
 
 use Illuminate\Http\Response;
-use Illuminate\Routing\Controller;
+use Illuminate\Routing\Attributes\Controllers\Middleware;
 use Illuminate\Routing\ResponseFactory;
 
-class UpdateTrackGenre extends Controller
+#[Middleware('verified')]
+#[Middleware('auth')]
+readonly class UpdateTrackGenre
 {
     public function __construct(
-        private readonly TrackGenre $genre,
-        private readonly ResponseFactory $response,
+        private TrackGenre $genre,
+        private ResponseFactory $response,
     ) {
-        $this->middleware('verified');
-        $this->middleware('auth');
     }
 
     public function __invoke(UpdateTrackGenreRequest $request, int $id): Response
