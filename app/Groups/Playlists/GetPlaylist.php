@@ -6,15 +6,14 @@ namespace App\Groups\Playlists;
 
 use Hashids\Hashids;
 use Illuminate\Http\Response;
-use Illuminate\Routing\Controller;
 use Illuminate\Routing\ResponseFactory;
 
-class GetPlaylist extends Controller
+readonly class GetPlaylist
 {
     public function __construct(
-        private readonly Playlist $playlist,
-        private readonly Hashids $hashids,
-        private readonly ResponseFactory $response,
+        private Playlist $playlist,
+        private Hashids $hashids,
+        private ResponseFactory $response,
     ) {
     }
 

@@ -5,19 +5,19 @@ declare(strict_types=1);
 namespace App\Groups\Playlists;
 
 use Illuminate\Http\Response;
-use Illuminate\Routing\Controller;
+use Illuminate\Routing\Attributes\Controllers\Middleware;
 use Illuminate\Routing\ResponseFactory;
 use Illuminate\Routing\UrlGenerator;
 
-class CreatePlaylist extends Controller
+#[Middleware('verified')]
+#[Middleware('auth')]
+readonly class CreatePlaylist
 {
     public function __construct(
-        private readonly Playlist $playlist,
-        private readonly ResponseFactory $response,
-        private readonly UrlGenerator $url,
+        private Playlist $playlist,
+        private ResponseFactory $response,
+        private UrlGenerator $url,
     ) {
-        $this->middleware('verified');
-        $this->middleware('auth');
     }
 
     public function __invoke(CreatePlaylistRequest $request): Response

@@ -6,18 +6,18 @@ namespace App\Groups\Playlists;
 
 use Hashids\Hashids;
 use Illuminate\Http\Response;
-use Illuminate\Routing\Controller;
+use Illuminate\Routing\Attributes\Controllers\Middleware;
 use Illuminate\Routing\ResponseFactory;
 
-class UpdatePlaylist extends Controller
+#[Middleware('verified')]
+#[Middleware('auth')]
+readonly class UpdatePlaylist
 {
     public function __construct(
-        private readonly Playlist $playlist,
-        private readonly Hashids $hashids,
-        private readonly ResponseFactory $response,
+        private Playlist $playlist,
+        private Hashids $hashids,
+        private ResponseFactory $response,
     ) {
-        $this->middleware('verified');
-        $this->middleware('auth');
     }
 
     public function __invoke(UpdatePlaylistRequest $request, string $hash): Response

@@ -6,16 +6,16 @@ namespace App\Groups\Playlists;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
-use Illuminate\Routing\Controller;
+use Illuminate\Routing\Attributes\Controllers\Middleware;
 
-class GetAdminPlaylists extends Controller
+#[Middleware('verified')]
+#[Middleware('auth')]
+readonly class GetAdminPlaylists
 {
     public function __construct(
-        private readonly Playlist $playlist,
-        private readonly Request $request,
+        private Playlist $playlist,
+        private Request $request,
     ) {
-        $this->middleware('verified');
-        $this->middleware('auth');
     }
 
     public function __invoke(): ResourceCollection

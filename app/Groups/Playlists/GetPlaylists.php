@@ -5,14 +5,13 @@ declare(strict_types=1);
 namespace App\Groups\Playlists;
 
 use Illuminate\Http\Response;
-use Illuminate\Routing\Controller;
 use Illuminate\Routing\ResponseFactory;
 
-class GetPlaylists extends Controller
+readonly class GetPlaylists
 {
     public function __construct(
-        private readonly Playlist $playlist,
-        private readonly ResponseFactory $response,
+        private Playlist $playlist,
+        private ResponseFactory $response,
     ) {
     }
 
