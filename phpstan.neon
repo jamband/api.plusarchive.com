@@ -10,5 +10,6 @@ parameters:
         - lang
         - public
         - tests
+    noEnvCallsOutsideOfConfig: false
     ignoreErrors:
         - '#Call to an undefined method Mockery\\ExpectationInterface#'
