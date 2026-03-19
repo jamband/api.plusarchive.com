@@ -47,7 +47,7 @@ class GetCsrfCookieTest extends TestCase
         $this->assertCount(6, $attributes);
 
         $this->assertMatchesRegularExpression(
-            '/\A'.str_replace('.', '', strtolower($this->app['config']['app.name'])).'_session=eyJpdiI.+\z/',
+            '/\A'.str_replace('.', '', strtolower($this->app['config']['app.name'])).'-session=eyJpdiI.+\z/',
             $this->session
         );
 
