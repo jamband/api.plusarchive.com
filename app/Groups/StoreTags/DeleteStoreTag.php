@@ -5,17 +5,17 @@ declare(strict_types=1);
 namespace App\Groups\StoreTags;
 
 use Illuminate\Http\Response;
-use Illuminate\Routing\Controller;
+use Illuminate\Routing\Attributes\Controllers\Middleware;
 use Illuminate\Routing\ResponseFactory;
 
-class DeleteStoreTag extends Controller
+#[Middleware('verified')]
+#[Middleware('auth')]
+readonly class DeleteStoreTag
 {
     public function __construct(
-        private readonly StoreTag $tag,
-        private readonly ResponseFactory $response,
+        private StoreTag $tag,
+        private ResponseFactory $response,
     ) {
-        $this->middleware('verified');
-        $this->middleware('auth');
     }
 
     public function __invoke(int $id): Response

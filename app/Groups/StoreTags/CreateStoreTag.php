@@ -5,19 +5,19 @@ declare(strict_types=1);
 namespace App\Groups\StoreTags;
 
 use Illuminate\Http\Response;
-use Illuminate\Routing\Controller;
+use Illuminate\Routing\Attributes\Controllers\Middleware;
 use Illuminate\Routing\ResponseFactory;
 use Illuminate\Routing\UrlGenerator;
 
-class CreateStoreTag extends Controller
+#[Middleware('verified')]
+#[Middleware('auth')]
+readonly class CreateStoreTag
 {
     public function __construct(
-        private readonly StoreTag $tag,
-        private readonly ResponseFactory $response,
-        private readonly UrlGenerator $url,
+        private StoreTag $tag,
+        private ResponseFactory $response,
+        private UrlGenerator $url,
     ) {
-        $this->middleware('verified');
-        $this->middleware('auth');
     }
 
     public function __invoke(CreateStoreTagRequest $request): Response
