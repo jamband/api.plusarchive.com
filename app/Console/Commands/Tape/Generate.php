@@ -6,17 +6,17 @@ namespace App\Console\Commands\Tape;
 
 use App\Groups\Tracks\Track;
 use Carbon\Carbon;
+use Illuminate\Console\Attributes\Description;
+use Illuminate\Console\Attributes\Signature;
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Str;
 
+#[Signature('tape:generate {id} {title}')]
+#[Description('Generate tapes from the favorite tracks')]
 class Generate extends Command
 {
-    protected $signature = 'tape:generate {id} {title}';
-
-    protected $description = 'Generate tapes from the favorite tracks';
-
     public function handle(Track $track, Carbon $carbon, Filesystem $file): int
     {
         /** @var Application $app */

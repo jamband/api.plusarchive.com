@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace App\Console\Commands\Tape;
 
+use Illuminate\Console\Attributes\Description;
+use Illuminate\Console\Attributes\Signature;
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Foundation\Application;
 
+#[Signature('tape:clear')]
+#[Description('Delete all tapes')]
 class Clear extends Command
 {
-    protected $signature = 'tape:clear';
-
-    protected $description = 'Delete all tapes';
-
     public function handle(Filesystem $filesystem): int
     {
         /** @var Application $app */

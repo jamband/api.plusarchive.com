@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace App\Console\Commands\Session;
 
+use Illuminate\Console\Attributes\Description;
+use Illuminate\Console\Attributes\Signature;
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Foundation\Application;
 
+#[Signature('session:flush')]
+#[Description('Flush all sessions')]
 class Flush extends Command
 {
-    protected $signature = 'session:flush';
-
-    protected $description = 'Flush all sessions';
-
     public function handle(Filesystem $filesystem): int
     {
         /** @var Application $app */

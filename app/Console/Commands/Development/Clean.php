@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace App\Console\Commands\Development;
 
+use Illuminate\Console\Attributes\Description;
+use Illuminate\Console\Attributes\Signature;
 use Illuminate\Console\Command;
 
+#[Signature('dev:clean')]
+#[Description('Clean up development environment')]
 class Clean extends Command
 {
-    protected $signature = 'dev:clean';
-
-    protected $description = 'Clean up development environment';
-
     public function handle(): int
     {
         $this->call('session:flush');
