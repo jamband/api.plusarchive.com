@@ -6,13 +6,12 @@ namespace App\Groups\Stores;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
-use Illuminate\Routing\Controller;
 
-class GetSearchStores extends Controller
+readonly class GetSearchStores
 {
     public function __construct(
-        private readonly Request $request,
-        private readonly Store $store,
+        private Request $request,
+        private Store $store,
     ) {
     }
 

@@ -5,15 +5,15 @@ declare(strict_types=1);
 namespace App\Groups\Stores;
 
 use App\Groups\Countries\CountryFactory;
+use Illuminate\Database\Eloquent\Factories\Attributes\UseModel;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
  * @extends Factory<Store>
  */
+#[UseModel(Store::class)]
 class StoreFactory extends Factory
 {
-    protected $model = Store::class;
-
     public function definition(): array
     {
         $countryFactory = new CountryFactory();

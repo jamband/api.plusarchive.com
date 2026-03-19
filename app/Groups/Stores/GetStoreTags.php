@@ -6,14 +6,13 @@ namespace App\Groups\Stores;
 
 use App\Groups\StoreTags\StoreTag;
 use Illuminate\Http\Response;
-use Illuminate\Routing\Controller;
 use Illuminate\Routing\ResponseFactory;
 
-class GetStoreTags extends Controller
+readonly class GetStoreTags
 {
     public function __construct(
-        private readonly ResponseFactory $response,
-        private readonly StoreTag $tag,
+        private ResponseFactory $response,
+        private StoreTag $tag,
     ) {
     }
 
