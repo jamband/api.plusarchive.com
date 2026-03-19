@@ -5,17 +5,17 @@ declare(strict_types=1);
 namespace App\Groups\LabelTags;
 
 use Illuminate\Http\Response;
-use Illuminate\Routing\Controller;
+use Illuminate\Routing\Attributes\Controllers\Middleware;
 use Illuminate\Routing\ResponseFactory;
 
-class UpdateLabelTag extends Controller
+#[Middleware('verified')]
+#[Middleware('auth')]
+readonly class UpdateLabelTag
 {
     public function __construct(
-        private readonly LabelTag $tag,
-        private readonly ResponseFactory $response,
+        private LabelTag $tag,
+        private ResponseFactory $response,
     ) {
-        $this->middleware('verified');
-        $this->middleware('auth');
     }
 
     public function __invoke(UpdateLabelTagRequest $request, int $id): Response

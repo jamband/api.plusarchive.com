@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Groups\LabelTags;
 
 use App\Scopes\SortableScope;
+use Illuminate\Database\Eloquent\Attributes\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
@@ -14,12 +15,13 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @mixin Builder<self>
  */
+#[Table(
+    timestamps: false
+)]
 class LabelTag extends Model
 {
     use LabelTagScope;
     use SortableScope;
-
-    public $timestamps = false;
 
     /**
      * @return array<int, string>

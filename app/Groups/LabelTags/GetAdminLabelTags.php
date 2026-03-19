@@ -6,16 +6,16 @@ namespace App\Groups\LabelTags;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
-use Illuminate\Routing\Controller;
+use Illuminate\Routing\Attributes\Controllers\Middleware;
 
-class GetAdminLabelTags extends Controller
+#[Middleware('verified')]
+#[Middleware('auth')]
+readonly class GetAdminLabelTags
 {
     public function __construct(
-        private readonly LabelTag $tag,
-        private readonly Request $request,
+        private LabelTag $tag,
+        private Request $request,
     ) {
-        $this->middleware('verified');
-        $this->middleware('auth');
     }
 
     public function __invoke(): ResourceCollection
