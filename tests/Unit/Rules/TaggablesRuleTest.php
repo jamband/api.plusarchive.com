@@ -41,11 +41,11 @@ class TaggablesRuleTest extends TestCase
         return [
             [null],
             ['foo'],
-            [null, 'foo'],
-            [123, 'foo'],
-            ['foo', 'bar!'],
-            ['a'],
-            [str_repeat('a', 31)],
+            [[null, 'foo']],
+            [[123, 'foo']],
+            [['foo', 'bar!']],
+            [['a']],
+            [[str_repeat('a', 31)]],
         ];
     }
 

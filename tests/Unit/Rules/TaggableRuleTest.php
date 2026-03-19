@@ -45,6 +45,7 @@ class TaggableRuleTest extends TestCase
             [123],
             [['foo']],
             ['foo!'],
+            ['a'],
             [str_repeat('a', 31)],
         ];
     }
