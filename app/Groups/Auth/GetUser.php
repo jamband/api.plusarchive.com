@@ -5,15 +5,15 @@ declare(strict_types=1);
 namespace App\Groups\Auth;
 
 use Illuminate\Http\Response;
-use Illuminate\Routing\Controller;
+use Illuminate\Routing\Attributes\Controllers\Middleware;
 use Illuminate\Routing\ResponseFactory;
 
-class GetUser extends Controller
+#[Middleware('auth')]
+readonly class GetUser
 {
     public function __construct(
-        private readonly ResponseFactory $response,
+        private ResponseFactory $response,
     ) {
-        $this->middleware('auth');
     }
 
     public function __invoke(): Response

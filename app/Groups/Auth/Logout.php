@@ -7,17 +7,17 @@ namespace App\Groups\Auth;
 use Illuminate\Auth\AuthManager;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Routing\Controller;
+use Illuminate\Routing\Attributes\Controllers\Middleware;
 use Illuminate\Routing\ResponseFactory;
 
-class Logout extends Controller
+#[Middleware('auth')]
+readonly class Logout
 {
     public function __construct(
-        private readonly AuthManager $auth,
-        private readonly Request $request,
-        private readonly ResponseFactory $response,
+        private AuthManager $auth,
+        private Request $request,
+        private ResponseFactory $response,
     ) {
-        $this->middleware('auth');
     }
 
     public function __invoke(): Response
