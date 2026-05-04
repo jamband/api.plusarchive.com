@@ -1124,23 +1124,23 @@
         },
         {
             "name": "jamband/ripple",
-            "version": "v0.18.0",
+            "version": "v0.18.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/jamband/ripple.git",
-                "reference": "290547d62d656998594a7ced5b881f804f089115"
+                "reference": "287af66df3a7c7921d377e54d2f68b228749b525"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jamband/ripple/zipball/290547d62d656998594a7ced5b881f804f089115",
-                "reference": "290547d62d656998594a7ced5b881f804f089115",
+                "url": "https://api.github.com/repos/jamband/ripple/zipball/287af66df3a7c7921d377e54d2f68b228749b525",
+                "reference": "287af66df3a7c7921d377e54d2f68b228749b525",
                 "shasum": ""
             },
             "require": {
                 "php": "^8.2"
             },
             "require-dev": {
-                "friendsofphp/php-cs-fixer": "^3.91",
+                "friendsofphp/php-cs-fixer": "^3.95",
                 "phpstan/phpstan": "^2.1",
                 "phpunit/phpunit": "^11.5"
             },
@@ -1174,9 +1174,9 @@
             ],
             "support": {
                 "issues": "https://github.com/jamband/ripple/issues",
-                "source": "https://github.com/jamband/ripple/tree/v0.18.0"
+                "source": "https://github.com/jamband/ripple/tree/v0.18.1"
             },
-            "time": "2025-12-05T06:26:09+00:00"
+            "time": "2026-05-04T04:32:27+00:00"
         },
         {
             "name": "laravel/framework",
